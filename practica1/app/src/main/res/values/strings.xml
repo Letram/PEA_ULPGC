@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Practica1</string>
+    <string name="player1">Player 1</string>
+    <string name="player2">Player 2</string>
+    <string name="current_player">Player 1</string>
+    <string name="turnScore">Points accumulated on this turn: 50</string>
+</resources>
