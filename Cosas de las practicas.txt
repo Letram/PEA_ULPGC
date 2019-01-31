@@ -1,0 +1,6 @@
+·Las aplicaciones deben adaptarse tanto a tabletas como a móviles de diferentes tamaños (Como el giro en el móvil y demás).
+·Prácticas sencillas -> 1 fichero por clase, prácticas avanzadas -> creación de directorios con las clases
+·Mínimo de pantallas posibles. Hacer varias penaliza.
+·Ningún valor dentro del código puede estar fuera de los recursos (strings, valores, constantes, ...), todo tiene que estar referenciado.
+·Todos los elementos de las vistas tienen que tener IDs.
+
