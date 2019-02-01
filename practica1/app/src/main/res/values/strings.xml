@@ -2,6 +2,9 @@
     <string name="app_name">Practica1</string>
     <string name="player1">Player 1</string>
     <string name="player2">Player 2</string>
-    <string name="current_player">Player 1</string>
-    <string name="turnScore">Points accumulated on this turn: 50</string>
+    <string name="current_player">Player \</string>
+    <string name="turnScore">Points accumulated on this turn: \</string>
+    <string name="start1">Begin Player 1\'s turn</string>
+    <string name="roll">Roll</string>
+    <string name="collect">Collect</string>
 </resources>
