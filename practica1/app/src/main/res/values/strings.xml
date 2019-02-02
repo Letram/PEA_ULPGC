@@ -5,6 +5,7 @@
     <string name="current_player">Player \</string>
     <string name="turnScore">Points accumulated on this turn: \</string>
     <string name="start1">Begin Player 1\'s turn</string>
+    <string name="start2">Begin Player 2\'s turn</string>
     <string name="roll">Roll</string>
     <string name="collect">Collect</string>
 </resources>

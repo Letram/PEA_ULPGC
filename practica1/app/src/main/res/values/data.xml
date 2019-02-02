@@ -3,6 +3,9 @@
     <integer name="initialPoints">0</integer>
     <integer name="goal">20</integer>
     <integer name="currentPlayer">1</integer>
+    <integer name="PlayerOne">1</integer>
+    <integer name="PlayerTwo">2</integer>
     <integer name="minDiceValue">1</integer>
     <integer name="maxDiceValue">6</integer>
+    <integer name="progressMax">100</integer>
 </resources>
