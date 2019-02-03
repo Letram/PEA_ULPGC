@@ -12,4 +12,8 @@
     <string name="alertQuestion">Are you sure you want to exit?</string>
     <string name="alertYes">Yes</string>
     <string name="alertNo">No</string>
+    <string name="wintTitle">Game finished!</string>
+    <string name="winDescription"> \wins!</string>
+    <string name="winNewGame">Play again</string>
+    <string name="winExit">Exit</string>
 </resources>
