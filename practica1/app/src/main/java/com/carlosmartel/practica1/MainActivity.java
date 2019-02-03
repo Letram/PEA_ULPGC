@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -19,6 +20,8 @@ public class MainActivity extends AppCompatActivity {
 
     TextView[] scoresTV;
     TextView turnPoints, currentPlayerTV, startPlayer;
+
+    ImageView diceImg;
 
     Button rollBtn, collectBtn;
 
@@ -42,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
         turnPoints = findViewById(R.id.turnScoreText);
         startPlayer = findViewById(R.id.StartPlayer);
 
+        //Images
+        diceImg = findViewById(R.id.diceImg);
         //Buttons
         rollBtn = findViewById(R.id.rollBtn);
         collectBtn = findViewById(R.id.collectBtn);
@@ -67,7 +72,30 @@ public class MainActivity extends AppCompatActivity {
         rollBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 int diceValue = (int) Math.floor(Math.random()*getResources().getInteger(R.integer.maxDiceValue)+getResources().getInteger(R.integer.minDiceValue));
+                if(diceImg.getVisibility() != View.VISIBLE)
+                    diceImg.setVisibility(View.VISIBLE);
+                switch (diceValue){
+                    case 1:
+                        diceImg.setImageResource(Dice.ONE.getDiceValue());
+                        break;
+                    case 2:
+                        diceImg.setImageResource(Dice.TWO.getDiceValue());
+                        break;
+                    case 3:
+                        diceImg.setImageResource(Dice.THREE.getDiceValue());
+                        break;
+                    case 4:
+                        diceImg.setImageResource(Dice.FOUR.getDiceValue());
+                        break;
+                    case 5:
+                        diceImg.setImageResource(Dice.FIVE.getDiceValue());
+                        break;
+                    case 6:
+                        diceImg.setImageResource(Dice.SIX.getDiceValue());
+                        break;
+                }
                 accumulatedPoints = diceValue != 1 ? accumulatedPoints + diceValue : 0;
                 if(accumulatedPoints == 0)swapPlayers();
                 else{
