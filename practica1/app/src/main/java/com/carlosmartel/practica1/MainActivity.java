@@ -1,5 +1,7 @@
 package com.carlosmartel.practica1;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.media.Image;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -72,7 +74,6 @@ public class MainActivity extends AppCompatActivity {
         rollBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 int diceValue = (int) Math.floor(Math.random()*getResources().getInteger(R.integer.maxDiceValue)+getResources().getInteger(R.integer.minDiceValue));
                 if(diceImg.getVisibility() != View.VISIBLE)
                     diceImg.setVisibility(View.VISIBLE);
@@ -112,6 +113,27 @@ public class MainActivity extends AppCompatActivity {
                 showTexts();
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        new AlertDialog.Builder(this)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setTitle(getResources().getString(R.string.alertTitle))
+                .setMessage(getResources().getString(R.string.alertQuestion))
+                .setPositiveButton(getResources().getString(R.string.alertYes), new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        //super.onBackPressed();
+                        //Or used finish();
+                        finish();
+                    }
+
+                })
+                .setNegativeButton(getResources().getString(R.string.alertNo), null)
+                .show();
     }
 
     private void swapPlayers(){

@@ -8,4 +8,8 @@
     <string name="start2">Begin Player 2\'s turn</string>
     <string name="roll">Roll</string>
     <string name="collect">Collect</string>
+    <string name="alertTitle">Exit app</string>
+    <string name="alertQuestion">Are you sure you want to exit?</string>
+    <string name="alertYes">Yes</string>
+    <string name="alertNo">No</string>
 </resources>
