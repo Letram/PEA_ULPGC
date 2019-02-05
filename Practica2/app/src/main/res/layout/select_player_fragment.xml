@@ -16,23 +16,23 @@
         android:textSize="18sp" />
 
     <Button
-        android:id="@+id/multiBtn"
+        android:id="@+id/singleBtn"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_row="1"
         android:layout_column="0"
         android:layout_columnSpan="2"
         android:layout_gravity="center"
-        android:text="@string/multi_player" />
+        android:text="@string/single_player" />
 
     <Button
-        android:id="@+id/singleBtn"
-        android:layout_width="wrap_content"
+        android:id="@+id/multiBtn"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_row="2"
         android:layout_column="0"
         android:layout_columnSpan="2"
         android:layout_gravity="center"
-        android:text="@string/single_player" />
+        android:text="@string/multi_player" />
 
 </GridLayout>
