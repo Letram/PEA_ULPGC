@@ -126,12 +126,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void playerWin() {
         scores[currentPlayer-1] = accumulatedPoints + scores[currentPlayer-1] > goal ? goal : accumulatedPoints + scores[currentPlayer-1];
-        String player = currentPlayer == 1? getResources().getString(R.string.player1) : getResources().getString(R.string.player2);
-        player += getResources().getString(R.string.winDescription);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setIcon(android.R.drawable.ic_dialog_alert)
                 .setTitle(getResources().getString(R.string.wintTitle))
-                .setMessage(player)
+                .setMessage(getString(R.string.winDescription, getString(R.string.current_player, currentPlayer)))
                 .setPositiveButton(getResources().getString(R.string.winNewGame), new DialogInterface.OnClickListener()
                 {
                     @Override
@@ -163,7 +161,6 @@ public class MainActivity extends AppCompatActivity {
                 {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
                         //super.onBackPressed();
                         //Or used finish();
                         finish();
@@ -178,13 +175,15 @@ public class MainActivity extends AppCompatActivity {
         //Reset counters and update components
         scores[currentPlayer-1] = accumulatedPoints + scores[currentPlayer-1] > goal ? goal : accumulatedPoints + scores[currentPlayer-1];
         accumulatedPoints = getResources().getInteger(R.integer.initialPoints);
-        currentPlayer = currentPlayer == getResources().getInteger(R.integer.PlayerOne) ? getResources().getInteger(R.integer.PlayerTwo) : getResources().getInteger(R.integer.PlayerOne);
-        startPlayer.setText(currentPlayer == getResources().getInteger(R.integer.PlayerOne)  ? getResources().getString(R.string.start1) : getResources().getString(R.string.start2));
+        currentPlayer = currentPlayer == 1 ? 2 : 1;
+        startPlayer.setText(getString(R.string.start, getString(R.string.current_player, currentPlayer)));
 
         //Reset button views
         rollBtn.setVisibility(View.GONE);
         collectBtn.setVisibility(View.GONE);
         startPlayer.setVisibility(View.VISIBLE);
+
+        showTexts();
     }
 
     private void showTexts(){
@@ -192,8 +191,8 @@ public class MainActivity extends AppCompatActivity {
             scoresTV[i].setText(String.valueOf(scores[i]));
         }
         currentPlayerTV.setText(currentPlayer == getResources().getInteger(R.integer.PlayerOne) ? getResources().getString(R.string.player1) : getResources().getString(R.string.player2));
-        turnPoints.setText(String.format("%s%d", getResources().getString(R.string.turnScore), accumulatedPoints));
-        progressBar1.setProgress(scores[getResources().getInteger(R.integer.PlayerOne)-1]);
-        progressBar2.setProgress(scores[getResources().getInteger(R.integer.PlayerTwo)-1]);
+        turnPoints.setText(getString(R.string.turnScore, accumulatedPoints));
+        progressBar1.setProgress(scores[0]);
+        progressBar2.setProgress(scores[1]);
     }
 }

@@ -2,10 +2,11 @@
     <string name="app_name">Practica1</string>
     <string name="player1">Player 1</string>
     <string name="player2">Player 2</string>
-    <string name="current_player">Player \</string>
-    <string name="turnScore">Points accumulated on this turn: \</string>
+    <string name="current_player">Player %1$d</string>
+    <string name="turnScore">Points accumulated on this turn: %1$d</string>
     <string name="start1">Begin Player 1\'s turn</string>
     <string name="start2">Begin Player 2\'s turn</string>
+    <string name="start">Begin %1$s\'s turn</string>
     <string name="roll">Roll</string>
     <string name="collect">Collect</string>
     <string name="alertTitle">Exit app</string>
@@ -13,7 +14,7 @@
     <string name="alertYes">Yes</string>
     <string name="alertNo">No</string>
     <string name="wintTitle">Game finished!</string>
-    <string name="winDescription"> \wins!</string>
+    <string name="winDescription">%1$s wins!</string>
     <string name="winNewGame">Play again</string>
     <string name="winExit">Exit</string>
 </resources>
