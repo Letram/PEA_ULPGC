@@ -10,21 +10,22 @@ import com.carlosmartel.practica2.R
 import kotlinx.android.synthetic.main.player_score_fragment.*
 
 class PlayerScoreFragment : Fragment(){
-    companion object {
-        fun newInstance(): PlayerScoreFragment {
-            return PlayerScoreFragment()
-        }
-    }
+    private var playerScoreInterface : PlayerScoreInterface? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.player_score_fragment, container, false)
     }
 
-    fun setPlayerName(gameMode: String){
-        var newName = -1
-        if(gameMode == "Single") newName = R.string.machine;
-        else newName = R.string.player2
-        otherPlayer.setText(newName)
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        try{
+            playerScoreInterface = context as PlayerScoreInterface
+            print("CAST DONE")
+        } catch (e: ClassCastException){
+            throw ClassCastException(context?.toString() + "must implement PlayerScoreInterface")
+        }
     }
-
+    interface PlayerScoreInterface {
+        fun setScores()
+    }
 }

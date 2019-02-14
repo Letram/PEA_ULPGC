@@ -14,13 +14,7 @@ import com.carlosmartel.practica2.R
 import java.lang.ClassCastException
 
 class SelectPlayerFragment : Fragment(){
-
-    companion object {
-        fun newInstance(): SelectPlayerFragment {
-            return SelectPlayerFragment()
-        }
-    }
-    var selectPlayerInterface : SelectPlayerInterface? = null
+    private var selectPlayerInterface : SelectPlayerInterface? = null
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view =  inflater.inflate(R.layout.select_player_fragment, container, false)
         val singlebtn = view?.findViewById<Button>(R.id.singleBtn)
@@ -40,12 +34,6 @@ class SelectPlayerFragment : Fragment(){
         } catch (e: ClassCastException){
             throw ClassCastException(context?.toString() + "must implement SelectPlayerInterface")
         }
-    }
-
-    private fun startGame(mode: String) {
-        val intent = Intent(this.activity, GameActivity::class.java)
-        intent.putExtra(CustomData.EXTRA_GAMEMODE, mode)
-        startActivity(intent)
     }
 
     private fun startNewGame(mode: String){
