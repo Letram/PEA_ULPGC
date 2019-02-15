@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <dimen name="initialScore">0</dimen>
-    <dimen name="goal">20</dimen>
-    <dimen name="diceMin">1</dimen>
-    <dimen name="diceMax">6</dimen>
-</resources>
