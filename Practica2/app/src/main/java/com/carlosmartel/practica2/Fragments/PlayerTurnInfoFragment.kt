@@ -6,10 +6,8 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.TextView
 import com.carlosmartel.practica2.R
-import kotlinx.android.synthetic.main.activity_game.*
 import kotlinx.android.synthetic.main.player_turn_info_fragment.*
 
 class PlayerTurnInfoFragment : Fragment(){
@@ -45,9 +43,10 @@ class PlayerTurnInfoFragment : Fragment(){
         }
     }
 
-    fun setAccValue(diceValue: Int) {
-        accScore += diceValue
+    fun setAccValue(diceValue: Int):Int {
+        accScore = if(diceValue == 1) 0 else accScore + diceValue
         updateTexts()
+        return accScore
     }
 
     private fun updateTexts(){
