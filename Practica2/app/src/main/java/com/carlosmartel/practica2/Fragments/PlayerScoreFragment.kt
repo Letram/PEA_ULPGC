@@ -1,5 +1,7 @@
 package com.carlosmartel.practica2.Fragments
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -38,6 +40,11 @@ class PlayerScoreFragment : Fragment(){
             otherPlayer.text = getString(R.string.player, resources.getInteger(R.integer.currentPlayer)+1)
         else
             otherPlayer.text = getString(R.string.machine)
+    }
+
+    fun reset() {
+        scores = intArrayOf(0,0)
+        updateBars()
     }
 
 

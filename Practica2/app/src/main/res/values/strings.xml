@@ -9,4 +9,13 @@
     <string name="pointsInTurnLabel">Points earned in this turn: %1$d</string>
     <string name="rollBtn">Roll</string>
     <string name="collectBtn">Collect</string>
+    <string name="winTitle">Game finished!</string>
+    <string name="winDescription">%1$s wins!</string>
+    <string name="winNewGame">Play Again</string>
+    <string name="winExit">Exit</string>
+    <string name="alertTitle">Exit app</string>
+    <string name="alertQuestion">Are you sure you want to exit?</string>
+    <string name="alertYes">Yes</string>
+    <string name="alertNo">No</string>
+
 </resources>

@@ -24,7 +24,7 @@ class PlayerTurnInfoFragment : Fragment(){
 
         val collectB = view?.findViewById<TextView>(R.id.collectBtn)
         collectB?.setOnClickListener{
-            playerTurnInfoInterface?.collect()
+            playerTurnInfoInterface?.collect(accScore)
         }
 
         view?.findViewById<TextView>(R.id.playerName)?.text = getString(R.string.player, resources.getInteger(R.integer.currentPlayer))
@@ -67,7 +67,7 @@ class PlayerTurnInfoFragment : Fragment(){
         var currentPlayer: Int
 
         fun roll()
-        fun collect()
+        fun collect(scoreValue: Int)
         fun setAccScore()
     }
 }
