@@ -1,7 +1,5 @@
 package com.carlosmartel.practica2.Fragments
 
-import android.app.AlertDialog
-import android.content.DialogInterface
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -12,23 +10,21 @@ import kotlinx.android.synthetic.main.player_score_fragment.*
 
 class PlayerScoreFragment : Fragment(){
 
-    var scores = intArrayOf(0,0)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         return inflater.inflate(R.layout.player_score_fragment, container, false)
     }
 
-    fun setScore(player: Int, scoreToAdd: Int){
-        scores[player-1] += scoreToAdd
-        updateBars()
+    fun setScore(scores: IntArray){
+        updateBars(scores)
     }
 
-    private fun updateBars() {
-        progressBar1.progress = scores[0]
-        player1Score.text = scores[0].toString()
-        progressBar2.progress = scores[1]
-        otherPlayerScore.text = scores[1].toString()
+    private fun updateBars(ints: IntArray) {
+        progressBar1.progress = ints[0]
+        player1Score.text = ints[0].toString()
+        progressBar2.progress = ints[1]
+        otherPlayerScore.text = ints[1].toString()
     }
 
     fun setup(gameMode: String?) {
@@ -43,8 +39,7 @@ class PlayerScoreFragment : Fragment(){
     }
 
     fun reset() {
-        scores = intArrayOf(0,0)
-        updateBars()
+        updateBars(intArrayOf(0,0))
     }
 
 

@@ -19,11 +19,13 @@ class PlayerTurnInfoFragment : Fragment(){
 
         val rollB = view?.findViewById<TextView>(R.id.rollBtn)
         rollB?.setOnClickListener{
+            if(collectBtn.visibility == View.INVISIBLE)collectBtn.visibility = View.VISIBLE
             playerTurnInfoInterface?.roll()
         }
 
         val collectB = view?.findViewById<TextView>(R.id.collectBtn)
         collectB?.setOnClickListener{
+            collectBtn.visibility = View.INVISIBLE
             playerTurnInfoInterface?.collect(accScore)
         }
 
@@ -62,12 +64,21 @@ class PlayerTurnInfoFragment : Fragment(){
         updateTexts()
     }
 
+    fun hideBtns() {
+        collectBtn.visibility = View.INVISIBLE
+        rollBtn.visibility = View.INVISIBLE
+    }
+
+    fun showBtns(){
+        collectBtn.visibility = View.VISIBLE
+        rollBtn.visibility = View.VISIBLE
+    }
+
     interface PlayerTurnInfoInterface{
 
         var currentPlayer: Int
 
-        fun roll()
+        fun roll():Boolean
         fun collect(scoreValue: Int)
-        fun setAccScore()
     }
 }
