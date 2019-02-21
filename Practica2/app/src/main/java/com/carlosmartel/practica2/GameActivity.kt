@@ -25,11 +25,11 @@ class GameActivity : AppCompatActivity(),
 
     private var cpuTurn: Boolean = false
     private var singlePlayer = false
+    private var hide = true
 
     override fun roll(): Boolean{
         val diceValue = diceImageFragment!!.getNumber()
-        if(diceImageFragment!!.isHidden)
-            supportFragmentManager.beginTransaction().show(diceImageFragment!!).commit()
+        supportFragmentManager.beginTransaction().show(diceImageFragment!!).commit()
         accPlayerValueInTurn = playerTurnFragment!!.setAccValue(diceValue)
         if(accPlayerValueInTurn == 0){
             collect(accPlayerValueInTurn)
@@ -100,6 +100,7 @@ class GameActivity : AppCompatActivity(),
 
                 playerTurnFragment?.resetAccScore()
                 playerScoreFragment?.reset()
+                diceImageFragment?.reset()
                 accPlayerValueInTurn = 0
             }
             .setNegativeButton(resources.getString(R.string.winExit)
@@ -119,7 +120,6 @@ class GameActivity : AppCompatActivity(),
         scores = intArrayOf(0,0)
 
         diceImageFragment = supportFragmentManager.findFragmentById(R.id.imageFragment) as DiceImageFragment
-        supportFragmentManager.beginTransaction().hide(diceImageFragment!!).commit()
 
         playerScoreFragment = supportFragmentManager.findFragmentById(R.id.playerScoreFragment) as PlayerScoreFragment
         playerScoreFragment?.setup(intent?.extras?.getString(CustomData.EXTRA_GAMEMODE))
@@ -135,7 +135,7 @@ class GameActivity : AppCompatActivity(),
         .setMessage(resources.getString(R.string.alertQuestion))
         .setPositiveButton(resources.getString(R.string.alertYes)
         ) { _, _ ->
-            finish()
+            finishAffinity()
         }
             .setNegativeButton(resources.getString(R.string.alertNo), null)
         .show()

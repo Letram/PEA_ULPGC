@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.carlosmartel.practica2.CustomData
 import com.carlosmartel.practica2.R
 import kotlinx.android.synthetic.main.player_turn_info_fragment.*
 
@@ -14,8 +15,9 @@ class PlayerTurnInfoFragment : Fragment(){
 
     private var playerTurnInfoInterface: PlayerTurnInfoInterface? = null
     private var accScore = 0
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.player_turn_info_fragment, container, false)
+        val view = inflater.inflate(R.layout.player_turn_info_alt, container, false)
 
         val rollB = view?.findViewById<TextView>(R.id.rollBtn)
         rollB?.setOnClickListener{
@@ -36,6 +38,19 @@ class PlayerTurnInfoFragment : Fragment(){
         return view
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(CustomData.ACC_SCORE, accScore)
+        outState.putInt(CustomData.CURRENT_PLAYER, if(playerTurnInfoInterface != null) playerTurnInfoInterface!!.currentPlayer else 1)
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        if(savedInstanceState != null){
+            accScore = savedInstanceState.getInt(CustomData.ACC_SCORE)
+            pointsInTurnLabel.text = getString(R.string.pointsInTurnLabel, accScore)
+        }
+    }
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         try{
