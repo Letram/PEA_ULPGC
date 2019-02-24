@@ -8,6 +8,7 @@
     <string name="diceValueLabel">Dice value: %1$d</string>
     <string name="pointsInTurnLabel">Points earned in this turn: %1$d</string>
     <string name="rollBtn">Roll</string>
+    <string name="rolling">Rolling…</string>
     <string name="collectBtn">Collect</string>
     <string name="winTitle">Game finished!</string>
     <string name="winDescription">%1$s wins!</string>

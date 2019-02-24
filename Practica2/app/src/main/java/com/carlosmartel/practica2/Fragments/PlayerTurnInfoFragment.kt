@@ -1,5 +1,7 @@
 package com.carlosmartel.practica2.Fragments
 
+import android.animation.ObjectAnimator
+import android.animation.PropertyValuesHolder
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -11,10 +13,12 @@ import com.carlosmartel.practica2.CustomData
 import com.carlosmartel.practica2.R
 import kotlinx.android.synthetic.main.player_turn_info_fragment.*
 
+
 class PlayerTurnInfoFragment : Fragment(){
 
     private var playerTurnInfoInterface: PlayerTurnInfoInterface? = null
     private var accScore = 0
+    private var scaleDown: ObjectAnimator = ObjectAnimator()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.player_turn_info_alt, container, false)
@@ -22,13 +26,15 @@ class PlayerTurnInfoFragment : Fragment(){
         val rollB = view?.findViewById<TextView>(R.id.rollBtn)
         rollB?.setOnClickListener{
             if(collectBtn.visibility == View.INVISIBLE)collectBtn.visibility = View.VISIBLE
-            playerTurnInfoInterface?.onRollBtnPressed()
+            playerTurnInfoInterface?.roll()
+            rollB.text = getString(R.string.rolling)
+            startTextAnimation(rollB)
         }
 
         val collectB = view?.findViewById<TextView>(R.id.collectBtn)
         collectB?.setOnClickListener{
             collectBtn.visibility = View.INVISIBLE
-            playerTurnInfoInterface?.onCollectBtnPressed(accScore)
+            playerTurnInfoInterface?.collect(accScore)
         }
 
         view?.findViewById<TextView>(R.id.playerName)?.text = getString(R.string.player, resources.getInteger(R.integer.currentPlayer))
@@ -36,6 +42,20 @@ class PlayerTurnInfoFragment : Fragment(){
         view?.findViewById<TextView>(R.id.pointsInTurnLabel)?.text = getString(R.string.pointsInTurnLabel, accScore)
 
         return view
+    }
+
+    private fun startTextAnimation(rollB: TextView) {
+        scaleDown = ObjectAnimator.ofPropertyValuesHolder(
+            rollB,
+            PropertyValuesHolder.ofFloat("scaleX", 1.2f),
+            PropertyValuesHolder.ofFloat("scaleY", 1.2f)
+        )
+        scaleDown.duration = 310
+
+        scaleDown.repeatCount = ObjectAnimator.INFINITE
+        scaleDown.repeatMode = ObjectAnimator.REVERSE
+
+        scaleDown.start()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -89,11 +109,16 @@ class PlayerTurnInfoFragment : Fragment(){
         rollBtn.visibility = View.VISIBLE
     }
 
+    fun stopRolling() {
+        scaleDown.cancel()
+        rollBtn.text = getString(R.string.rollBtn)
+    }
+
     interface PlayerTurnInfoInterface{
 
         var currentPlayer: Int
 
-        fun onRollBtnPressed():Boolean
-        fun onCollectBtnPressed(scoreValue: Int)
+        fun roll()
+        fun collect(scoreValue: Int)
     }
 }

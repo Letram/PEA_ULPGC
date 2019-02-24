@@ -13,15 +13,15 @@ abstract class CustomAnimationDrawable(animationDrawable: AnimationDrawable) : A
 
     override fun start() {
         super.start()
-        animationHandler.post(Runnable {
+        animationHandler.post {
             onAnimationStart()
-        })
-        animationHandler.postDelayed(Runnable {
+        }
+        animationHandler.postDelayed({
             onAnimationFinish()
         }, getTotalDuration().toLong())
     }
 
-    fun getTotalDuration(): Int {
+    private fun getTotalDuration(): Int {
         var iDuration = 0
         for (i in 0 until this.numberOfFrames)
             iDuration += this.getDuration(i)

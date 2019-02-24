@@ -1,5 +1,6 @@
 package com.carlosmartel.practica2
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
@@ -7,7 +8,6 @@ import android.view.View
 import com.carlosmartel.practica2.Fragments.DiceImageFragment
 import com.carlosmartel.practica2.Fragments.PlayerScoreFragment
 import com.carlosmartel.practica2.Fragments.PlayerTurnInfoFragment
-import java.util.*
 import kotlin.random.Random
 
 class GameActivity : AppCompatActivity(),
@@ -26,43 +26,65 @@ class GameActivity : AppCompatActivity(),
 
     private var cpuTurn: Boolean = false
     private var singlePlayer = false
+    private var keepRolling = true
 
-    override fun animationEnded() {
-        println("ANIMATION ENDED IN ACTIVITY AS WELL")
+    override fun animationEnded(diceValue: Int){
+        supportFragmentManager.beginTransaction().show(diceImageFragment!!).commit()
+        accPlayerValueInTurn = playerTurnFragment!!.setAccValue(diceValue)
+        playerTurnFragment!!.stopRolling()
+        if(accPlayerValueInTurn == 0){
+            collect(accPlayerValueInTurn)
+            keepRolling = false
+        }
+        else if (scores[currentPlayer-1] + accPlayerValueInTurn >= goal){
+            collect(goal-scores[currentPlayer-1])
+        }
     }
 
-    override fun onRollBtnPressed(): Boolean{
-
+    override fun roll(){
         diceImageFragment?.startDiceAnimation()
-        return true
         /*
         val diceValue = diceImageFragment!!.getNumber()
         supportFragmentManager.beginTransaction().show(diceImageFragment!!).commit()
         accPlayerValueInTurn = playerTurnFragment!!.setAccValue(diceValue)
         if(accPlayerValueInTurn == 0){
-            onCollectBtnPressed(accPlayerValueInTurn)
+            collect(accPlayerValueInTurn)
             return false
         }
         else if (scores[currentPlayer-1] + accPlayerValueInTurn >= goal){
-            onCollectBtnPressed(goal-scores[currentPlayer-1])
+            collect(goal-scores[currentPlayer-1])
             return false
         }
         return true
         */
     }
 
+    private fun rollCpu() : Boolean {
+        val diceValue = diceImageFragment!!.getNumber()
+        supportFragmentManager.beginTransaction().show(diceImageFragment!!).commit()
+        accPlayerValueInTurn = playerTurnFragment!!.setAccValue(diceValue)
+        if(accPlayerValueInTurn == 0){
+            collect(accPlayerValueInTurn)
+            return false
+        }
+        else if (scores[currentPlayer-1] + accPlayerValueInTurn >= goal){
+            collect(goal-scores[currentPlayer-1])
+            return false
+        }
+        return true
+    }
 
-    override fun onCollectBtnPressed(scoreValue: Int) {
+
+    override fun collect(scoreValue: Int) {
         scores[currentPlayer-1] += scoreValue
         playerScoreFragment?.setScore(scores)
-        println(Arrays.toString(scores))
         if(scores[currentPlayer-1] == goal)
             openWinAlert()
         else{
             currentPlayer = if (currentPlayer == 1) 2 else 1
             playerTurnFragment?.resetAccScore()
             accPlayerValueInTurn = 0
-            if(!singlePlayer)
+            if(!singlePlayer && resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
                 swapFragments()
             if(singlePlayer && !cpuTurn){
                 println("CPU TURN - $accPlayerValueInTurn - CURRENT_PLAYER - $currentPlayer")
@@ -73,6 +95,22 @@ class GameActivity : AppCompatActivity(),
         }
     }
 
+    private fun enterCPUTurn() {
+        cpuTurn = true
+        playerTurnFragment?.hideBtns()
+        val rolls = Random.nextInt(1,4)
+        for (index in 0 until rolls){
+            if(!rollCpu()){
+                playerTurnFragment?.showBtns()
+                return
+            }
+            println(accPlayerValueInTurn)
+        }
+        playerTurnFragment?.showBtns()
+        collect(accPlayerValueInTurn)
+    }
+
+
     private fun swapFragments() {
 
         val diceLayout = findViewById<View>(R.id.imageFragment).layoutParams
@@ -80,22 +118,6 @@ class GameActivity : AppCompatActivity(),
 
         findViewById<View>(R.id.turnInfoFragment).layoutParams = diceLayout
         findViewById<View>(R.id.imageFragment).layoutParams = infoLayout
-    }
-
-    private fun enterCPUTurn() {
-        cpuTurn = true
-        playerTurnFragment?.hideBtns()
-        val rolls = Random.nextInt(1,11)
-        for (index in 1..rolls){
-            println("ROLLING")
-            if(!onRollBtnPressed()){
-                playerTurnFragment?.showBtns()
-                return
-            }
-            println(accPlayerValueInTurn)
-        }
-        playerTurnFragment?.showBtns()
-        onCollectBtnPressed(accPlayerValueInTurn)
     }
 
     private fun openWinAlert() {

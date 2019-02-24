@@ -5,7 +5,6 @@ import android.graphics.Bitmap
 import android.graphics.drawable.AnimationDrawable
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
-import android.os.Handler
 import android.os.Parcelable
 import android.support.v4.app.Fragment
 import android.support.v4.content.res.ResourcesCompat
@@ -18,9 +17,6 @@ import com.carlosmartel.practica2.CustomData
 import com.carlosmartel.practica2.R
 import kotlinx.android.synthetic.main.image_fragment.*
 import kotlin.random.Random
-
-
-
 
 
 class DiceImageFragment : Fragment(){
@@ -57,8 +53,9 @@ class DiceImageFragment : Fragment(){
             }
 
             override fun onAnimationFinish() {
-                println("ANIMATION ENDED BRO")
-                diceImageInterface?.animationEnded()
+                diceValue = getNumber()
+                println("DICE VALUE: $diceValue")
+                diceImageInterface?.animationEnded(diceValue)
             }
         }
         cad.isOneShot = true
@@ -74,6 +71,7 @@ class DiceImageFragment : Fragment(){
             resources.getInteger(R.integer.diceMin),
             resources.getInteger(R.integer.diceMax)+1
         )
+        diceImage.background = ResourcesCompat.getDrawable(resources, android.R.color.transparent, null)
         diceImage.setImageResource(diceImages[diceValue-1])
         diceValueLabel.text = getString(R.string.diceValueLabel, diceValue)
         return diceValue
@@ -106,6 +104,6 @@ class DiceImageFragment : Fragment(){
     }
 
     interface DiceImageListener{
-        fun animationEnded()
+        fun animationEnded(diceValue: Int)
     }
 }
