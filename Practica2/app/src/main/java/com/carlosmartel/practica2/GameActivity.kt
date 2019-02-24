@@ -11,7 +11,8 @@ import java.util.*
 import kotlin.random.Random
 
 class GameActivity : AppCompatActivity(),
-    PlayerTurnInfoFragment.PlayerTurnInfoInterface{
+    PlayerTurnInfoFragment.PlayerTurnInfoInterface,
+    DiceImageFragment.DiceImageListener{
 
     override var currentPlayer: Int = -1
 
@@ -26,23 +27,32 @@ class GameActivity : AppCompatActivity(),
     private var cpuTurn: Boolean = false
     private var singlePlayer = false
 
-    override fun roll(): Boolean{
+    override fun animationEnded() {
+        println("ANIMATION ENDED IN ACTIVITY AS WELL")
+    }
+
+    override fun onRollBtnPressed(): Boolean{
+
+        diceImageFragment?.startDiceAnimation()
+        return true
+        /*
         val diceValue = diceImageFragment!!.getNumber()
         supportFragmentManager.beginTransaction().show(diceImageFragment!!).commit()
         accPlayerValueInTurn = playerTurnFragment!!.setAccValue(diceValue)
         if(accPlayerValueInTurn == 0){
-            collect(accPlayerValueInTurn)
+            onCollectBtnPressed(accPlayerValueInTurn)
             return false
         }
         else if (scores[currentPlayer-1] + accPlayerValueInTurn >= goal){
-            collect(goal-scores[currentPlayer-1])
+            onCollectBtnPressed(goal-scores[currentPlayer-1])
             return false
         }
         return true
+        */
     }
 
 
-    override fun collect(scoreValue: Int) {
+    override fun onCollectBtnPressed(scoreValue: Int) {
         scores[currentPlayer-1] += scoreValue
         playerScoreFragment?.setScore(scores)
         println(Arrays.toString(scores))
@@ -70,24 +80,6 @@ class GameActivity : AppCompatActivity(),
 
         findViewById<View>(R.id.turnInfoFragment).layoutParams = diceLayout
         findViewById<View>(R.id.imageFragment).layoutParams = infoLayout
-
-        /*
-        val diceLayout = findViewById<ConstraintLayout>(R.id.imageFragment)
-        val playerInfoLayout = findViewById<ConstraintLayout>(R.id.turnInfoFragment)
-
-
-        val diceImageConstraints = ConstraintSet()
-        val playerInfoConstraints = ConstraintSet()
-
-        diceImageConstraints.clone(diceLayout)
-        playerInfoConstraints.clone(playerInfoLayout)
-
-
-        if(resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE){
-            diceImageConstraints.applyTo(playerInfoLayout)
-            playerInfoConstraints.applyTo(diceLayout)
-        }
-        */
     }
 
     private fun enterCPUTurn() {
@@ -96,14 +88,14 @@ class GameActivity : AppCompatActivity(),
         val rolls = Random.nextInt(1,11)
         for (index in 1..rolls){
             println("ROLLING")
-            if(!roll()){
+            if(!onRollBtnPressed()){
                 playerTurnFragment?.showBtns()
                 return
             }
             println(accPlayerValueInTurn)
         }
         playerTurnFragment?.showBtns()
-        collect(accPlayerValueInTurn)
+        onCollectBtnPressed(accPlayerValueInTurn)
     }
 
     private fun openWinAlert() {
@@ -153,14 +145,12 @@ class GameActivity : AppCompatActivity(),
 
 
     }
-
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putInt(CustomData.CURRENT_PLAYER, currentPlayer)
         outState.putInt(CustomData.ACC_SCORE, accPlayerValueInTurn)
         outState.putIntArray(CustomData.SCORES, scores)
     }
-
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
         super.onRestoreInstanceState(savedInstanceState)
         if(savedInstanceState != null){

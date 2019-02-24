@@ -1,5 +1,6 @@
 package com.carlosmartel.practica2.Fragments
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.AnimationDrawable
 import android.graphics.drawable.BitmapDrawable
@@ -12,6 +13,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.carlosmartel.practica2.CustomAnimationDrawable
 import com.carlosmartel.practica2.CustomData
 import com.carlosmartel.practica2.R
 import kotlinx.android.synthetic.main.image_fragment.*
@@ -19,9 +21,12 @@ import kotlin.random.Random
 
 
 
+
+
 class DiceImageFragment : Fragment(){
     private var diceImages :IntArray = intArrayOf(R.drawable.dice_1, R.drawable.dice_2, R.drawable.dice_3, R.drawable.dice_4, R.drawable.dice_5, R.drawable.dice_6)
     private var diceValue :Int = -1
+    private var diceImageInterface : DiceImageListener? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.image_fragment, container, false)
@@ -31,11 +36,40 @@ class DiceImageFragment : Fragment(){
         return view
     }
 
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        try{
+            diceImageInterface = context as DiceImageListener
+        } catch (e: ClassCastException){
+            throw ClassCastException(context?.toString() + "must implement DiceImageListener")
+        }
+    }
+
+    fun startDiceAnimation(){
+        diceImage.setImageResource(android.R.color.transparent)
+
+        val diceAnimation = AnimationDrawable()
+        for(i in 1..10)
+            diceAnimation.addFrame(ResourcesCompat.getDrawable(resources, diceImages[Random.nextInt(0,diceImages.size)], null)!!, 200)
+        val cad = object : CustomAnimationDrawable(diceAnimation) {
+            override fun onAnimationStart() {
+                // Animation has started...
+            }
+
+            override fun onAnimationFinish() {
+                println("ANIMATION ENDED BRO")
+                diceImageInterface?.animationEnded()
+            }
+        }
+        cad.isOneShot = true
+
+        diceImage.background = cad
+        
+        cad.start()
+    }
 
     fun getNumber():Int{
         diceValueLabel.visibility = View.VISIBLE
-        diceImage.setImageResource(android.R.color.transparent)
-        Handler().postDelayed({},5000)
         diceValue = Random.nextInt(
             resources.getInteger(R.integer.diceMin),
             resources.getInteger(R.integer.diceMax)+1
@@ -69,5 +103,9 @@ class DiceImageFragment : Fragment(){
         diceImage.setImageResource(android.R.color.transparent)
         diceValue = -1
         diceValueLabel.visibility = View.INVISIBLE
+    }
+
+    interface DiceImageListener{
+        fun animationEnded()
     }
 }
