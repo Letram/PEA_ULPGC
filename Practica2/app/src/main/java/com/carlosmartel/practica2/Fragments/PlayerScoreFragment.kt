@@ -54,17 +54,4 @@ class PlayerScoreFragment : Fragment(){
         updateBars(intArrayOf(0,0))
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putInt("Score1", progressBar1.progress)
-        outState.putInt("Score2", progressBar2.progress)
-    }
-
-    override fun onViewStateRestored(savedInstanceState: Bundle?) {
-        super.onViewStateRestored(savedInstanceState)
-        if(savedInstanceState != null)
-            updateBars(intArrayOf(savedInstanceState.getInt("Score1"),savedInstanceState.getInt("Score2")))
-    }
-
-
 }

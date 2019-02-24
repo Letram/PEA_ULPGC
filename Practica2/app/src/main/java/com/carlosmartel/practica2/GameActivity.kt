@@ -1,9 +1,9 @@
 package com.carlosmartel.practica2
 
-import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
+import android.view.View
 import com.carlosmartel.practica2.Fragments.DiceImageFragment
 import com.carlosmartel.practica2.Fragments.PlayerScoreFragment
 import com.carlosmartel.practica2.Fragments.PlayerTurnInfoFragment
@@ -25,7 +25,6 @@ class GameActivity : AppCompatActivity(),
 
     private var cpuTurn: Boolean = false
     private var singlePlayer = false
-    private var hide = true
 
     override fun roll(): Boolean{
         val diceValue = diceImageFragment!!.getNumber()
@@ -53,6 +52,8 @@ class GameActivity : AppCompatActivity(),
             currentPlayer = if (currentPlayer == 1) 2 else 1
             playerTurnFragment?.resetAccScore()
             accPlayerValueInTurn = 0
+            if(!singlePlayer)
+                swapFragments()
             if(singlePlayer && !cpuTurn){
                 println("CPU TURN - $accPlayerValueInTurn - CURRENT_PLAYER - $currentPlayer")
                 enterCPUTurn()
@@ -60,6 +61,33 @@ class GameActivity : AppCompatActivity(),
                 cpuTurn = false
             }
         }
+    }
+
+    private fun swapFragments() {
+
+        val diceLayout = findViewById<View>(R.id.imageFragment).layoutParams
+        val infoLayout = findViewById<View>(R.id.turnInfoFragment).layoutParams
+
+        findViewById<View>(R.id.turnInfoFragment).layoutParams = diceLayout
+        findViewById<View>(R.id.imageFragment).layoutParams = infoLayout
+
+        /*
+        val diceLayout = findViewById<ConstraintLayout>(R.id.imageFragment)
+        val playerInfoLayout = findViewById<ConstraintLayout>(R.id.turnInfoFragment)
+
+
+        val diceImageConstraints = ConstraintSet()
+        val playerInfoConstraints = ConstraintSet()
+
+        diceImageConstraints.clone(diceLayout)
+        playerInfoConstraints.clone(playerInfoLayout)
+
+
+        if(resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE){
+            diceImageConstraints.applyTo(playerInfoLayout)
+            playerInfoConstraints.applyTo(diceLayout)
+        }
+        */
     }
 
     private fun enterCPUTurn() {
@@ -116,8 +144,6 @@ class GameActivity : AppCompatActivity(),
         currentPlayer = resources.getInteger(R.integer.currentPlayer)
         goal = resources.getInteger(R.integer.goal)
         singlePlayer = intent!!.extras!!.getString(CustomData.EXTRA_GAMEMODE) == "single"
-        accPlayerValueInTurn = 0
-        scores = intArrayOf(0,0)
 
         diceImageFragment = supportFragmentManager.findFragmentById(R.id.imageFragment) as DiceImageFragment
 
@@ -128,6 +154,22 @@ class GameActivity : AppCompatActivity(),
 
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(CustomData.CURRENT_PLAYER, currentPlayer)
+        outState.putInt(CustomData.ACC_SCORE, accPlayerValueInTurn)
+        outState.putIntArray(CustomData.SCORES, scores)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+        super.onRestoreInstanceState(savedInstanceState)
+        if(savedInstanceState != null){
+            currentPlayer = savedInstanceState.getInt(CustomData.CURRENT_PLAYER)
+            accPlayerValueInTurn = savedInstanceState.getInt(CustomData.ACC_SCORE)
+            scores = savedInstanceState.getIntArray(CustomData.SCORES)!!
+        }
+
+    }
     override fun onBackPressed() {
         android.app.AlertDialog.Builder(this)
         .setIcon(android.R.drawable.ic_dialog_alert)
