@@ -31,13 +31,14 @@
         tools:layout="@layout/image_fragment" />
 
     <fragment
-        android:id="@+id/turnInfoFragment"
-        android:name="com.carlosmartel.practica2.Fragments.PlayerTurnInfoFragment"
-        android:layout_width="0dp"
-        android:layout_height="175dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/playerScoreFragment"
-        tools:layout="@layout/player_turn_info_fragment" />
+            android:id="@+id/turnInfoFragment"
+            android:name="com.carlosmartel.practica2.Fragments.PlayerTurnInfoFragment"
+            android:layout_width="0dp"
+            android:layout_height="175dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/playerScoreFragment"
+            tools:layout="@layout/player_turn_info_alt" android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"/>
 </android.support.constraint.ConstraintLayout>
