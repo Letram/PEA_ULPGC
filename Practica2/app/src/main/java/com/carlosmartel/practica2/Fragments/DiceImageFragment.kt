@@ -23,7 +23,7 @@ class DiceImageFragment : Fragment(){
     private var diceImages :IntArray = intArrayOf(R.drawable.dice_1, R.drawable.dice_2, R.drawable.dice_3, R.drawable.dice_4, R.drawable.dice_5, R.drawable.dice_6)
     private var diceValue :Int = -1
     private var diceImageInterface : DiceImageListener? = null
-
+    private var lastAnimationFrameValue = -1
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.image_fragment, container, false)
 
@@ -45,8 +45,10 @@ class DiceImageFragment : Fragment(){
         diceImage.setImageResource(android.R.color.transparent)
 
         val diceAnimation = AnimationDrawable()
-        for(i in 1..10)
-            diceAnimation.addFrame(ResourcesCompat.getDrawable(resources, diceImages[Random.nextInt(0,diceImages.size)], null)!!, 200)
+        for(i in 1..10){
+            lastAnimationFrameValue = Random.nextInt(0,diceImages.size)
+            diceAnimation.addFrame(ResourcesCompat.getDrawable(resources, diceImages[lastAnimationFrameValue], null)!!, 200)
+        }
         val cad = object : CustomAnimationDrawable(diceAnimation) {
             override fun onAnimationStart() {
                 // Animation has started...
@@ -54,7 +56,6 @@ class DiceImageFragment : Fragment(){
 
             override fun onAnimationFinish() {
                 diceValue = getNumber()
-                println("DICE VALUE: $diceValue")
                 diceImageInterface?.animationEnded(diceValue)
             }
         }
@@ -67,12 +68,9 @@ class DiceImageFragment : Fragment(){
 
     fun getNumber():Int{
         diceValueLabel.visibility = View.VISIBLE
-        diceValue = Random.nextInt(
-            resources.getInteger(R.integer.diceMin),
-            resources.getInteger(R.integer.diceMax)+1
-        )
+        diceValue = lastAnimationFrameValue+1
         diceImage.background = ResourcesCompat.getDrawable(resources, android.R.color.transparent, null)
-        diceImage.setImageResource(diceImages[diceValue-1])
+        diceImage.setImageResource(diceImages[lastAnimationFrameValue])
         diceValueLabel.text = getString(R.string.diceValueLabel, diceValue)
         return diceValue
     }

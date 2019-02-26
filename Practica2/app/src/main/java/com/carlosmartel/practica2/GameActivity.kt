@@ -25,8 +25,8 @@ class GameActivity : AppCompatActivity(),
     private var goal: Int = -1
 
     private var cpuTurn: Boolean = false
+    private var cpuRolls: Int = -1
     private var singlePlayer = false
-    private var keepRolling = true
 
     override fun animationEnded(diceValue: Int){
         supportFragmentManager.beginTransaction().show(diceImageFragment!!).commit()
@@ -34,14 +34,22 @@ class GameActivity : AppCompatActivity(),
         playerTurnFragment!!.stopRolling()
         if(accPlayerValueInTurn == 0){
             collect(accPlayerValueInTurn)
-            keepRolling = false
         }
         else if (scores[currentPlayer-1] + accPlayerValueInTurn >= goal){
             collect(goal-scores[currentPlayer-1])
         }
+        if(currentPlayer == 2){
+            if(cpuRolls == 0){
+                collect(accPlayerValueInTurn)
+            }
+            else{
+                roll()
+            }
+        }
     }
 
     override fun roll(){
+        cpuRolls--
         diceImageFragment?.startDiceAnimation()
         /*
         val diceValue = diceImageFragment!!.getNumber()
@@ -76,29 +84,28 @@ class GameActivity : AppCompatActivity(),
 
 
     override fun collect(scoreValue: Int) {
+        playerTurnFragment?.showBtns()
+        cpuRolls = 0
         scores[currentPlayer-1] += scoreValue
         playerScoreFragment?.setScore(scores)
         if(scores[currentPlayer-1] == goal)
             openWinAlert()
         else{
+            if(!singlePlayer && resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
+                swapFragments()
             currentPlayer = if (currentPlayer == 1) 2 else 1
             playerTurnFragment?.resetAccScore()
             accPlayerValueInTurn = 0
-            if(!singlePlayer && resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
-                swapFragments()
-            if(singlePlayer && !cpuTurn){
-                println("CPU TURN - $accPlayerValueInTurn - CURRENT_PLAYER - $currentPlayer")
-                enterCPUTurn()
-                println("EXIT CPU TURN")
-                cpuTurn = false
-            }
+            if(singlePlayer && currentPlayer == 2)enterCPUTurn()
         }
     }
 
     private fun enterCPUTurn() {
-        cpuTurn = true
         playerTurnFragment?.hideBtns()
-        val rolls = Random.nextInt(1,4)
+        cpuRolls= Random.nextInt(1,4)
+        println("ENTER CPU TURN - Number of rolls: $cpuRolls")
+        roll()
+        /*
         for (index in 0 until rolls){
             if(!rollCpu()){
                 playerTurnFragment?.showBtns()
@@ -108,6 +115,7 @@ class GameActivity : AppCompatActivity(),
         }
         playerTurnFragment?.showBtns()
         collect(accPlayerValueInTurn)
+        */
     }
 
 
