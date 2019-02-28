@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.drawable.AnimationDrawable
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
+import android.os.Parcel
 import android.os.Parcelable
 import android.support.v4.app.Fragment
 import android.support.v4.content.res.ResourcesCompat
@@ -24,6 +25,8 @@ class DiceImageFragment : Fragment(){
     private var diceValue :Int = -1
     private var diceImageInterface : DiceImageListener? = null
     private var lastAnimationFrameValue = -1
+    private var cad : CustomAnimationDrawable? = null
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.image_fragment, container, false)
 
@@ -49,9 +52,9 @@ class DiceImageFragment : Fragment(){
             lastAnimationFrameValue = Random.nextInt(0,diceImages.size)
             diceAnimation.addFrame(ResourcesCompat.getDrawable(resources, diceImages[lastAnimationFrameValue], null)!!, 200)
         }
-        val cad = object : CustomAnimationDrawable(diceAnimation) {
+        cad = object : CustomAnimationDrawable(diceAnimation) {
             override fun onAnimationStart() {
-                // Animation has started...
+                diceImageInterface?.animationStarted()
             }
 
             override fun onAnimationFinish() {
@@ -59,20 +62,25 @@ class DiceImageFragment : Fragment(){
                 diceImageInterface?.animationEnded(diceValue)
             }
         }
-        cad.isOneShot = true
+        cad?.isOneShot = true
 
         diceImage.background = cad
         
-        cad.start()
+        cad?.start()
     }
 
     fun getNumber():Int{
-        diceValueLabel.visibility = View.VISIBLE
+        diceValueLabel?.visibility = View.VISIBLE
         diceValue = lastAnimationFrameValue+1
-        diceImage.background = ResourcesCompat.getDrawable(resources, android.R.color.transparent, null)
-        diceImage.setImageResource(diceImages[lastAnimationFrameValue])
-        diceValueLabel.text = getString(R.string.diceValueLabel, diceValue)
+        diceImage?.background = ResourcesCompat.getDrawable(resources, android.R.color.transparent, null)
+        diceImage?.setImageResource(diceImages[lastAnimationFrameValue])
+        diceValueLabel?.text = getString(R.string.diceValueLabel, diceValue)
         return diceValue
+    }
+
+    override fun onPause() {
+        cad?.stop()
+        super.onPause()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -93,6 +101,7 @@ class DiceImageFragment : Fragment(){
             if(parcelable != null)
                 diceImage.setImageBitmap(parcelable as Bitmap)
         }
+        cad?.start()
     }
 
     fun reset() {
@@ -103,5 +112,6 @@ class DiceImageFragment : Fragment(){
 
     interface DiceImageListener{
         fun animationEnded(diceValue: Int)
+        fun animationStarted()
     }
 }

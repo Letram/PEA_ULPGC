@@ -8,5 +8,6 @@ class CustomData{
         const val ACC_SCORE = "ACC_SCORE"
         const val CURRENT_PLAYER = "CURRENT_PLAYER"
         const val SCORES = "SCORES"
+        const val ANIMATION = "ANIMATION"
     }
 }

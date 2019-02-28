@@ -6,10 +6,17 @@ import android.os.Handler
 abstract class CustomAnimationDrawable(animationDrawable: AnimationDrawable) : AnimationDrawable() {
     private val animationHandler = Handler()
 
+    private val startRunnable = Runnable {
+        onAnimationStart()
+    }
+    private val finishRunnable = Runnable {
+        onAnimationFinish()
+    }
     init {
         for(i in 0 until animationDrawable.numberOfFrames)
             this.addFrame(animationDrawable.getFrame(i), animationDrawable.getDuration(i))
     }
+
 
     override fun start() {
         super.start()
@@ -19,6 +26,12 @@ abstract class CustomAnimationDrawable(animationDrawable: AnimationDrawable) : A
         animationHandler.postDelayed({
             onAnimationFinish()
         }, getTotalDuration().toLong())
+    }
+
+    override fun stop() {
+        super.stop()
+        animationHandler.removeCallbacks(startRunnable)
+        animationHandler.removeCallbacks(finishRunnable)
     }
 
     private fun getTotalDuration(): Int {

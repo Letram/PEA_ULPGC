@@ -24,12 +24,15 @@ class GameActivity : AppCompatActivity(),
     private var scores = intArrayOf(0, 0)
     private var goal: Int = -1
 
-    private var cpuTurn: Boolean = false
     private var cpuRolls: Int = -1
     private var singlePlayer = false
 
+    override fun animationStarted() {
+        playerTurnFragment?.startRolling()
+    }
+
     override fun animationEnded(diceValue: Int){
-        supportFragmentManager.beginTransaction().show(diceImageFragment!!).commit()
+        //supportFragmentManager.beginTransaction().show(diceImageFragment!!).commit()
         accPlayerValueInTurn = playerTurnFragment!!.setAccValue(diceValue)
         playerTurnFragment!!.stopRolling()
         if(accPlayerValueInTurn == 0){
@@ -38,7 +41,7 @@ class GameActivity : AppCompatActivity(),
         else if (scores[currentPlayer-1] + accPlayerValueInTurn >= goal){
             collect(goal-scores[currentPlayer-1])
         }
-        if(currentPlayer == 2){
+        if(currentPlayer == 2 && singlePlayer){
             if(cpuRolls == 0){
                 collect(accPlayerValueInTurn)
             }
@@ -66,7 +69,7 @@ class GameActivity : AppCompatActivity(),
         return true
         */
     }
-
+/*
     private fun rollCpu() : Boolean {
         val diceValue = diceImageFragment!!.getNumber()
         supportFragmentManager.beginTransaction().show(diceImageFragment!!).commit()
@@ -82,7 +85,7 @@ class GameActivity : AppCompatActivity(),
         return true
     }
 
-
+*/
     override fun collect(scoreValue: Int) {
         playerTurnFragment?.showBtns()
         cpuRolls = 0
@@ -105,17 +108,6 @@ class GameActivity : AppCompatActivity(),
         cpuRolls= Random.nextInt(1,4)
         println("ENTER CPU TURN - Number of rolls: $cpuRolls")
         roll()
-        /*
-        for (index in 0 until rolls){
-            if(!rollCpu()){
-                playerTurnFragment?.showBtns()
-                return
-            }
-            println(accPlayerValueInTurn)
-        }
-        playerTurnFragment?.showBtns()
-        collect(accPlayerValueInTurn)
-        */
     }
 
 

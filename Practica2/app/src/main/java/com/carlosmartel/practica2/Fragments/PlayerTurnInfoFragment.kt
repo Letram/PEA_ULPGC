@@ -27,8 +27,6 @@ class PlayerTurnInfoFragment : Fragment(){
         rollB?.setOnClickListener{
             if(collectBtn.visibility == View.INVISIBLE)collectBtn.visibility = View.VISIBLE
             playerTurnInfoInterface?.roll()
-            rollB.text = getString(R.string.rolling)
-            startTextAnimation(rollB)
         }
 
         val collectB = view?.findViewById<TextView>(R.id.collectBtn)
@@ -65,11 +63,11 @@ class PlayerTurnInfoFragment : Fragment(){
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
-        super.onViewStateRestored(savedInstanceState)
         if(savedInstanceState != null){
             accScore = savedInstanceState.getInt(CustomData.ACC_SCORE)
             pointsInTurnLabel.text = getString(R.string.pointsInTurnLabel, accScore)
         }
+        super.onViewStateRestored(savedInstanceState)
     }
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -112,6 +110,11 @@ class PlayerTurnInfoFragment : Fragment(){
     fun stopRolling() {
         scaleDown.cancel()
         rollBtn.text = getString(R.string.rollBtn)
+    }
+
+    fun startRolling() {
+        startTextAnimation(rollBtn)
+        rollBtn.text = getString(R.string.rolling)
     }
 
     interface PlayerTurnInfoInterface{
