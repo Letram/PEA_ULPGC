@@ -25,7 +25,7 @@ class DiceImageFragment : Fragment(){
     private var diceImageInterface : DiceImageListener? = null
     private var lastAnimationFrameValue = -1
     private var cad : CustomAnimationDrawable? = null
-
+    private var rolled = false
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.image_fragment, container, false)
 
@@ -44,6 +44,7 @@ class DiceImageFragment : Fragment(){
     }
 
     fun startDiceAnimation(){
+        rolled = true
         diceImage.setImageResource(android.R.color.transparent)
         cad = createAnimation()
         cad?.isOneShot = true
@@ -54,9 +55,9 @@ class DiceImageFragment : Fragment(){
 
     private fun createAnimation() : CustomAnimationDrawable{
         val diceAnimation = AnimationDrawable()
-        for(i in 1..10){
+        for(i in 1..20){
             lastAnimationFrameValue = Random.nextInt(0,diceImages.size)
-            diceAnimation.addFrame(ResourcesCompat.getDrawable(resources, diceImages[lastAnimationFrameValue], null)!!, 200)
+            diceAnimation.addFrame(ResourcesCompat.getDrawable(resources, diceImages[lastAnimationFrameValue], null)!!, 90+(10*i))
         }
         val cadAux = object : CustomAnimationDrawable(diceAnimation) {
             override fun onAnimationStart() {
@@ -90,6 +91,7 @@ class DiceImageFragment : Fragment(){
         if(diceImage.drawable != null && diceImage.drawable is BitmapDrawable){
             outState.putParcelable(CustomData.DICE_IMAGE, (diceImage.drawable as BitmapDrawable).bitmap as Parcelable)
         }
+        outState.putBoolean(CustomData.FIRST_ROLL, rolled)
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
@@ -101,8 +103,10 @@ class DiceImageFragment : Fragment(){
             val parcelable : Parcelable? = savedInstanceState.getParcelable(CustomData.DICE_IMAGE)
             if(parcelable != null)
                 diceImage.setImageBitmap(parcelable as Bitmap)
+            rolled = savedInstanceState.getBoolean(CustomData.FIRST_ROLL)
+            if(rolled)
+                startDiceAnimation()
         }
-        startDiceAnimation()
     }
 
     fun reset() {
