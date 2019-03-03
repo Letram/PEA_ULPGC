@@ -5,7 +5,6 @@ import android.graphics.Bitmap
 import android.graphics.drawable.AnimationDrawable
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
-import android.os.Parcel
 import android.os.Parcelable
 import android.support.v4.app.Fragment
 import android.support.v4.content.res.ResourcesCompat
@@ -46,13 +45,20 @@ class DiceImageFragment : Fragment(){
 
     fun startDiceAnimation(){
         diceImage.setImageResource(android.R.color.transparent)
+        cad = createAnimation()
+        cad?.isOneShot = true
+        diceImage.background = cad
+        cad?.start()
+    }
 
+
+    private fun createAnimation() : CustomAnimationDrawable{
         val diceAnimation = AnimationDrawable()
         for(i in 1..10){
             lastAnimationFrameValue = Random.nextInt(0,diceImages.size)
             diceAnimation.addFrame(ResourcesCompat.getDrawable(resources, diceImages[lastAnimationFrameValue], null)!!, 200)
         }
-        cad = object : CustomAnimationDrawable(diceAnimation) {
+        val cadAux = object : CustomAnimationDrawable(diceAnimation) {
             override fun onAnimationStart() {
                 diceImageInterface?.animationStarted()
             }
@@ -62,13 +68,8 @@ class DiceImageFragment : Fragment(){
                 diceImageInterface?.animationEnded(diceValue)
             }
         }
-        cad?.isOneShot = true
-
-        diceImage.background = cad
-        
-        cad?.start()
+        return cadAux
     }
-
     fun getNumber():Int{
         diceValueLabel?.visibility = View.VISIBLE
         diceValue = lastAnimationFrameValue+1
@@ -101,7 +102,7 @@ class DiceImageFragment : Fragment(){
             if(parcelable != null)
                 diceImage.setImageBitmap(parcelable as Bitmap)
         }
-        cad?.start()
+        startDiceAnimation()
     }
 
     fun reset() {

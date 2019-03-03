@@ -86,10 +86,10 @@ class PlayerTurnInfoFragment : Fragment(){
 
     private fun updateTexts(){
         if(playerTurnInfoInterface != null)
-            playerName.text = getString(R.string.player, playerTurnInfoInterface?.currentPlayer)
+            playerName?.text = getString(R.string.player, playerTurnInfoInterface?.currentPlayer)
         else
-            playerName.text = getString(R.string.player, 1)
-        pointsInTurnLabel.text = getString(R.string.pointsInTurnLabel, accScore)
+            playerName?.text = getString(R.string.player, 1)
+        pointsInTurnLabel?.text = getString(R.string.pointsInTurnLabel, accScore)
     }
 
     fun resetAccScore() {
@@ -98,23 +98,23 @@ class PlayerTurnInfoFragment : Fragment(){
     }
 
     fun hideBtns() {
-        collectBtn.visibility = View.INVISIBLE
-        rollBtn.visibility = View.INVISIBLE
+        collectBtn?.visibility = View.INVISIBLE
+        rollBtn?.visibility = View.INVISIBLE
     }
 
     fun showBtns(){
-        collectBtn.visibility = View.VISIBLE
-        rollBtn.visibility = View.VISIBLE
+        collectBtn?.visibility = View.VISIBLE
+        rollBtn?.visibility = View.VISIBLE
     }
 
     fun stopRolling() {
         scaleDown.cancel()
-        rollBtn.text = getString(R.string.rollBtn)
+        rollBtn?.text = getString(R.string.rollBtn)
     }
 
     fun startRolling() {
         startTextAnimation(rollBtn)
-        rollBtn.text = getString(R.string.rolling)
+        rollBtn?.text = getString(R.string.rolling)
     }
 
     interface PlayerTurnInfoInterface{
