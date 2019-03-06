@@ -1,6 +1,4 @@
 <resources>
-    <string name="app_name">Practica2</string>
-    <string name="title">Welcome to the app, select the number of players.</string>
     <string name="single_player">Single player</string>
     <string name="multi_player">Multi player</string>
     <string name="player">Player %1$d</string>
@@ -18,5 +16,7 @@
     <string name="alertQuestion">Are you sure you want to exit?</string>
     <string name="alertYes">Yes</string>
     <string name="alertNo">No</string>
+    <string name="title">Welcome to the app, select the number of players.</string>
+    <string name="app_name">Practica2</string>
 
 </resources>

@@ -54,38 +54,8 @@ class GameActivity : AppCompatActivity(),
     override fun roll(){
         cpuRolls--
         diceImageFragment?.startDiceAnimation()
-        /*
-        val diceValue = diceImageFragment!!.getNumber()
-        supportFragmentManager.beginTransaction().show(diceImageFragment!!).commit()
-        accPlayerValueInTurn = playerTurnFragment!!.setAccValue(diceValue)
-        if(accPlayerValueInTurn == 0){
-            collect(accPlayerValueInTurn)
-            return false
-        }
-        else if (scores[currentPlayer-1] + accPlayerValueInTurn >= goal){
-            collect(goal-scores[currentPlayer-1])
-            return false
-        }
-        return true
-        */
-    }
-/*
-    private fun rollCpu() : Boolean {
-        val diceValue = diceImageFragment!!.getNumber()
-        supportFragmentManager.beginTransaction().show(diceImageFragment!!).commit()
-        accPlayerValueInTurn = playerTurnFragment!!.setAccValue(diceValue)
-        if(accPlayerValueInTurn == 0){
-            collect(accPlayerValueInTurn)
-            return false
-        }
-        else if (scores[currentPlayer-1] + accPlayerValueInTurn >= goal){
-            collect(goal-scores[currentPlayer-1])
-            return false
-        }
-        return true
     }
 
-*/
     override fun collect(scoreValue: Int) {
         playerTurnFragment?.showBtns()
         cpuRolls = 0

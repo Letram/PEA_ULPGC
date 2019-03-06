@@ -26,6 +26,9 @@ class DiceImageFragment : Fragment(){
     private var lastAnimationFrameValue = -1
     private var cad : CustomAnimationDrawable? = null
     private var rolled = false
+    private var animStarted = false
+    private var animEnded = false
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.image_fragment, container, false)
 
@@ -45,6 +48,8 @@ class DiceImageFragment : Fragment(){
 
     fun startDiceAnimation(){
         rolled = true
+        animStarted = true
+        animEnded = false
         diceImage.setImageResource(android.R.color.transparent)
         cad = createAnimation()
         cad?.isOneShot = true
@@ -59,7 +64,7 @@ class DiceImageFragment : Fragment(){
             lastAnimationFrameValue = Random.nextInt(0,diceImages.size)
             diceAnimation.addFrame(ResourcesCompat.getDrawable(resources, diceImages[lastAnimationFrameValue], null)!!, 90+(10*i))
         }
-        val cadAux = object : CustomAnimationDrawable(diceAnimation) {
+        return object : CustomAnimationDrawable(diceAnimation) {
             override fun onAnimationStart() {
                 diceImageInterface?.animationStarted()
             }
@@ -67,9 +72,10 @@ class DiceImageFragment : Fragment(){
             override fun onAnimationFinish() {
                 diceValue = getNumber()
                 diceImageInterface?.animationEnded(diceValue)
+                animEnded = true
+                animStarted = false
             }
         }
-        return cadAux
     }
     fun getNumber():Int{
         diceValueLabel?.visibility = View.VISIBLE
@@ -92,19 +98,23 @@ class DiceImageFragment : Fragment(){
             outState.putParcelable(CustomData.DICE_IMAGE, (diceImage.drawable as BitmapDrawable).bitmap as Parcelable)
         }
         outState.putBoolean(CustomData.FIRST_ROLL, rolled)
+        outState.putBoolean(CustomData.ANIM_STARTED, animStarted)
+        outState.putBoolean(CustomData.ANIM_ENDED, animEnded)
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
         if(savedInstanceState != null){
-            diceValue = savedInstanceState.getInt(CustomData.DICE_VALUE)
+            diceValue = if(savedInstanceState.getInt(CustomData.DICE_VALUE) == -1) 0 else savedInstanceState.getInt(CustomData.DICE_VALUE)
             diceValueLabel.text = resources.getString(R.string.diceValueLabel, diceValue)
             diceValueLabel.visibility = View.VISIBLE
             val parcelable : Parcelable? = savedInstanceState.getParcelable(CustomData.DICE_IMAGE)
             if(parcelable != null)
                 diceImage.setImageBitmap(parcelable as Bitmap)
             rolled = savedInstanceState.getBoolean(CustomData.FIRST_ROLL)
-            if(rolled)
+            animStarted = savedInstanceState.getBoolean(CustomData.ANIM_STARTED)
+            animEnded = savedInstanceState.getBoolean(CustomData.ANIM_ENDED)
+            if(rolled && (animStarted && !animEnded) )
                 startDiceAnimation()
         }
     }

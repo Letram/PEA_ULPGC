@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Practica2</string>
+    <string name="single_player">Un jugador</string>
+    <string name="multi_player">Dos jugadores</string>
+    <string name="player">Jugador %1$d</string>
+    <string name="diceValueLabel">Valor obtenido: %1$d</string>
+    <string name="pointsInTurnLabel">Puntos obtenidos: %1$d</string>
+    <string name="rollBtn">Tirar</string>
+    <string name="rolling">Tirando...</string>
+    <string name="collectBtn">Recoger</string>
+    <string name="winTitle">¡Juego terminado!</string>
+    <string name="winDescription">"¡%1$d gana! "</string>
+    <string name="winNewGame">Jugar de nuevo</string>
+    <string name="winExit">Salir</string>
+    <string name="alertTitle">Salir de la aplicación</string>
+    <string name="alertQuestion">Seguro de que quiere salir?</string>
+    <string name="alertYes">Sí</string>
+    <string name="alertNo">No</string>
+    <string name="title">Bienvenido a la aplicación, seleccione el número de jugadores</string>
+    <string name="machine">Máquina</string>
+</resources>

@@ -9,5 +9,7 @@ class CustomData{
         const val CURRENT_PLAYER = "CURRENT_PLAYER"
         const val SCORES = "SCORES"
         const val FIRST_ROLL = "FIRST_ROLL"
+        const val ANIM_STARTED= "ANIM_STARTED"
+        const val ANIM_ENDED = "ANIM_ENDED"
     }
 }

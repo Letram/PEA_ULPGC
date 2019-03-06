@@ -33,10 +33,10 @@ class PlayerScoreFragment : Fragment(){
     }
 
     private fun updateBars(ints: IntArray) {
-        progressBar1.progress = ints[0]
-        player1Score.text = ints[0].toString()
-        progressBar2.progress = ints[1]
-        otherPlayerScore.text = ints[1].toString()
+        progressBar1?.progress = ints[0]
+        player1Score?.text = ints[0].toString()
+        progressBar2?.progress = ints[1]
+        otherPlayerScore?.text = ints[1].toString()
     }
 
     fun setup(gameMode: String?) {
