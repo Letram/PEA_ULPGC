@@ -21,6 +21,8 @@ class PlayerTurnInfoFragment : Fragment(){
     private var scaleDown: ObjectAnimator = ObjectAnimator()
     private var rollB : TextView? = null
     private var collectB : TextView? = null
+    private var currentPlayer = -1
+    private var cpuTurn = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.player_turn_info_alt, container, false)
@@ -31,12 +33,14 @@ class PlayerTurnInfoFragment : Fragment(){
         }
 
         collectB = view?.findViewById(R.id.collectBtn)
-        collectB?.visibility = if(accScore == 0) View.GONE else View.VISIBLE
+        if(!cpuTurn)collectB?.visibility = if(accScore == 0) View.GONE else View.VISIBLE
         collectB?.setOnClickListener{
             playerTurnInfoInterface?.collect(accScore)
         }
 
-        view?.findViewById<TextView>(R.id.playerName)?.text = getString(R.string.player, resources.getInteger(R.integer.currentPlayer))
+        currentPlayer = resources.getInteger(R.integer.currentPlayer)
+
+        view?.findViewById<TextView>(R.id.playerName)?.text = getString(R.string.player, currentPlayer)
 
         view?.findViewById<TextView>(R.id.pointsInTurnLabel)?.text = getString(R.string.pointsInTurnLabel, accScore)
 
@@ -58,16 +62,17 @@ class PlayerTurnInfoFragment : Fragment(){
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
+        scaleDown.cancel()
         super.onSaveInstanceState(outState)
         outState.putInt(CustomData.ACC_SCORE, accScore)
-        outState.putInt(CustomData.CURRENT_PLAYER, if(playerTurnInfoInterface != null) playerTurnInfoInterface!!.currentPlayer else 1)
+        outState.putInt(CustomData.CURRENT_PLAYER, currentPlayer)
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         if(savedInstanceState != null){
             accScore = savedInstanceState.getInt(CustomData.ACC_SCORE)
-            collectB?.visibility = if(accScore == 0) View.GONE else View.VISIBLE
-            pointsInTurnLabel.text = getString(R.string.pointsInTurnLabel, accScore)
+            currentPlayer = savedInstanceState.getInt(CustomData.CURRENT_PLAYER)
+            updateTexts()
         }
         super.onViewStateRestored(savedInstanceState)
     }
@@ -75,23 +80,36 @@ class PlayerTurnInfoFragment : Fragment(){
         super.onAttach(context)
         try{
             playerTurnInfoInterface = context as PlayerTurnInfoInterface
+            currentPlayer = playerTurnInfoInterface!!.currentPlayer
         } catch (e: ClassCastException){
             throw ClassCastException(context?.toString() + "must implement PlayerTurnInfoInterface")
         }
     }
 
+    /**
+     * Sets the accumulated value of the player into the texts and returns it to the activity
+     *
+     * @param diceValue value we have to add to our accumulated value
+     * @return the total accumulated value
+     */
     fun setAccValue(diceValue: Int):Int {
         accScore = if(diceValue == 1) 0 else accScore + diceValue
-        collectB?.visibility = if(accScore > 0) View.VISIBLE else View.GONE
         updateTexts()
         return accScore
     }
-    fun resetAccScore() {
+
+    /**
+     * Resets the score of the current player for their turn
+     *
+     * @param currentPlayer player whose turn is playing now
+     */
+    fun resetAccScore(currentPlayer: Int) {
         accScore = 0
+        this.currentPlayer = currentPlayer
         updateTexts()
     }
 
-    fun hideBtns() {
+    private fun hideBtns() {
         collectB?.visibility = View.INVISIBLE
         rollB?.visibility = View.INVISIBLE
     }
@@ -99,6 +117,7 @@ class PlayerTurnInfoFragment : Fragment(){
     fun showBtns(){
         collectB?.visibility = View.VISIBLE
         rollB?.visibility = View.VISIBLE
+        cpuTurn = false
     }
 
     fun stopRolling() {
@@ -116,12 +135,14 @@ class PlayerTurnInfoFragment : Fragment(){
     }
 
     private fun updateTexts(){
-        collectB?.visibility = if(accScore == 0) View.GONE else View.VISIBLE
-        if(playerTurnInfoInterface != null)
-            playerName?.text = getString(R.string.player, playerTurnInfoInterface?.currentPlayer)
-        else
-            playerName?.text = getString(R.string.player, 1)
+        if(!cpuTurn)collectB?.visibility = if(accScore == 0) View.GONE else View.VISIBLE
+        playerName?.text = getString(R.string.player, currentPlayer)
         pointsInTurnLabel?.text = getString(R.string.pointsInTurnLabel, accScore)
+    }
+
+    fun cpuTurn() {
+        hideBtns()
+        cpuTurn = true
     }
 
     interface PlayerTurnInfoInterface{

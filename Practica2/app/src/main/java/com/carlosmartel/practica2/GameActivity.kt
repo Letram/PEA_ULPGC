@@ -32,7 +32,6 @@ class GameActivity : AppCompatActivity(),
     }
 
     override fun animationEnded(diceValue: Int){
-        //supportFragmentManager.beginTransaction().show(diceImageFragment!!).commit()
         accPlayerValueInTurn = playerTurnFragment!!.setAccValue(diceValue)
         playerTurnFragment!!.stopRolling()
         if(accPlayerValueInTurn == 0){
@@ -53,6 +52,7 @@ class GameActivity : AppCompatActivity(),
 
     override fun roll(){
         cpuRolls--
+        println(cpuRolls)
         diceImageFragment?.startDiceAnimation()
     }
 
@@ -67,14 +67,14 @@ class GameActivity : AppCompatActivity(),
             if(!singlePlayer && resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
                 swapFragments()
             currentPlayer = if (currentPlayer == 1) 2 else 1
-            playerTurnFragment?.resetAccScore()
+            playerTurnFragment?.resetAccScore(currentPlayer)
             accPlayerValueInTurn = 0
             if(singlePlayer && currentPlayer == 2)enterCPUTurn()
         }
     }
 
     private fun enterCPUTurn() {
-        playerTurnFragment?.hideBtns()
+        playerTurnFragment?.cpuTurn()
         cpuRolls= Random.nextInt(1,4)
         println("ENTER CPU TURN - Number of rolls: $cpuRolls")
         roll()
@@ -90,6 +90,9 @@ class GameActivity : AppCompatActivity(),
         findViewById<View>(R.id.imageFragment).layoutParams = infoLayout
     }
 
+    /**
+     * Opens an alert when a player wins (any player or CPU, doesn't matter). That alert cannot be dismissed using the back button
+     */
     private fun openWinAlert() {
         val winner = when {
             intent!!.extras!!.getString(CustomData.EXTRA_GAMEMODE) == "multi" -> getString(R.string.player, currentPlayer)
@@ -110,7 +113,7 @@ class GameActivity : AppCompatActivity(),
                     else -> 1
                 }
 
-                playerTurnFragment?.resetAccScore()
+                playerTurnFragment?.resetAccScore(currentPlayer)
                 playerScoreFragment?.reset()
                 diceImageFragment?.reset()
                 accPlayerValueInTurn = 0
@@ -134,8 +137,6 @@ class GameActivity : AppCompatActivity(),
         playerScoreFragment = supportFragmentManager.findFragmentById(R.id.playerScoreFragment) as PlayerScoreFragment
         playerScoreFragment?.setup(intent?.extras?.getString(CustomData.EXTRA_GAMEMODE))
         playerTurnFragment = supportFragmentManager.findFragmentById(R.id.turnInfoFragment) as PlayerTurnInfoFragment
-
-
     }
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -144,13 +145,12 @@ class GameActivity : AppCompatActivity(),
         outState.putIntArray(CustomData.SCORES, scores)
     }
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
-        super.onRestoreInstanceState(savedInstanceState)
         if(savedInstanceState != null){
             currentPlayer = savedInstanceState.getInt(CustomData.CURRENT_PLAYER)
             accPlayerValueInTurn = savedInstanceState.getInt(CustomData.ACC_SCORE)
             scores = savedInstanceState.getIntArray(CustomData.SCORES)!!
         }
-
+        super.onRestoreInstanceState(savedInstanceState)
     }
     override fun onBackPressed() {
         android.app.AlertDialog.Builder(this)

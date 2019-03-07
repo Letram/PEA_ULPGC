@@ -29,6 +29,8 @@ class DiceImageFragment : Fragment(){
     private var animStarted = false
     private var animEnded = false
 
+    val numberOfFrames = 20
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.image_fragment, container, false)
 
@@ -50,17 +52,16 @@ class DiceImageFragment : Fragment(){
         rolled = true
         animStarted = true
         animEnded = false
-        diceImage.setImageResource(android.R.color.transparent)
         cad = createAnimation()
         cad?.isOneShot = true
-        diceImage.background = cad
+        diceImage.setImageDrawable(cad)
         cad?.start()
     }
 
 
     private fun createAnimation() : CustomAnimationDrawable{
         val diceAnimation = AnimationDrawable()
-        for(i in 1..20){
+        for(i in 1..numberOfFrames){
             lastAnimationFrameValue = Random.nextInt(0,diceImages.size)
             diceAnimation.addFrame(ResourcesCompat.getDrawable(resources, diceImages[lastAnimationFrameValue], null)!!, 90+(10*i))
         }
@@ -80,8 +81,6 @@ class DiceImageFragment : Fragment(){
     fun getNumber():Int{
         diceValueLabel?.visibility = View.VISIBLE
         diceValue = lastAnimationFrameValue+1
-        diceImage?.background = ResourcesCompat.getDrawable(resources, android.R.color.transparent, null)
-        diceImage?.setImageResource(diceImages[lastAnimationFrameValue])
         diceValueLabel?.text = getString(R.string.diceValueLabel, diceValue)
         return diceValue
     }

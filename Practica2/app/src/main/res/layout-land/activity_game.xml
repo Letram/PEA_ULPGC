@@ -33,20 +33,21 @@
             app:layout_constraintStart_toStartOf="@+id/guideline50"/>
 
     <fragment
-            android:id="@+id/turnInfoFragment"
-            android:name="com.carlosmartel.practica2.Fragments.PlayerTurnInfoFragment"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_chainStyle="spread"
-            app:layout_constraintStart_toEndOf="@+id/guideline10"
-            app:layout_constraintStart_toStartOf="@+id/guideline10"
-            app:layout_constraintTop_toBottomOf="@+id/playerScoreFragment"
-            tools:layout="@layout/player_turn_info_alt" android:layout_marginEnd="8dp"
-            app:layout_constraintEnd_toStartOf="@+id/imageFragment"/>
+        android:id="@+id/turnInfoFragment"
+        android:name="com.carlosmartel.practica2.Fragments.PlayerTurnInfoFragment"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline50"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintStart_toEndOf="@+id/guideline10"
+        app:layout_constraintStart_toStartOf="@+id/guideline10"
+        app:layout_constraintTop_toBottomOf="@+id/playerScoreFragment"
+        tools:layout="@layout/player_turn_info_alt" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline10"
