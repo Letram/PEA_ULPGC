@@ -21,20 +21,21 @@
     <fragment
             android:id="@+id/imageFragment"
             android:name="com.carlosmartel.practica2.Fragments.DiceImageFragment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/guideline90"
             app:layout_constraintTop_toBottomOf="@+id/playerScoreFragment"
-            tools:layout="@layout/image_fragment"/>
+            tools:layout="@layout/image_fragment" android:layout_marginStart="8dp"
+            app:layout_constraintStart_toStartOf="@+id/guideline50"/>
 
     <fragment
             android:id="@+id/turnInfoFragment"
             android:name="com.carlosmartel.practica2.Fragments.PlayerTurnInfoFragment"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
@@ -44,7 +45,8 @@
             app:layout_constraintStart_toEndOf="@+id/guideline10"
             app:layout_constraintStart_toStartOf="@+id/guideline10"
             app:layout_constraintTop_toBottomOf="@+id/playerScoreFragment"
-            tools:layout="@layout/player_turn_info_alt"/>
+            tools:layout="@layout/player_turn_info_alt" android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toStartOf="@+id/imageFragment"/>
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline10"
@@ -59,4 +61,10 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.9" />
+    <android.support.constraint.Guideline
+            android:id="@+id/guideline50"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5"/>
 </android.support.constraint.ConstraintLayout>
