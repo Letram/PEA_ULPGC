@@ -13,7 +13,7 @@
         android:layout_columnSpan="2"
         android:layout_gravity="center"
         android:text="@string/title"
-        android:textSize="18sp" />
+        android:textSize="@dimen/button" />
 
     <Button
         android:id="@+id/singleBtn"
@@ -24,7 +24,7 @@
         android:layout_columnSpan="2"
         android:layout_gravity="center"
         android:text="@string/single_player"
-        />
+        android:textSize="@dimen/button" />
 
     <Button
         android:id="@+id/multiBtn"
@@ -34,6 +34,7 @@
         android:layout_column="0"
         android:layout_columnSpan="2"
         android:layout_gravity="center"
-        android:text="@string/multi_player" />
+        android:text="@string/multi_player"
+        android:textSize="@dimen/button" />
 
 </GridLayout>

@@ -59,6 +59,9 @@ class DiceImageFragment : Fragment(){
     }
 
 
+    /**
+     * Creates a custom animation drawable using an existing set of images.
+     */
     private fun createAnimation() : CustomAnimationDrawable{
         val diceAnimation = AnimationDrawable()
         for(i in 1..numberOfFrames){
@@ -78,6 +81,7 @@ class DiceImageFragment : Fragment(){
             }
         }
     }
+
     fun getNumber():Int{
         diceValueLabel?.visibility = View.VISIBLE
         diceValue = lastAnimationFrameValue+1

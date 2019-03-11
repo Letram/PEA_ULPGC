@@ -10,6 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/player"
+        android:textSize="@dimen/normalText"
         app:layout_columnSpan="7"
         app:layout_gravity="center" />
 
@@ -18,8 +19,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/pointsInTurnLabel"
+        android:textSize="@dimen/normalText"
         app:layout_columnSpan="7"
-        app:layout_gravity="center"/>
+        app:layout_gravity="center" />
 
     <Space app:layout_columnWeight="1"/>
 
@@ -29,9 +31,9 @@
         android:layout_height="wrap_content"
         android:text="@string/rollBtn"
         android:textColor="@android:color/holo_blue_light"
-        android:textSize="18sp"
+        android:textSize="@dimen/button"
         android:textStyle="bold"
-        app:layout_gravity="start"/>
+        app:layout_gravity="start" />
 
     <Space app:layout_columnWeight="1"/>
 
@@ -39,11 +41,11 @@
         android:id="@+id/collectBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:gravity="end"
         android:text="@string/collectBtn"
         android:textColor="@android:color/holo_blue_light"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:gravity="end"/>
+        android:textSize="@dimen/button"
+        android:textStyle="bold" />
 
     <Space app:layout_columnWeight="1"/>
 

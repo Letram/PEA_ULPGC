@@ -31,6 +31,12 @@ class GameActivity : AppCompatActivity(),
         playerTurnFragment?.startRolling()
     }
 
+    /**
+     * @param diceValue: Int value of the last rolled dice
+     *
+     * This function is used to sum the value of the dice to the player's accumulated value in that turn.
+     * In case of having reached the goal, then the points are collected automatically.
+     */
     override fun animationEnded(diceValue: Int){
         accPlayerValueInTurn = playerTurnFragment!!.setAccValue(diceValue)
         playerTurnFragment!!.stopRolling()
@@ -50,12 +56,20 @@ class GameActivity : AppCompatActivity(),
         }
     }
 
+    /**
+     *
+     */
     override fun roll(){
         cpuRolls--
-        println(cpuRolls)
         diceImageFragment?.startDiceAnimation()
     }
 
+    /**
+     * Collects the accumulated points of the current player turn and updates the view.
+     * In case of having reached the goal, the game is over.
+     *
+     * @param scoreValue: Int score accumulated in the current turn.
+     */
     override fun collect(scoreValue: Int) {
         playerTurnFragment?.showBtns()
         cpuRolls = 0
