@@ -1,6 +1,7 @@
-package com.carlosmartel.project3.models.product
+package com.carlosmartel.project3.dao
 
 import android.arch.persistence.room.*
+import com.carlosmartel.project3.models.Product
 
 @Dao
 interface ProductQuery{
