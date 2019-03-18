@@ -1,4 +1,4 @@
-package com.carlosmartel.project3.models
+package com.carlosmartel.project3.data.models
 
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.ForeignKey

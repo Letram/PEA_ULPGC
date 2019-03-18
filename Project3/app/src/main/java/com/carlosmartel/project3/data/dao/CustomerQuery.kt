@@ -1,7 +1,7 @@
-package com.carlosmartel.project3.dao
+package com.carlosmartel.project3.data.dao
 
 import android.arch.persistence.room.*
-import com.carlosmartel.project3.models.Customer
+import com.carlosmartel.project3.data.models.Customer
 
 @Dao
 interface CustomerQuery{

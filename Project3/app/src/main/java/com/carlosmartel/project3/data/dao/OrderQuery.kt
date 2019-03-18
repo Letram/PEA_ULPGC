@@ -1,7 +1,7 @@
-package com.carlosmartel.project3.dao
+package com.carlosmartel.project3.data.dao
 
 import android.arch.persistence.room.*
-import com.carlosmartel.project3.models.Order
+import com.carlosmartel.project3.data.models.Order
 
 @Dao
 interface OrderQuery{

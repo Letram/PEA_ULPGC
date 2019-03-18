@@ -8,6 +8,10 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import com.carlosmartel.project3.data.database.DatabaseManager
+import com.carlosmartel.project3.data.models.Customer
+import com.carlosmartel.project3.data.models.Order
+import com.carlosmartel.project3.data.models.Product
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 

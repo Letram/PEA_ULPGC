@@ -1,4 +1,4 @@
-package com.carlosmartel.project3.database
+package com.carlosmartel.project3.data.database
 
 import android.arch.persistence.room.TypeConverter
 import java.util.*

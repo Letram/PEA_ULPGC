@@ -1,13 +1,13 @@
-package com.carlosmartel.project3.database
+package com.carlosmartel.project3.data.database
 
 import android.arch.persistence.room.*
 import android.content.Context
-import com.carlosmartel.project3.models.Customer
-import com.carlosmartel.project3.dao.CustomerQuery
-import com.carlosmartel.project3.models.Order
-import com.carlosmartel.project3.dao.OrderQuery
-import com.carlosmartel.project3.models.Product
-import com.carlosmartel.project3.dao.ProductQuery
+import com.carlosmartel.project3.data.models.Customer
+import com.carlosmartel.project3.data.dao.CustomerQuery
+import com.carlosmartel.project3.data.models.Order
+import com.carlosmartel.project3.data.dao.OrderQuery
+import com.carlosmartel.project3.data.models.Product
+import com.carlosmartel.project3.data.dao.ProductQuery
 
 @Database(entities = [Customer::class, Order::class, Product::class], version = 1, exportSchema = true)
 @TypeConverters(MyTypeConverters::class)
