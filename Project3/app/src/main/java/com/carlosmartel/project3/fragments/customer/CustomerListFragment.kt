@@ -1,4 +1,4 @@
-package com.carlosmartel.project3.fragments
+package com.carlosmartel.project3.fragments.customer
 
 import android.content.Context
 import android.net.Uri
@@ -11,6 +11,8 @@ import android.view.View
 import android.view.ViewGroup
 
 import com.carlosmartel.project3.R
+import com.carlosmartel.project3.data.dao.CustomerQuery
+import com.carlosmartel.project3.data.database.DatabaseManager
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -32,27 +34,36 @@ class CustomerListFragment : Fragment() {
     private lateinit var viewAdapter: RecyclerView.Adapter<*>
     private lateinit var viewManager: RecyclerView.LayoutManager
 
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private lateinit var db: DatabaseManager
+    private lateinit var customerQuery: CustomerQuery
+
     private var listener: OnFragmentInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-        viewManager = LinearLayoutManager(context)
-
     }
 
+
+    //TODO: Crear una lista dummy y enlazar el fragmento con los tabs
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_customer_list, container, false)
+        val view = inflater.inflate(R.layout.fragment_customer_list, container, false)
+
+        db = DatabaseManager.getInstance(context!!)!!
+        customerQuery = db.customerQuery()
+
+        viewManager = LinearLayoutManager(context)
+        viewAdapter = CustomerListAdapter(customerQuery.getAllCustomers())
+        recyclerView = view.findViewById(R.id.RV)
+        recyclerView.apply {
+            layoutManager = viewManager
+            adapter = viewAdapter
+        }
+
+        return view
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -101,12 +112,7 @@ class CustomerListFragment : Fragment() {
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            CustomerListFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+        fun newInstance() =
+            CustomerListFragment().apply {}
     }
 }
