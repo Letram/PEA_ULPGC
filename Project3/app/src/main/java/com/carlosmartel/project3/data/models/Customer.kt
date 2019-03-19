@@ -6,7 +6,7 @@ import android.arch.persistence.room.PrimaryKey
 
 @Entity (indices = [Index(value = arrayOf("uid"))])
 data class Customer (
-    @PrimaryKey(autoGenerate = true) var uid: Int,
+    @PrimaryKey(autoGenerate = true) var uid: Int = 0,
     var address: String,
     var name: String
 )

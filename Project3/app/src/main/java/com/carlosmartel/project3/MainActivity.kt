@@ -3,7 +3,10 @@ package com.carlosmartel.project3
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.design.widget.NavigationView
+import android.support.design.widget.TabLayout
 import android.support.v4.view.GravityCompat
+import android.support.v4.view.PagerAdapter
+import android.support.v4.view.ViewPager
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
@@ -12,10 +15,24 @@ import com.carlosmartel.project3.data.database.DatabaseManager
 import com.carlosmartel.project3.data.models.Customer
 import com.carlosmartel.project3.data.models.Order
 import com.carlosmartel.project3.data.models.Product
+import com.carlosmartel.project3.fragments.MyFragmentPagerAdapter
+import com.carlosmartel.project3.fragments.customer.CustomerFragment
+import com.carlosmartel.project3.fragments.order.OrderFragment
+import com.carlosmartel.project3.fragments.product.ProductFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class MainActivity :
+    AppCompatActivity(),
+    NavigationView.OnNavigationItemSelectedListener,
+    OrderFragment.OnFragmentInteractionListener,
+    ProductFragment.OnFragmentInteractionListener,
+    CustomerFragment.OnFragmentInteractionListener
+{
+
+    private lateinit var viewPager: ViewPager
+    private lateinit var mAdapter: MyFragmentPagerAdapter
+    private lateinit var tabLayout: TabLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +51,18 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         toggle.syncState()
 
         nav_view.setNavigationItemSelectedListener(this)
+
+        mAdapter = MyFragmentPagerAdapter(supportFragmentManager)
+        mAdapter.setTitles(arrayOf(
+            getString(R.string.customer_tab),
+            getString(R.string.order_tab),
+            getString(R.string.product_tab))
+        )
+        viewPager = findViewById(R.id.View_Pager)
+        viewPager.adapter = mAdapter
+
+        tabLayout = findViewById(R.id.tabLayout)
+        tabLayout.setupWithViewPager(viewPager)
     }
 
     override fun onBackPressed() {
@@ -54,9 +83,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        when (item.itemId) {
-            R.id.action_settings -> return true
-            else -> return super.onOptionsItemSelected(item)
+        return when (item.itemId) {
+            R.id.action_settings -> true
+            else -> super.onOptionsItemSelected(item)
         }
     }
 

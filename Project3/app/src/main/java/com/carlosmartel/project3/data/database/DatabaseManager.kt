@@ -8,6 +8,12 @@ import com.carlosmartel.project3.data.models.Order
 import com.carlosmartel.project3.data.dao.OrderQuery
 import com.carlosmartel.project3.data.models.Product
 import com.carlosmartel.project3.data.dao.ProductQuery
+import android.os.AsyncTask.execute
+import android.arch.persistence.db.SupportSQLiteDatabase
+import android.support.annotation.NonNull
+import android.arch.persistence.room.RoomDatabase
+import android.os.AsyncTask
+
 
 @Database(entities = [Customer::class, Order::class, Product::class], version = 1, exportSchema = true)
 @TypeConverters(MyTypeConverters::class)
@@ -34,7 +40,9 @@ abstract class DatabaseManager: RoomDatabase(){
                         context.applicationContext,
                         DatabaseManager::class.java,
                         dbName
-                    ).build()
+                    )
+                        .addCallback(roomCallback)
+                        .build()
                 }
             }
             return INSTANCE
@@ -42,6 +50,25 @@ abstract class DatabaseManager: RoomDatabase(){
 
         fun destroyDatabase(){
             INSTANCE = null
+        }
+
+        private val roomCallback = object : RoomDatabase.Callback() {
+            override fun onCreate(db: SupportSQLiteDatabase) {
+                super.onCreate(db)
+                PopulateDbAsyncTask(INSTANCE).execute()
+            }
+        }
+
+        class PopulateDbAsyncTask(instance: DatabaseManager?): AsyncTask<Void, Void, Void>() {
+            override fun doInBackground(vararg params: Void?): Void? {
+                customerQuery.insert(Customer(address = "Casa", name = "Pepe"))
+                customerQuery.insert(Customer(address = "Casa2", name = "Pepe2"))
+                customerQuery.insert(Customer(address = "Casa3", name = "Pepe3"))
+                return null
+            }
+
+            private var customerQuery: CustomerQuery = instance!!.customerQuery()
+
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.carlosmartel.project3.data.dao
 
+import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.*
 import com.carlosmartel.project3.data.models.Customer
 
@@ -9,10 +10,13 @@ interface CustomerQuery{
     fun getCustomer(uid: Int): Customer
 
     @Query("SELECT * FROM Customer")
-    fun getAllCustomers(): List<Customer>
+    fun getAllCustomers(): LiveData<List<Customer>>
 
     @Insert
     fun insertAll(vararg customers: Customer)
+
+    @Insert
+    fun insert(customer: Customer)
 
     @Delete
     fun deleteCustomer(customer: Customer)
