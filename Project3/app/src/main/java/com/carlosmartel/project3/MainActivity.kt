@@ -45,7 +45,7 @@ class MainActivity :
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-        fab.setOnClickListener { view ->
+        fab.setOnClickListener {
             val intent = Intent(this@MainActivity, AddCustomerActivity::class.java)
             startActivityForResult(intent, CustomData.ADD_CUSTOMER_REQ)
         }
