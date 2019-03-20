@@ -8,15 +8,15 @@ import android.widget.TextView
 import com.carlosmartel.project3.R
 import com.carlosmartel.project3.data.models.Customer
 
-class CustomerListAdapter(private val customers: List<Customer>):
-RecyclerView.Adapter<CustomerListAdapter.CustomerViewHolder>(){
+class CustomerListAdapter: RecyclerView.Adapter<CustomerListAdapter.CustomerViewHolder>(){
 
+    private var customers: List<Customer> = ArrayList<Customer>()
     class CustomerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         var customerName: TextView = itemView.findViewById(R.id.customerName)
         var customerAddress: TextView = itemView.findViewById(R.id.customerAddress)
         var customerID: TextView = itemView.findViewById(R.id.customerID)
-
+        var customer: Customer? = null
     }
 
 
@@ -35,5 +35,11 @@ RecyclerView.Adapter<CustomerListAdapter.CustomerViewHolder>(){
         customerViewHolder.customerName.text = currentCustomer.name
         customerViewHolder.customerAddress.text = currentCustomer.address
         customerViewHolder.customerID.text = currentCustomer.uid.toString()
+        customerViewHolder.customer = currentCustomer
+    }
+
+    fun setCustomers(customers: List<Customer>){
+        this.customers = customers
+        notifyDataSetChanged()
     }
 }

@@ -6,6 +6,8 @@ import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,22 +20,36 @@ class CustomerFragment : Fragment() {
 
     private var listener: OnFragmentInteractionListener? = null
     private lateinit var customerViewModel: CustomerViewModel
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var recyclerAdapter: CustomerListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        customerViewModel = ViewModelProviders.of(this@CustomerFragment).get(CustomerViewModel(application = activity!!.application)::class.java)
-        customerViewModel.getAllCustomers().observe(this, Observer {
-            Toast.makeText(context, "onChanged", Toast.LENGTH_SHORT).show()
-        })
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        val v = inflater.inflate(R.layout.fragment_customer, container, false)
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_customer, container, false)
+        recyclerView = v.findViewById(R.id.recycler_view)
+        recyclerAdapter = CustomerListAdapter()
+
+        recyclerView.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = recyclerAdapter
+        }
+
+
+        customerViewModel = ViewModelProviders.of(this.activity!!).get(CustomerViewModel(application = activity!!.application)::class.java)
+        customerViewModel.getAllCustomers().observe(this, Observer {
+            Toast.makeText(context, "onChanged", Toast.LENGTH_SHORT).show()
+            if (it != null) {
+                recyclerAdapter.setCustomers(customers = it)
+            }
+        })
+        return v
     }
 
     override fun onAttach(context: Context) {

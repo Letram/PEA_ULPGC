@@ -1,5 +1,8 @@
 package com.carlosmartel.project3
 
+import android.app.Activity
+import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.design.widget.NavigationView
@@ -11,16 +14,19 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import com.carlosmartel.project3.data.database.DatabaseManager
 import com.carlosmartel.project3.data.models.Customer
 import com.carlosmartel.project3.data.models.Order
 import com.carlosmartel.project3.data.models.Product
 import com.carlosmartel.project3.fragments.MyFragmentPagerAdapter
 import com.carlosmartel.project3.fragments.customer.CustomerFragment
+import com.carlosmartel.project3.fragments.customer.CustomerViewModel
 import com.carlosmartel.project3.fragments.order.OrderFragment
 import com.carlosmartel.project3.fragments.product.ProductFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
+import kotlinx.android.synthetic.main.fragment_customer.*
 
 class MainActivity :
     AppCompatActivity(),
@@ -40,8 +46,8 @@ class MainActivity :
         setSupportActionBar(toolbar)
 
         fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
+            val intent = Intent(this@MainActivity, AddCustomerActivity::class.java)
+            startActivityForResult(intent, CustomData.ADD_CUSTOMER_REQ)
         }
 
         val toggle = ActionBarDrawerToggle(
@@ -114,5 +120,24 @@ class MainActivity :
 
         drawer_layout.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if(requestCode == CustomData.ADD_CUSTOMER_REQ && resultCode == Activity.RESULT_OK){
+            if(data != null){
+                val name: String = data.getStringExtra(CustomData.EXTRA_NAME)
+                val address: String = data.getStringExtra(CustomData.EXTRA_ADDRESS)
+
+                val newCustomer = Customer(address = address, name = name)
+
+                ViewModelProviders.of(this).get(CustomerViewModel::class.java).insert(newCustomer)
+
+                Snackbar.make(recycler_view, R.string.customer_saved_snack, Snackbar.LENGTH_SHORT)
+            }
+        }else{
+            Snackbar.make(recycler_view, R.string.customer_not_saved_snack, Snackbar.LENGTH_SHORT)
+        }
     }
 }

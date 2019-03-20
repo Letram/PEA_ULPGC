@@ -11,7 +11,11 @@
     <string name="product_tab">Products</string>
     <string name="name_placeholder">Put name here…</string>
     <string name="address_placeholder">Customer address here…</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="name_label">Name: </string>
+    <string name="address_label">Address: </string>
+    <string name="save">Save</string>
+    <string name="add_customer_title">%1$s</string>
+    <string name="save_customer_toast">Please, insert a name and an address to continue</string>
+    <string name="customer_saved_snack">Customer saved!</string>
+    <string name="customer_not_saved_snack">Customer not saved!</string>
 </resources>
