@@ -17,13 +17,18 @@ class CustomerListAdapter : RecyclerView.Adapter<CustomerListAdapter.CustomerVie
     class CustomerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         fun bind(customer: Customer, clickListener: OnItemClickListener) {
+            println("${customer.name} - ${customer.address}")
             itemView.customerName.text = customer.name
             itemView.customerAddress.text = customer.address
-            itemView.customerID.text = customer.uid.toString()
 
             itemView.setOnClickListener {
                 if (adapterPosition != RecyclerView.NO_POSITION)
                     clickListener.onItemClick(customer)
+            }
+            itemView.setOnLongClickListener {
+                if (adapterPosition != RecyclerView.NO_POSITION)
+                    clickListener.onItemLongClick(customer)
+                true
             }
         }
     }
@@ -55,6 +60,7 @@ class CustomerListAdapter : RecyclerView.Adapter<CustomerListAdapter.CustomerVie
 
     interface OnItemClickListener {
         fun onItemClick(customer: Customer)
+        fun onItemLongClick(customer: Customer)
     }
 
     fun setOnItemClickListener(listener: OnItemClickListener) {

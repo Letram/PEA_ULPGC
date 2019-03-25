@@ -10,6 +10,7 @@ import android.support.design.widget.TabLayout
 import android.support.v4.view.GravityCompat
 import android.support.v4.view.ViewPager
 import android.support.v7.app.ActionBarDrawerToggle
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
@@ -31,6 +32,25 @@ class MainActivity :
     ProductFragment.OnFragmentInteractionListener,
     CustomerFragment.OnFragmentInteractionListener
 {
+    override fun updateCustomerLongClick(customer: Customer) {
+        val dialog = AlertDialog.Builder(this@MainActivity)
+        dialog.setTitle(R.string.dialog_title)
+        dialog.setMessage(R.string.dialog_confirmation)
+        dialog.setPositiveButton(R.string.dialog_delete){ _, _ ->
+            ViewModelProviders.of(this).get(CustomerViewModel::class.java).delete(customer)
+            Toast.makeText(this, R.string.customer_deleted, Toast.LENGTH_SHORT).show()
+        }
+        dialog.setNegativeButton(R.string.dialog_cancel){_,_ ->}
+        dialog.show()
+    }
+
+    override fun updateCustomer(customer: Customer) {
+        val intent = Intent(this@MainActivity, AddEditCustomerActivity::class.java)
+        intent.putExtra(CustomData.EXTRA_NAME, customer.name)
+        intent.putExtra(CustomData.EXTRA_ADDRESS, customer.address)
+        intent.putExtra(CustomData.EXTRA_ID, customer.uid)
+        startActivityForResult(intent, CustomData.EDIT_CUSTOMER_REQ)
+    }
 
     private lateinit var viewPager: ViewPager
     private lateinit var mAdapter: MyFragmentPagerAdapter
@@ -63,7 +83,7 @@ class MainActivity :
         viewPager = findViewById(R.id.View_Pager)
         viewPager.adapter = mAdapter
 
-        tabLayout = findViewById(R.id.tabLayout)
+        tabLayout = this.findViewById(R.id.tabLayout)
         tabLayout.setupWithViewPager(viewPager)
     }
 
@@ -94,23 +114,14 @@ class MainActivity :
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         // Handle navigation view item clicks here.
         when (item.itemId) {
-            R.id.nav_camera -> {
-                // Handle the camera action
+            R.id.nav_customer -> {
+                viewPager.currentItem = 0
             }
-            R.id.nav_gallery -> {
-
+            R.id.nav_order -> {
+                viewPager.currentItem = 1
             }
-            R.id.nav_slideshow -> {
-
-            }
-            R.id.nav_manage -> {
-
-            }
-            R.id.nav_share -> {
-
-            }
-            R.id.nav_send -> {
-
+            R.id.nav_product -> {
+                viewPager.currentItem = 2
             }
         }
 
@@ -139,7 +150,7 @@ class MainActivity :
                 return
             }
             val name = data.getStringExtra(CustomData.EXTRA_NAME)
-            val address = data.getStringExtra(CustomData.EXTRA_NAME)
+            val address = data.getStringExtra(CustomData.EXTRA_ADDRESS)
 
             val customerAux = Customer(address = address, name = name)
             customerAux.uid = uid

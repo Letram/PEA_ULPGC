@@ -75,11 +75,11 @@ class CustomerFragment : Fragment() {
 
         recyclerAdapter.setOnItemClickListener(object : CustomerListAdapter.OnItemClickListener {
             override fun onItemClick(customer: Customer) {
-                val intent = Intent(activity, AddEditCustomerActivity::class.java)
-                intent.putExtra(CustomData.EXTRA_NAME, customer.name)
-                intent.putExtra(CustomData.EXTRA_ADDRESS, customer.address)
-                intent.putExtra(CustomData.EXTRA_ID, customer.uid)
-                startActivityForResult(intent, CustomData.EDIT_CUSTOMER_REQ)
+                listener?.updateCustomer(customer)
+            }
+
+            override fun onItemLongClick(customer: Customer) {
+                listener?.updateCustomerLongClick(customer)
             }
         })
         return v
@@ -99,7 +99,10 @@ class CustomerFragment : Fragment() {
         listener = null
     }
 
-    interface OnFragmentInteractionListener {}
+    interface OnFragmentInteractionListener {
+        fun updateCustomer(customer: Customer)
+        fun updateCustomerLongClick(customer: Customer)
+    }
 
     companion object {
         @JvmStatic

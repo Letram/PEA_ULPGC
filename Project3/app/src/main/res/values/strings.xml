@@ -19,4 +19,11 @@
     <string name="customer_saved_snack">Customer saved!</string>
     <string name="customer_not_saved_snack">Customer not saved!</string>
     <string name="customer_deleted">Customer deleted!</string>
+    <string name="nav_customer">Customers</string>
+    <string name="nav_product">Products</string>
+    <string name="nav_order">Orders</string>
+    <string name="dialog_title">Delete customer</string>
+    <string name="dialog_confirmation">Are you sure you want to delete the customer?</string>
+    <string name="dialog_delete">Delete</string>
+    <string name="dialog_cancel">Cancel</string>
 </resources>
