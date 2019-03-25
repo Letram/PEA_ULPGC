@@ -33,12 +33,17 @@ class MainActivity :
     CustomerFragment.OnFragmentInteractionListener
 {
     override fun updateCustomerLongClick(customer: Customer) {
+        val undoCustomer = Customer(customer.uid, customer.address, customer.name)
         val dialog = AlertDialog.Builder(this@MainActivity)
         dialog.setTitle(R.string.dialog_title)
         dialog.setMessage(R.string.dialog_confirmation)
         dialog.setPositiveButton(R.string.dialog_delete){ _, _ ->
             ViewModelProviders.of(this).get(CustomerViewModel::class.java).delete(customer)
-            Toast.makeText(this, R.string.customer_deleted, Toast.LENGTH_SHORT).show()
+            Snackbar.make(viewPager, R.string.customer_deleted, Snackbar.LENGTH_SHORT)
+                .setAction(R.string.snack_undo) { _ ->
+                    ViewModelProviders.of(this).get(CustomerViewModel::class.java).insert(undoCustomer)
+                }
+                .show()
         }
         dialog.setNegativeButton(R.string.dialog_cancel){_,_ ->}
         dialog.show()

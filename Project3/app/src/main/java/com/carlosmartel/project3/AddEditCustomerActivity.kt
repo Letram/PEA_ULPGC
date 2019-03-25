@@ -15,7 +15,6 @@ class AddEditCustomerActivity : AppCompatActivity() {
 
     private lateinit var customerNameEdit: EditText
     private lateinit var customerAddressEdit: EditText
-    private lateinit var customerIDLabel: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,7 +43,8 @@ class AddEditCustomerActivity : AppCompatActivity() {
         //maybe here we can use the layout of the menu we want depending on whether we created this activity via fab or clicking on an existing customer
 
         //default add_customer_menu, we could change this to another one if something in the intent says so.
-        menuInflater.inflate(R.menu.add_customer_menu, menu)
+        if(intent.hasExtra(CustomData.EXTRA_ID))menuInflater.inflate(R.menu.edit_customer_menu, menu)
+        else menuInflater.inflate(R.menu.add_customer_menu, menu)
         return true
     }
 
@@ -54,7 +54,6 @@ class AddEditCustomerActivity : AppCompatActivity() {
                 saveCustomer()
                 true
             }
-
             else -> {
                 super.onOptionsItemSelected(item)
             }

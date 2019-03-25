@@ -26,4 +26,6 @@
     <string name="dialog_confirmation">Are you sure you want to delete the customer?</string>
     <string name="dialog_delete">Delete</string>
     <string name="dialog_cancel">Cancel</string>
+    <string name="snack_undo">undo</string>
+    <string name="delete">Delete</string>
 </resources>
