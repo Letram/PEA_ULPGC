@@ -7,22 +7,31 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.carlosmartel.project3.R
 import com.carlosmartel.project3.data.models.Customer
+import kotlinx.android.synthetic.main.customer_list_item.view.*
 
-class CustomerListAdapter: RecyclerView.Adapter<CustomerListAdapter.CustomerViewHolder>(){
+class CustomerListAdapter : RecyclerView.Adapter<CustomerListAdapter.CustomerViewHolder>() {
 
-    private var customers: List<Customer> = ArrayList<Customer>()
+    private var customers: List<Customer> = ArrayList()
+    private lateinit var listener: OnItemClickListener
+
     class CustomerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        var customerName: TextView = itemView.findViewById(R.id.customerName)
-        var customerAddress: TextView = itemView.findViewById(R.id.customerAddress)
-        var customerID: TextView = itemView.findViewById(R.id.customerID)
-        var customer: Customer? = null
-    }
+        fun bind(customer: Customer, clickListener: OnItemClickListener) {
+            itemView.customerName.text = customer.name
+            itemView.customerAddress.text = customer.address
+            itemView.customerID.text = customer.uid.toString()
 
+            itemView.setOnClickListener {
+                if (adapterPosition != RecyclerView.NO_POSITION)
+                    clickListener.onItemClick(customer)
+            }
+        }
+    }
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomerViewHolder {
         val customerView = LayoutInflater.from(parent.context).inflate(R.layout.customer_list_item, parent, false)
+
         return CustomerViewHolder(customerView)
     }
 
@@ -31,15 +40,24 @@ class CustomerListAdapter: RecyclerView.Adapter<CustomerListAdapter.CustomerView
     }
 
     override fun onBindViewHolder(customerViewHolder: CustomerViewHolder, position: Int) {
-        val currentCustomer = customers[position]
-        customerViewHolder.customerName.text = currentCustomer.name
-        customerViewHolder.customerAddress.text = currentCustomer.address
-        customerViewHolder.customerID.text = currentCustomer.uid.toString()
-        customerViewHolder.customer = currentCustomer
+        customerViewHolder.bind(customers[position], listener)
+
     }
 
-    fun setCustomers(customers: List<Customer>){
+    fun setCustomers(customers: List<Customer>) {
         this.customers = customers
         notifyDataSetChanged()
+    }
+
+    fun getCustomerAt(position: Int): Customer {
+        return customers[position]
+    }
+
+    interface OnItemClickListener {
+        fun onItemClick(customer: Customer)
+    }
+
+    fun setOnItemClickListener(listener: OnItemClickListener) {
+        this.listener = listener
     }
 }

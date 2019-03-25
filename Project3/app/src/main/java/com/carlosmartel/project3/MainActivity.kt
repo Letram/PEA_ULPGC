@@ -8,17 +8,13 @@ import android.support.design.widget.Snackbar
 import android.support.design.widget.NavigationView
 import android.support.design.widget.TabLayout
 import android.support.v4.view.GravityCompat
-import android.support.v4.view.PagerAdapter
 import android.support.v4.view.ViewPager
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import com.carlosmartel.project3.data.database.DatabaseManager
+import android.widget.Toast
 import com.carlosmartel.project3.data.models.Customer
-import com.carlosmartel.project3.data.models.Order
-import com.carlosmartel.project3.data.models.Product
 import com.carlosmartel.project3.fragments.MyFragmentPagerAdapter
 import com.carlosmartel.project3.fragments.customer.CustomerFragment
 import com.carlosmartel.project3.fragments.customer.CustomerViewModel
@@ -46,7 +42,7 @@ class MainActivity :
         setSupportActionBar(toolbar)
 
         fab.setOnClickListener {
-            val intent = Intent(this@MainActivity, AddCustomerActivity::class.java)
+            val intent = Intent(this@MainActivity, AddEditCustomerActivity::class.java)
             startActivityForResult(intent, CustomData.ADD_CUSTOMER_REQ)
         }
 
@@ -134,10 +130,25 @@ class MainActivity :
 
                 ViewModelProviders.of(this).get(CustomerViewModel::class.java).insert(newCustomer)
 
-                Snackbar.make(recycler_view, R.string.customer_saved_snack, Snackbar.LENGTH_SHORT)
+                Toast.makeText(this, R.string.customer_saved_snack, Toast.LENGTH_SHORT).show()
             }
-        }else{
-            Snackbar.make(recycler_view, R.string.customer_not_saved_snack, Snackbar.LENGTH_SHORT)
-        }
+        }else if (requestCode == CustomData.EDIT_CUSTOMER_REQ && resultCode == Activity.RESULT_OK){
+            val uid: Int = data!!.getIntExtra(CustomData.EXTRA_ID, -1)
+            if(uid == -1){
+                Toast.makeText(this,"Customer could not be updated", Toast.LENGTH_SHORT).show()
+                return
+            }
+            val name = data.getStringExtra(CustomData.EXTRA_NAME)
+            val address = data.getStringExtra(CustomData.EXTRA_NAME)
+
+            val customerAux = Customer(address = address, name = name)
+            customerAux.uid = uid
+
+            println(customerAux.name)
+            ViewModelProviders.of(this).get(CustomerViewModel::class.java).update(customerAux)
+            Toast.makeText(this,"Customer updated", Toast.LENGTH_SHORT).show()
+
+        }else
+            Toast.makeText(this, "fml", Toast.LENGTH_SHORT).show()
     }
 }

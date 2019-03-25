@@ -18,4 +18,5 @@
     <string name="save_customer_toast">Please, insert a name and an address to continue</string>
     <string name="customer_saved_snack">Customer saved!</string>
     <string name="customer_not_saved_snack">Customer not saved!</string>
+    <string name="customer_deleted">Customer deleted!</string>
 </resources>

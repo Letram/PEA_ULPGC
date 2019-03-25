@@ -8,7 +8,7 @@ import com.carlosmartel.project3.data.repositories.CustomerRepository
 
 class CustomerViewModel constructor(application: Application) : AndroidViewModel(application) {
     private var customerRepository: CustomerRepository = CustomerRepository(application)
-    private lateinit var allCustomers: LiveData<List<Customer>>
+    private var allCustomers: LiveData<List<Customer>>
 
 
     init {
