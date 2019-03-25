@@ -30,14 +30,13 @@ class MainActivity :
     NavigationView.OnNavigationItemSelectedListener,
     OrderFragment.OnFragmentInteractionListener,
     ProductFragment.OnFragmentInteractionListener,
-    CustomerFragment.OnFragmentInteractionListener
-{
+    CustomerFragment.OnFragmentInteractionListener {
     override fun updateCustomerLongClick(customer: Customer) {
         val undoCustomer = Customer(customer.uid, customer.address, customer.name)
         val dialog = AlertDialog.Builder(this@MainActivity)
         dialog.setTitle(R.string.dialog_title)
         dialog.setMessage(R.string.dialog_confirmation)
-        dialog.setPositiveButton(R.string.dialog_delete){ _, _ ->
+        dialog.setPositiveButton(R.string.dialog_delete) { _, _ ->
             ViewModelProviders.of(this).get(CustomerViewModel::class.java).delete(customer)
             Snackbar.make(viewPager, R.string.customer_deleted, Snackbar.LENGTH_SHORT)
                 .setAction(R.string.snack_undo) { _ ->
@@ -45,7 +44,7 @@ class MainActivity :
                 }
                 .show()
         }
-        dialog.setNegativeButton(R.string.dialog_cancel){_,_ ->}
+        dialog.setNegativeButton(R.string.dialog_cancel) { _, _ -> }
         dialog.show()
     }
 
@@ -80,10 +79,12 @@ class MainActivity :
         nav_view.setNavigationItemSelectedListener(this)
 
         mAdapter = MyFragmentPagerAdapter(supportFragmentManager)
-        mAdapter.setTitles(arrayOf(
-            getString(R.string.customer_tab),
-            getString(R.string.order_tab),
-            getString(R.string.product_tab))
+        mAdapter.setTitles(
+            arrayOf(
+                getString(R.string.customer_tab),
+                getString(R.string.order_tab),
+                getString(R.string.product_tab)
+            )
         )
         viewPager = findViewById(R.id.View_Pager)
         viewPager.adapter = mAdapter
@@ -137,8 +138,8 @@ class MainActivity :
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if(requestCode == CustomData.ADD_CUSTOMER_REQ && resultCode == Activity.RESULT_OK){
-            if(data != null){
+        if (requestCode == CustomData.ADD_CUSTOMER_REQ && resultCode == Activity.RESULT_OK) {
+            if (data != null) {
                 val name: String = data.getStringExtra(CustomData.EXTRA_NAME)
                 val address: String = data.getStringExtra(CustomData.EXTRA_ADDRESS)
 
@@ -148,10 +149,10 @@ class MainActivity :
 
                 Toast.makeText(this, R.string.customer_saved_snack, Toast.LENGTH_SHORT).show()
             }
-        }else if (requestCode == CustomData.EDIT_CUSTOMER_REQ && resultCode == Activity.RESULT_OK){
+        } else if (requestCode == CustomData.EDIT_CUSTOMER_REQ && resultCode == Activity.RESULT_OK) {
             val uid: Int = data!!.getIntExtra(CustomData.EXTRA_ID, -1)
-            if(uid == -1){
-                Toast.makeText(this,"Customer could not be updated", Toast.LENGTH_SHORT).show()
+            if (uid == -1) {
+                Toast.makeText(this, "Customer could not be updated", Toast.LENGTH_SHORT).show()
                 return
             }
             val name = data.getStringExtra(CustomData.EXTRA_NAME)
@@ -160,11 +161,11 @@ class MainActivity :
             val customerAux = Customer(address = address, name = name)
             customerAux.uid = uid
 
-            println(customerAux.name)
             ViewModelProviders.of(this).get(CustomerViewModel::class.java).update(customerAux)
-            Toast.makeText(this,"Customer updated", Toast.LENGTH_SHORT).show()
-
-        }else
+            Toast.makeText(this, "Customer updated", Toast.LENGTH_SHORT).show()
+        }
+        //TODO: result code of the addeditcustomer is different of -1, check it here to show another snack and that stuff
+        else
             Toast.makeText(this, "fml", Toast.LENGTH_SHORT).show()
     }
 }

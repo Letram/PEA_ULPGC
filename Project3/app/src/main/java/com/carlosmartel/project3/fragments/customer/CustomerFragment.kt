@@ -6,6 +6,7 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -51,7 +52,6 @@ class CustomerFragment : Fragment() {
             if (it != null) {
                 recyclerAdapter.setCustomers(customers = it)
             }
-            println("Triggered")
         })
 
         //In order to delete a customer we just have to swipe left or right
@@ -68,8 +68,13 @@ class CustomerFragment : Fragment() {
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val undoCustomer = recyclerAdapter.getCustomerAt(viewHolder.adapterPosition)
                 customerViewModel.delete(recyclerAdapter.getCustomerAt(viewHolder.adapterPosition))
-                Toast.makeText(context, R.string.customer_deleted, Toast.LENGTH_SHORT).show()
+                Snackbar.make(view!!, R.string.customer_deleted, Snackbar.LENGTH_SHORT)
+                    .setAction(R.string.snack_undo) { _ ->
+                        customerViewModel.insert(undoCustomer)
+                    }
+                    .show()
             }
         }).attachToRecyclerView(recyclerView)
 

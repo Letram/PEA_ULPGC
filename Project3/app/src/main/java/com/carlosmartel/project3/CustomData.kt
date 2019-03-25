@@ -7,6 +7,7 @@ class CustomData {
         const val EXTRA_ID: String = "EXTRA_ID"
         const val EXTRA_FROM_FAB: String = "EXTRA_FROM_FAB"
         const val ADD_CUSTOMER_REQ: Int = 1
-        const val EDIT_CUSTOMER_REQ: Int = 3
+        const val EDIT_CUSTOMER_REQ: Int = 2
+        const val DEL_CUSTOMER: Int = 3
     }
 }

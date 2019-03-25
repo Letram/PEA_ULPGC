@@ -17,7 +17,6 @@ class CustomerListAdapter : RecyclerView.Adapter<CustomerListAdapter.CustomerVie
     class CustomerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         fun bind(customer: Customer, clickListener: OnItemClickListener) {
-            println("${customer.name} - ${customer.address}")
             itemView.customerName.text = customer.name
             itemView.customerAddress.text = customer.address
 
