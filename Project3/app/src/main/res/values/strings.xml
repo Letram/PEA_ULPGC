@@ -10,7 +10,9 @@
     <string name="order_tab">Orders</string>
     <string name="product_tab">Products</string>
     <string name="name_placeholder">Put name here…</string>
+    <string name="description_placeholder">Put description here…</string>
     <string name="address_placeholder">Customer address here…</string>
+    <string name="price_placeholder">Price goes here…</string>
     <string name="name_label">Name: </string>
     <string name="address_label">Address: </string>
     <string name="save">Save</string>

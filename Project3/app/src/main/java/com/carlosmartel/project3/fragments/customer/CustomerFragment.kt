@@ -47,7 +47,8 @@ class CustomerFragment : Fragment() {
         }
 
 
-        customerViewModel = ViewModelProviders.of(this.activity!!).get(CustomerViewModel(application = activity!!.application)::class.java)
+        customerViewModel = ViewModelProviders.of(this.activity!!)
+            .get(CustomerViewModel(application = activity!!.application)::class.java)
         customerViewModel.getAllCustomers().observe(this, Observer {
             if (it != null) {
                 recyclerAdapter.setCustomers(customers = it)

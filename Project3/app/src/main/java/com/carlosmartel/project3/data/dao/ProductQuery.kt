@@ -1,5 +1,6 @@
 package com.carlosmartel.project3.data.dao
 
+import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.*
 import com.carlosmartel.project3.data.models.Product
 
@@ -9,10 +10,13 @@ interface ProductQuery{
     fun getProduct(productID: Int): Product
 
     @Query("SELECT * FROM Product")
-    fun getAllProducts(): List<Product>
+    fun getAllProducts(): LiveData<List<Product>>
 
     @Insert
     fun insertAll(vararg products: Product)
+
+    @Insert
+    fun insert(product: Product)
 
     @Delete
     fun deleteProduct(product: Product)

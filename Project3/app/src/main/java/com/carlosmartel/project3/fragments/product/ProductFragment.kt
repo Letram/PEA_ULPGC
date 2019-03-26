@@ -1,9 +1,13 @@
 package com.carlosmartel.project3.fragments.product
 
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +18,10 @@ class ProductFragment : Fragment() {
 
     private var listener: OnFragmentInteractionListener? = null
 
+    private lateinit var productViewModel: ProductViewModel
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var recyclerAdapter: ProductListAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -23,7 +31,22 @@ class ProductFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_product, container, false)
+        val view = inflater.inflate(R.layout.fragment_product, container, false)
+
+        recyclerView = view.findViewById(R.id.recycler_view)
+        recyclerAdapter = ProductListAdapter()
+        recyclerView.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = recyclerAdapter
+        }
+        productViewModel = ViewModelProviders.of(this.activity!!)
+            .get(ProductViewModel(application = activity!!.application)::class.java)
+        productViewModel.getAllProducts().observe(this, Observer {
+            if(it != null){
+                recyclerAdapter.setProducts(products = it)
+            }
+        })
+        return view
     }
 
     override fun onAttach(context: Context) {
