@@ -16,14 +16,15 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import com.carlosmartel.project3.data.models.Customer
+import com.carlosmartel.project3.data.models.Product
 import com.carlosmartel.project3.fragments.MyFragmentPagerAdapter
 import com.carlosmartel.project3.fragments.customer.CustomerFragment
 import com.carlosmartel.project3.fragments.customer.CustomerViewModel
 import com.carlosmartel.project3.fragments.order.OrderFragment
 import com.carlosmartel.project3.fragments.product.ProductFragment
+import com.carlosmartel.project3.fragments.product.ProductViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
-import kotlinx.android.synthetic.main.fragment_customer.*
 
 class MainActivity :
     AppCompatActivity(),
@@ -31,11 +32,42 @@ class MainActivity :
     OrderFragment.OnFragmentInteractionListener,
     ProductFragment.OnFragmentInteractionListener,
     CustomerFragment.OnFragmentInteractionListener {
-    override fun updateCustomerLongClick(customer: Customer) {
+    override fun updateProduct(product: Product) {
+        val intent = Intent(this@MainActivity, AddEditProductActivity::class.java)
+        intent.putExtra(CustomData.EXTRA_NAME, product.name)
+        intent.putExtra(CustomData.EXTRA_DESCRIPTION, product.description)
+        intent.putExtra(CustomData.EXTRA_PRICE, product.price)
+        intent.putExtra(CustomData.EXTRA_ID, product.productID)
+        startActivityForResult(intent, CustomData.EDIT_PRODUCT_REQ)
+    }
+
+    override fun deleteProduct(product: Product) {
+        val undoProduct = Product(
+            productID = product.productID,
+            name = product.name,
+            description = product.description,
+            price = product.price
+        )
+        val dialog = AlertDialog.Builder(this@MainActivity)
+        dialog.setTitle(R.string.dialog_title)
+        dialog.setMessage(R.string.dialog_product_confirmation)
+        dialog.setPositiveButton(R.string.dialog_delete) { _, _ ->
+            ViewModelProviders.of(this).get(ProductViewModel::class.java).delete(product)
+            Snackbar.make(viewPager, R.string.customer_deleted, Snackbar.LENGTH_SHORT)
+                .setAction(R.string.snack_undo) {
+                    ViewModelProviders.of(this).get(ProductViewModel::class.java).insert(undoProduct)
+                }
+                .show()
+        }
+        dialog.setNegativeButton(R.string.dialog_cancel) { _, _ -> }
+        dialog.show()
+    }
+
+    override fun deleteCustomer(customer: Customer) {
         val undoCustomer = Customer(customer.uid, customer.address, customer.name)
         val dialog = AlertDialog.Builder(this@MainActivity)
         dialog.setTitle(R.string.dialog_title)
-        dialog.setMessage(R.string.dialog_confirmation)
+        dialog.setMessage(R.string.dialog_customer_confirmation)
         dialog.setPositiveButton(R.string.dialog_delete) { _, _ ->
             ViewModelProviders.of(this).get(CustomerViewModel::class.java).delete(customer)
             Snackbar.make(viewPager, R.string.customer_deleted, Snackbar.LENGTH_SHORT)
@@ -66,8 +98,19 @@ class MainActivity :
         setSupportActionBar(toolbar)
 
         fab.setOnClickListener {
-            val intent = Intent(this@MainActivity, AddEditCustomerActivity::class.java)
-            startActivityForResult(intent, CustomData.ADD_CUSTOMER_REQ)
+            when (viewPager.currentItem) {
+                0 -> {
+                    val intent = Intent(this@MainActivity, AddEditCustomerActivity::class.java)
+                    startActivityForResult(intent, CustomData.ADD_CUSTOMER_REQ)
+                }
+                1 -> {
+
+                }
+                else -> {
+                    val intent = Intent(this@MainActivity, AddEditProductActivity::class.java)
+                    startActivityForResult(intent, CustomData.ADD_PRODUCT_REQ)
+                }
+            }
         }
 
         val toggle = ActionBarDrawerToggle(
@@ -139,17 +182,17 @@ class MainActivity :
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == CustomData.ADD_CUSTOMER_REQ && resultCode == Activity.RESULT_OK) {
+
             if (data != null) {
                 val name: String = data.getStringExtra(CustomData.EXTRA_NAME)
                 val address: String = data.getStringExtra(CustomData.EXTRA_ADDRESS)
-
                 val newCustomer = Customer(address = address, name = name)
-
                 ViewModelProviders.of(this).get(CustomerViewModel::class.java).insert(newCustomer)
-
                 Toast.makeText(this, R.string.customer_saved_snack, Toast.LENGTH_SHORT).show()
             }
+
         } else if (requestCode == CustomData.EDIT_CUSTOMER_REQ && resultCode == Activity.RESULT_OK) {
+
             val uid: Int = data!!.getIntExtra(CustomData.EXTRA_ID, -1)
             if (uid == -1) {
                 Toast.makeText(this, "Customer could not be updated", Toast.LENGTH_SHORT).show()
@@ -157,15 +200,47 @@ class MainActivity :
             }
             val name = data.getStringExtra(CustomData.EXTRA_NAME)
             val address = data.getStringExtra(CustomData.EXTRA_ADDRESS)
-
             val customerAux = Customer(address = address, name = name)
             customerAux.uid = uid
-
             ViewModelProviders.of(this).get(CustomerViewModel::class.java).update(customerAux)
             Toast.makeText(this, "Customer updated", Toast.LENGTH_SHORT).show()
-        }
-        //TODO: result code of the addeditcustomer is different of -1, check it here to show another snack and that stuff
-        else
+
+        } else if (requestCode == CustomData.ADD_PRODUCT_REQ && resultCode == Activity.RESULT_OK) {
+
+            if (data != null) {
+                val name: String = data.getStringExtra(CustomData.EXTRA_NAME)
+                val description: String = data.getStringExtra(CustomData.EXTRA_DESCRIPTION)
+                val price: Float = data.getFloatExtra(CustomData.EXTRA_PRICE, 0F)
+                val newProduct = Product(description = description, name = name, price = price)
+                ViewModelProviders.of(this).get(ProductViewModel::class.java).insert(newProduct)
+                Toast.makeText(this, R.string.product_saved_toast, Toast.LENGTH_SHORT).show()
+            }
+
+        } else if (requestCode == CustomData.EDIT_PRODUCT_REQ && resultCode == Activity.RESULT_OK) {
+
+            val productID: Int = data!!.getIntExtra(CustomData.EXTRA_ID, -1)
+            if (productID == -1) {
+                Toast.makeText(this, "Product could not be updated", Toast.LENGTH_SHORT).show()
+                return
+            }
+            val name = data.getStringExtra(CustomData.EXTRA_NAME)
+            val description = data.getStringExtra(CustomData.EXTRA_DESCRIPTION)
+            val price = data.getFloatExtra(CustomData.EXTRA_PRICE, -1F)
+            val productAux = Product(name = name, description = description, price = price)
+            productAux.productID = productID
+            ViewModelProviders.of(this).get(ProductViewModel::class.java).update(productAux)
+            Toast.makeText(this, "Customer updated", Toast.LENGTH_SHORT).show()
+
+        } else if (requestCode == CustomData.EDIT_CUSTOMER_REQ && resultCode == CustomData.DEL_CUSTOMER_REQ) {
+
+            Toast.makeText(this, R.string.customer_deleted, Toast.LENGTH_SHORT).show()
+
+        } else if (requestCode == CustomData.EDIT_PRODUCT_REQ && resultCode == CustomData.DEL_PRODUCT_REQ) {
+
+            Toast.makeText(this, R.string.product_deleted, Toast.LENGTH_SHORT).show()
+
+        } else
+
             Toast.makeText(this, "fml", Toast.LENGTH_SHORT).show()
     }
 }

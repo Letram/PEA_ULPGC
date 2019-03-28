@@ -1,10 +1,8 @@
 package com.carlosmartel.project3.fragments.customer
 
-import android.app.Activity.RESULT_OK
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
@@ -14,12 +12,8 @@ import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import com.carlosmartel.project3.AddEditCustomerActivity
-import com.carlosmartel.project3.CustomData
 import com.carlosmartel.project3.R
 import com.carlosmartel.project3.data.models.Customer
-
 
 class CustomerFragment : Fragment() {
 
@@ -37,7 +31,7 @@ class CustomerFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val v = inflater.inflate(com.carlosmartel.project3.R.layout.fragment_customer, container, false)
-        // Inflate the layout for this fragment
+
         recyclerView = v.findViewById(R.id.recycler_view)
         recyclerAdapter = CustomerListAdapter()
 
@@ -52,6 +46,7 @@ class CustomerFragment : Fragment() {
         customerViewModel.getAllCustomers().observe(this, Observer {
             if (it != null) {
                 recyclerAdapter.setCustomers(customers = it)
+                recyclerAdapter.notifyDataSetChanged()
             }
         })
 
@@ -85,7 +80,7 @@ class CustomerFragment : Fragment() {
             }
 
             override fun onItemLongClick(customer: Customer) {
-                listener?.updateCustomerLongClick(customer)
+                listener?.deleteCustomer(customer)
             }
         })
         return v
@@ -107,7 +102,7 @@ class CustomerFragment : Fragment() {
 
     interface OnFragmentInteractionListener {
         fun updateCustomer(customer: Customer)
-        fun updateCustomerLongClick(customer: Customer)
+        fun deleteCustomer(customer: Customer)
     }
 
     companion object {

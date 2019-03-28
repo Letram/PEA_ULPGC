@@ -4,17 +4,14 @@ import android.app.Activity
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.EditText
-import android.widget.TextView
 import android.widget.Toast
 import com.carlosmartel.project3.data.models.Customer
 import com.carlosmartel.project3.fragments.customer.CustomerViewModel
-import org.w3c.dom.Text
 
 class AddEditCustomerActivity : AppCompatActivity() {
 
@@ -30,6 +27,7 @@ class AddEditCustomerActivity : AppCompatActivity() {
 
         supportActionBar!!.apply {
             setHomeAsUpIndicator(R.drawable.ic_close)
+            setDisplayHomeAsUpEnabled(true)
         }
 
         //get customer name from intent when creating activity from clicking on a customer from the list
@@ -50,18 +48,18 @@ class AddEditCustomerActivity : AppCompatActivity() {
         //maybe here we can use the layout of the menu we want depending on whether we created this activity via fab or clicking on an existing customer
 
         //default add_customer_menu, we could change this to another one if something in the intent says so.
-        if (intent.hasExtra(CustomData.EXTRA_ID)) menuInflater.inflate(R.menu.edit_customer_menu, menu)
-        else menuInflater.inflate(R.menu.add_customer_menu, menu)
+        if (intent.hasExtra(CustomData.EXTRA_ID)) menuInflater.inflate(R.menu.edit_menu, menu)
+        else menuInflater.inflate(R.menu.add_menu, menu)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         return when (item?.itemId) {
-            R.id.save_customer -> {
+            R.id.save -> {
                 saveCustomer()
                 true
             }
-            R.id.delete_customer -> {
+            R.id.delete -> {
                 deleteCustomer()
                 true
             }
@@ -79,10 +77,10 @@ class AddEditCustomerActivity : AppCompatActivity() {
         )
         val dialog = AlertDialog.Builder(this@AddEditCustomerActivity)
         dialog.setTitle(R.string.dialog_title)
-        dialog.setMessage(R.string.dialog_confirmation)
+        dialog.setMessage(R.string.dialog_customer_confirmation)
         dialog.setPositiveButton(R.string.dialog_delete){ _, _ ->
             ViewModelProviders.of(this).get(CustomerViewModel::class.java).delete(deleteCustomer)
-            setResult(CustomData.DEL_CUSTOMER)
+            setResult(CustomData.DEL_CUSTOMER_REQ)
             finish()
         }
         dialog.setNegativeButton(R.string.dialog_cancel){_,_ ->}

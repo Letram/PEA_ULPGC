@@ -7,26 +7,27 @@ import com.carlosmartel.project3.data.models.Customer
 import com.carlosmartel.project3.data.repositories.CustomerRepository
 
 class CustomerViewModel constructor(application: Application) : AndroidViewModel(application) {
+
     private var customerRepository: CustomerRepository = CustomerRepository(application)
     private var allCustomers: LiveData<List<Customer>>
-
 
     init {
         allCustomers = customerRepository.getAllCustomers()
     }
-    fun insert(customer: Customer){
+
+    fun insert(customer: Customer) {
         customerRepository.insert(customer)
     }
 
-    fun update(customer: Customer){
+    fun update(customer: Customer) {
         customerRepository.update(customer)
     }
 
-    fun delete(customer: Customer){
+    fun delete(customer: Customer) {
         customerRepository.delete(customer)
     }
 
-    fun deleteAll(){
+    fun deleteAll() {
         customerRepository.deleteAll()
     }
 

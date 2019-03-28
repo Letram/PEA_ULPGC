@@ -17,19 +17,19 @@ import java.util.*
             entity = Customer::class,
             parentColumns = arrayOf("uid"),
             childColumns = arrayOf("uid"),
-            onDelete = ForeignKey.CASCADE
+            onDelete = ForeignKey.RESTRICT
         ),
         ForeignKey(
             entity = Product::class,
             parentColumns = arrayOf("productID"),
             childColumns = arrayOf("productID"),
-            onDelete = ForeignKey.CASCADE
+            onDelete = ForeignKey.RESTRICT
         )
     ]
 )
 
 data class Order(
-    @PrimaryKey (autoGenerate = true) var orderID: Int,
+    @PrimaryKey (autoGenerate = true) var orderID: Int = 0,
     var uid: Int,
     var productID: Int,
     var code: String,
