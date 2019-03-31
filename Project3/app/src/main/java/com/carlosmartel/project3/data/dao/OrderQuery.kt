@@ -1,5 +1,6 @@
 package com.carlosmartel.project3.data.dao
 
+import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.*
 import com.carlosmartel.project3.data.models.Order
 
@@ -9,17 +10,20 @@ interface OrderQuery{
     fun getOrder(orderID: Int): Order
 
     @Query("SELECT * FROM `Order` ORDER BY uid, productID, code")
-    fun getAllOrders(): List<Order>
+    fun getAllOrders(): LiveData<List<Order>>
 
     @Insert
-    fun insertAll(vararg products: Order)
+    fun insertAll(vararg orders: Order)
+
+    @Insert
+    fun insert(order: Order)
 
     @Delete
-    fun deleteOrder(product: Order)
+    fun deleteOrder(order: Order)
 
     @Query("DELETE FROM `Order`")
     fun deleteAllOrders()
 
     @Update
-    fun updateOrder(product: Order)
+    fun updateOrder(order: Order)
 }

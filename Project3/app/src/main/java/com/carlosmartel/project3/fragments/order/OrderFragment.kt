@@ -1,18 +1,28 @@
 package com.carlosmartel.project3.fragments.order
 
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
-import android.net.Uri
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
 import com.carlosmartel.project3.R
+import com.carlosmartel.project3.data.models.Order
 
 class OrderFragment : Fragment() {
 
     private var listener: OnFragmentInteractionListener? = null
+
+    private lateinit var orderViewModel: OrderViewModel
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var recyclerAdapter: OrderListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,7 +33,56 @@ class OrderFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_order, container, false)
+        val view = inflater.inflate(R.layout.fragment_order, container, false)
+
+        recyclerView = view.findViewById(R.id.order_recycler_view)
+        recyclerAdapter = OrderListAdapter()
+        recyclerView.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = recyclerAdapter
+        }
+        orderViewModel = ViewModelProviders.of(this.activity!!).get(OrderViewModel(application = activity!!.application)::class.java)
+        orderViewModel.getAllOrders().observe(this, Observer {
+            if (it != null){
+                recyclerAdapter.setOrders(it)
+                recyclerAdapter.notifyDataSetChanged()
+            }
+        })
+        //In order to delete a customer we just have to swipe left or right
+        ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
+            0,
+            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+        ) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val undoOrder = recyclerAdapter.getOrderAt(viewHolder.adapterPosition)
+                orderViewModel.delete(recyclerAdapter.getOrderAt(viewHolder.adapterPosition))
+                Snackbar.make(view!!, R.string.customer_deleted, Snackbar.LENGTH_SHORT)
+                    .setAction(R.string.snack_undo) {
+                        orderViewModel.insert(undoOrder)
+                    }
+                    .show()
+            }
+        }).attachToRecyclerView(recyclerView)
+
+        recyclerAdapter.setOnItemClickListener(object : OrderListAdapter.OnItemClickListener {
+            override fun onItemClick(order: Order) {
+                listener?.updateOrder(order)
+            }
+
+            override fun onItemLongClick(order: Order) {
+                listener?.deleteOrder(order)
+            }
+
+        })
+        return view
     }
 
     override fun onAttach(context: Context) {
@@ -39,19 +98,10 @@ class OrderFragment : Fragment() {
         super.onDetach()
         listener = null
     }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     *
-     *
-     * See the Android Training lesson [Communicating with Other Fragments]
-     * (http://developer.android.com/training/basics/fragments/communicating.html)
-     * for more information.
-     */
-    interface OnFragmentInteractionListener {}
+    interface OnFragmentInteractionListener {
+        fun updateOrder(order: Order)
+        fun deleteOrder(order: Order)
+    }
 
     companion object {
         @JvmStatic

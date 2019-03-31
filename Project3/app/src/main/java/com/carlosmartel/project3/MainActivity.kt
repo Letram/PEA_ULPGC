@@ -16,6 +16,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import com.carlosmartel.project3.data.models.Customer
+import com.carlosmartel.project3.data.models.Order
 import com.carlosmartel.project3.data.models.Product
 import com.carlosmartel.project3.fragments.MyFragmentPagerAdapter
 import com.carlosmartel.project3.fragments.customer.CustomerFragment
@@ -32,6 +33,14 @@ class MainActivity :
     OrderFragment.OnFragmentInteractionListener,
     ProductFragment.OnFragmentInteractionListener,
     CustomerFragment.OnFragmentInteractionListener {
+    override fun updateOrder(order: Order) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun deleteOrder(order: Order) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun updateProduct(product: Product) {
         val intent = Intent(this@MainActivity, AddEditProductActivity::class.java)
         intent.putExtra(CustomData.EXTRA_NAME, product.name)
@@ -104,7 +113,8 @@ class MainActivity :
                     startActivityForResult(intent, CustomData.ADD_CUSTOMER_REQ)
                 }
                 1 -> {
-
+                    val intent = Intent(this@MainActivity, AddEditOrderActivity::class.java)
+                    startActivity(intent)
                 }
                 else -> {
                     val intent = Intent(this@MainActivity, AddEditProductActivity::class.java)

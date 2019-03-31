@@ -39,4 +39,9 @@
     <string name="save_product_toast">Please fill all the information in the form in order to add a product</string>
     <string name="product_saved_toast">Product saved!</string>
     <string name="product_deleted">Product deleted!</string>
+    <string name="code_placeholder">Code here…</string>
+    <string name="order_code">Code</string>
+    <string name="order_qty">Quantity</string>
+    <string name="order_price">Price</string>
+    <string name="order_date">Date…</string>
 </resources>

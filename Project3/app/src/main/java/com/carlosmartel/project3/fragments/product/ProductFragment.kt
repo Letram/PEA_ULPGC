@@ -32,7 +32,7 @@ class ProductFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_product, container, false)
 
-        recyclerView = view.findViewById(R.id.recycler_view)
+        recyclerView = view.findViewById(R.id.product_recycler_view)
         recyclerAdapter = ProductListAdapter()
 
         recyclerView.apply {

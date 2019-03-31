@@ -15,7 +15,7 @@ import android.arch.persistence.room.RoomDatabase
 import android.os.AsyncTask
 
 
-@Database(entities = [Customer::class, Order::class, Product::class], version = 1, exportSchema = true)
+@Database(entities = [Customer::class, Order::class, Product::class], version = 2, exportSchema = true)
 @TypeConverters(MyTypeConverters::class)
 abstract class DatabaseManager: RoomDatabase(){
 
@@ -42,6 +42,7 @@ abstract class DatabaseManager: RoomDatabase(){
                         dbName
                     )
                         .addCallback(roomCallback)
+                        .fallbackToDestructiveMigration()
                         .build()
                 }
             }
