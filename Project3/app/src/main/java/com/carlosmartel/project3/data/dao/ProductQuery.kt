@@ -2,11 +2,11 @@ package com.carlosmartel.project3.data.dao
 
 import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.*
-import com.carlosmartel.project3.data.models.Product
+import com.carlosmartel.project3.data.entities.Product
 
 @Dao
 interface ProductQuery{
-    @Query("SELECT * FROM Product WHERE productID = :productID")
+    @Query("SELECT * FROM Product WHERE p_id = :productID")
     fun getProduct(productID: Int): Product
 
     @Query("SELECT * FROM Product")

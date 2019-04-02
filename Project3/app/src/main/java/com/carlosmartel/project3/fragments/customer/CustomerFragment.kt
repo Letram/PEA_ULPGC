@@ -13,7 +13,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.carlosmartel.project3.R
-import com.carlosmartel.project3.data.models.Customer
+import com.carlosmartel.project3.data.entities.Customer
 
 class CustomerFragment : Fragment() {
 

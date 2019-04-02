@@ -4,9 +4,8 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import com.carlosmartel.project3.R
-import com.carlosmartel.project3.data.models.Customer
+import com.carlosmartel.project3.data.entities.Customer
 import kotlinx.android.synthetic.main.customer_list_item.view.*
 
 class CustomerListAdapter : RecyclerView.Adapter<CustomerListAdapter.CustomerViewHolder>() {
@@ -17,7 +16,7 @@ class CustomerListAdapter : RecyclerView.Adapter<CustomerListAdapter.CustomerVie
     class CustomerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         fun bind(customer: Customer, clickListener: OnItemClickListener) {
-            itemView.customerName.text = customer.name
+            itemView.customerName.text = customer.c_name
             itemView.customerAddress.text = customer.address
 
             itemView.setOnClickListener {

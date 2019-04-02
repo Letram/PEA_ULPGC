@@ -15,9 +15,10 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
-import com.carlosmartel.project3.data.models.Customer
-import com.carlosmartel.project3.data.models.Order
-import com.carlosmartel.project3.data.models.Product
+import com.carlosmartel.project3.data.entities.Customer
+import com.carlosmartel.project3.data.entities.Order
+import com.carlosmartel.project3.data.entities.Product
+import com.carlosmartel.project3.data.pojo.InflatedOrder
 import com.carlosmartel.project3.fragments.MyFragmentPagerAdapter
 import com.carlosmartel.project3.fragments.customer.CustomerFragment
 import com.carlosmartel.project3.fragments.customer.CustomerViewModel
@@ -33,6 +34,10 @@ class MainActivity :
     OrderFragment.OnFragmentInteractionListener,
     ProductFragment.OnFragmentInteractionListener,
     CustomerFragment.OnFragmentInteractionListener {
+    override fun updateInflatedOrder(inflatedOrder: InflatedOrder) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun updateOrder(order: Order) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -43,17 +48,17 @@ class MainActivity :
 
     override fun updateProduct(product: Product) {
         val intent = Intent(this@MainActivity, AddEditProductActivity::class.java)
-        intent.putExtra(CustomData.EXTRA_NAME, product.name)
+        intent.putExtra(CustomData.EXTRA_NAME, product.p_name)
         intent.putExtra(CustomData.EXTRA_DESCRIPTION, product.description)
         intent.putExtra(CustomData.EXTRA_PRICE, product.price)
-        intent.putExtra(CustomData.EXTRA_ID, product.productID)
+        intent.putExtra(CustomData.EXTRA_ID, product.p_id)
         startActivityForResult(intent, CustomData.EDIT_PRODUCT_REQ)
     }
 
     override fun deleteProduct(product: Product) {
         val undoProduct = Product(
-            productID = product.productID,
-            name = product.name,
+            p_id = product.p_id,
+            p_name = product.p_name,
             description = product.description,
             price = product.price
         )
@@ -73,7 +78,7 @@ class MainActivity :
     }
 
     override fun deleteCustomer(customer: Customer) {
-        val undoCustomer = Customer(customer.uid, customer.address, customer.name)
+        val undoCustomer = Customer(customer.u_id, customer.address, customer.c_name)
         val dialog = AlertDialog.Builder(this@MainActivity)
         dialog.setTitle(R.string.dialog_title)
         dialog.setMessage(R.string.dialog_customer_confirmation)
@@ -91,9 +96,9 @@ class MainActivity :
 
     override fun updateCustomer(customer: Customer) {
         val intent = Intent(this@MainActivity, AddEditCustomerActivity::class.java)
-        intent.putExtra(CustomData.EXTRA_NAME, customer.name)
+        intent.putExtra(CustomData.EXTRA_NAME, customer.c_name)
         intent.putExtra(CustomData.EXTRA_ADDRESS, customer.address)
-        intent.putExtra(CustomData.EXTRA_ID, customer.uid)
+        intent.putExtra(CustomData.EXTRA_ID, customer.u_id)
         startActivityForResult(intent, CustomData.EDIT_CUSTOMER_REQ)
     }
 
@@ -196,7 +201,7 @@ class MainActivity :
             if (data != null) {
                 val name: String = data.getStringExtra(CustomData.EXTRA_NAME)
                 val address: String = data.getStringExtra(CustomData.EXTRA_ADDRESS)
-                val newCustomer = Customer(address = address, name = name)
+                val newCustomer = Customer(address = address, c_name = name)
                 ViewModelProviders.of(this).get(CustomerViewModel::class.java).insert(newCustomer)
                 Toast.makeText(this, R.string.customer_saved_snack, Toast.LENGTH_SHORT).show()
             }
@@ -210,8 +215,8 @@ class MainActivity :
             }
             val name = data.getStringExtra(CustomData.EXTRA_NAME)
             val address = data.getStringExtra(CustomData.EXTRA_ADDRESS)
-            val customerAux = Customer(address = address, name = name)
-            customerAux.uid = uid
+            val customerAux = Customer(address = address, c_name = name)
+            customerAux.u_id = uid
             ViewModelProviders.of(this).get(CustomerViewModel::class.java).update(customerAux)
             Toast.makeText(this, "Customer updated", Toast.LENGTH_SHORT).show()
 
@@ -221,7 +226,7 @@ class MainActivity :
                 val name: String = data.getStringExtra(CustomData.EXTRA_NAME)
                 val description: String = data.getStringExtra(CustomData.EXTRA_DESCRIPTION)
                 val price: Float = data.getFloatExtra(CustomData.EXTRA_PRICE, 0F)
-                val newProduct = Product(description = description, name = name, price = price)
+                val newProduct = Product(description = description, p_name = name, price = price)
                 ViewModelProviders.of(this).get(ProductViewModel::class.java).insert(newProduct)
                 Toast.makeText(this, R.string.product_saved_toast, Toast.LENGTH_SHORT).show()
             }
@@ -236,8 +241,8 @@ class MainActivity :
             val name = data.getStringExtra(CustomData.EXTRA_NAME)
             val description = data.getStringExtra(CustomData.EXTRA_DESCRIPTION)
             val price = data.getFloatExtra(CustomData.EXTRA_PRICE, -1F)
-            val productAux = Product(name = name, description = description, price = price)
-            productAux.productID = productID
+            val productAux = Product(p_name = name, description = description, price = price)
+            productAux.p_id = productID
             ViewModelProviders.of(this).get(ProductViewModel::class.java).update(productAux)
             Toast.makeText(this, "Customer updated", Toast.LENGTH_SHORT).show()
 

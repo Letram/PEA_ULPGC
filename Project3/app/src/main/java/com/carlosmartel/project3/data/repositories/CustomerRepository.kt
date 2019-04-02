@@ -5,7 +5,7 @@ import android.arch.lifecycle.LiveData
 import android.os.AsyncTask
 import com.carlosmartel.project3.data.dao.CustomerQuery
 import com.carlosmartel.project3.data.database.DatabaseManager
-import com.carlosmartel.project3.data.models.Customer
+import com.carlosmartel.project3.data.entities.Customer
 
 class CustomerRepository (application: Application){
     private val customerQuery: CustomerQuery = DatabaseManager.getInstance(application)!!.customerQuery()

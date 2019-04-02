@@ -1,5 +1,6 @@
 package com.carlosmartel.project3.fragments.order
 
+import android.arch.lifecycle.LifecycleService
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
@@ -14,7 +15,8 @@ import android.view.View
 import android.view.ViewGroup
 
 import com.carlosmartel.project3.R
-import com.carlosmartel.project3.data.models.Order
+import com.carlosmartel.project3.data.entities.Order
+import com.carlosmartel.project3.data.pojo.InflatedOrder
 
 class OrderFragment : Fragment() {
 
@@ -42,6 +44,20 @@ class OrderFragment : Fragment() {
             adapter = recyclerAdapter
         }
         orderViewModel = ViewModelProviders.of(this.activity!!).get(OrderViewModel(application = activity!!.application)::class.java)
+        orderViewModel.getAllInflatedOrders().observe(this, Observer {
+            if(it != null){
+                recyclerAdapter.setInflatedOrders(it)
+                recyclerAdapter.notifyDataSetChanged()
+            }
+        })
+        /*
+        orderViewModel.getAllOrders().observe(this, Observer {
+            if (it != null){
+                recyclerAdapter.setOrders(it)
+                recyclerAdapter.notifyDataSetChanged()
+            }
+        })
+        */
         orderViewModel.getAllOrders().observe(this, Observer {
             if (it != null){
                 recyclerAdapter.setOrders(it)
@@ -72,6 +88,7 @@ class OrderFragment : Fragment() {
             }
         }).attachToRecyclerView(recyclerView)
 
+        /*
         recyclerAdapter.setOnItemClickListener(object : OrderListAdapter.OnItemClickListener {
             override fun onItemClick(order: Order) {
                 listener?.updateOrder(order)
@@ -79,6 +96,16 @@ class OrderFragment : Fragment() {
 
             override fun onItemLongClick(order: Order) {
                 listener?.deleteOrder(order)
+            }
+        })
+        */
+        recyclerAdapter.setOnInflatedItemClickListener(object: OrderListAdapter.OnInflatedItemClickListener{
+            override fun onItemClick(inflatedOrder: InflatedOrder) {
+                listener?.updateInflatedOrder(inflatedOrder)
+            }
+
+            override fun onItemLongClick(inflatedOrder: InflatedOrder) {
+                listener?.deleteOrder(inflatedOrder.order!!)
             }
 
         })
@@ -101,6 +128,7 @@ class OrderFragment : Fragment() {
     interface OnFragmentInteractionListener {
         fun updateOrder(order: Order)
         fun deleteOrder(order: Order)
+        fun updateInflatedOrder(inflatedOrder: InflatedOrder)
     }
 
     companion object {

@@ -1,4 +1,4 @@
-package com.carlosmartel.project3.data.models
+package com.carlosmartel.project3.data.entities
 
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.ForeignKey
@@ -15,13 +15,13 @@ import java.util.*
     foreignKeys = [
         ForeignKey(
             entity = Customer::class,
-            parentColumns = arrayOf("uid"),
+            parentColumns = arrayOf("u_id"),
             childColumns = arrayOf("uid"),
             onDelete = ForeignKey.RESTRICT
         ),
         ForeignKey(
             entity = Product::class,
-            parentColumns = arrayOf("productID"),
+            parentColumns = arrayOf("p_id"),
             childColumns = arrayOf("productID"),
             onDelete = ForeignKey.RESTRICT
         )

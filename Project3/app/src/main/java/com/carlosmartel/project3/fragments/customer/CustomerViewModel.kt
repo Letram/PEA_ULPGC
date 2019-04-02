@@ -3,7 +3,7 @@ package com.carlosmartel.project3.fragments.customer
 import android.app.Application
 import android.arch.lifecycle.AndroidViewModel
 import android.arch.lifecycle.LiveData
-import com.carlosmartel.project3.data.models.Customer
+import com.carlosmartel.project3.data.entities.Customer
 import com.carlosmartel.project3.data.repositories.CustomerRepository
 
 class CustomerViewModel constructor(application: Application) : AndroidViewModel(application) {

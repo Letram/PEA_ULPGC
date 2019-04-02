@@ -2,7 +2,8 @@ package com.carlosmartel.project3.data.dao
 
 import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.*
-import com.carlosmartel.project3.data.models.Order
+import com.carlosmartel.project3.data.entities.Order
+import com.carlosmartel.project3.data.pojo.InflatedOrder
 
 @Dao
 interface OrderQuery{
@@ -26,4 +27,7 @@ interface OrderQuery{
 
     @Update
     fun updateOrder(order: Order)
+
+    @Query("SELECT * FROM `Order`, Customer, Product WHERE Customer.u_id = `Order`.uid AND Product.p_id =  `Order`.productID ORDER BY u_id, p_id, code")
+    fun getAllInflatedOrders(): LiveData<List<InflatedOrder>>
 }

@@ -10,7 +10,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.EditText
 import android.widget.Toast
-import com.carlosmartel.project3.data.models.Customer
+import com.carlosmartel.project3.data.entities.Customer
 import com.carlosmartel.project3.fragments.customer.CustomerViewModel
 
 class AddEditCustomerActivity : AppCompatActivity() {
@@ -30,7 +30,7 @@ class AddEditCustomerActivity : AppCompatActivity() {
             setDisplayHomeAsUpEnabled(true)
         }
 
-        //get customer name from intent when creating activity from clicking on a customer from the list
+        //get customer c_name from intent when creating activity from clicking on a customer from the list
         //we are now just putting a default title when adding a customer using the fab
 
         if (intent.hasExtra(CustomData.EXTRA_NAME)) {

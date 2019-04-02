@@ -10,7 +10,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.EditText
 import android.widget.Toast
-import com.carlosmartel.project3.data.models.Product
+import com.carlosmartel.project3.data.entities.Product
 import com.carlosmartel.project3.fragments.product.ProductViewModel
 
 class AddEditProductActivity : AppCompatActivity() {
@@ -67,10 +67,10 @@ class AddEditProductActivity : AppCompatActivity() {
 
     private fun deleteProduct() {
         val deleteProduct = Product(
-            name = intent.getStringExtra(CustomData.EXTRA_NAME),
+            p_name = intent.getStringExtra(CustomData.EXTRA_NAME),
             description = intent.getStringExtra(CustomData.EXTRA_DESCRIPTION),
             price = intent.getFloatExtra(CustomData.EXTRA_PRICE, -1F),
-            productID = intent.getIntExtra(CustomData.EXTRA_ID, -1)
+            p_id = intent.getIntExtra(CustomData.EXTRA_ID, -1)
         )
         val dialog = AlertDialog.Builder(this@AddEditProductActivity)
         dialog.setTitle(R.string.dialog_title)

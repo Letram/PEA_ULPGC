@@ -5,7 +5,7 @@ import android.arch.lifecycle.LiveData
 import android.os.AsyncTask
 import com.carlosmartel.project3.data.dao.ProductQuery
 import com.carlosmartel.project3.data.database.DatabaseManager
-import com.carlosmartel.project3.data.models.Product
+import com.carlosmartel.project3.data.entities.Product
 
 class ProductRepository (application: Application){
     private val productQuery: ProductQuery = DatabaseManager.getInstance(application)!!.productQuery()
