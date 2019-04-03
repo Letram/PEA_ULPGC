@@ -64,10 +64,11 @@ class CustomerFragment : Fragment() {
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                println(customerViewModel.getAllCustomersWithOrders())
                 val undoCustomer = recyclerAdapter.getCustomerAt(viewHolder.adapterPosition)
                 customerViewModel.delete(recyclerAdapter.getCustomerAt(viewHolder.adapterPosition))
                 Snackbar.make(view!!, R.string.customer_deleted, Snackbar.LENGTH_SHORT)
-                    .setAction(R.string.snack_undo) { _ ->
+                    .setAction(R.string.snack_undo) {
                         customerViewModel.insert(undoCustomer)
                     }
                     .show()

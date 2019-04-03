@@ -12,6 +12,9 @@ interface CustomerQuery{
     @Query("SELECT * FROM Customer")
     fun getAllCustomers(): LiveData<List<Customer>>
 
+    @Query("SELECT Customer.u_id FROM Customer, `Order` WHERE Customer.u_id = `Order`.uid")
+    fun getAllCustomersWithOrders(): LiveData<List<Int>>
+
     @Insert
     fun insertAll(vararg customers: Customer)
 

@@ -10,9 +10,11 @@ class CustomerViewModel constructor(application: Application) : AndroidViewModel
 
     private var customerRepository: CustomerRepository = CustomerRepository(application)
     private var allCustomers: LiveData<List<Customer>>
+    private var allCustomersWithOrders: LiveData<List<Int>>
 
     init {
         allCustomers = customerRepository.getAllCustomers()
+        allCustomersWithOrders = customerRepository.getAllCustomersWithOrders()
     }
 
     fun insert(customer: Customer) {
@@ -33,5 +35,9 @@ class CustomerViewModel constructor(application: Application) : AndroidViewModel
 
     fun getAllCustomers(): LiveData<List<Customer>> {
         return allCustomers
+    }
+
+    fun getAllCustomersWithOrders(): LiveData<List<Int>> {
+        return allCustomersWithOrders
     }
 }

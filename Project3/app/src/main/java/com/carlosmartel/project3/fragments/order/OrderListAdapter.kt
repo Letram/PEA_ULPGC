@@ -35,8 +35,8 @@ class OrderListAdapter : RecyclerView.Adapter<OrderListAdapter.OrderViewHolder>(
         }
 
         fun bindInflated(inflatedOrder: InflatedOrder, listener: OnInflatedItemClickListener) {
-            itemView.order_customer_name.text = inflatedOrder.customer?.u_id.toString()
-            itemView.order_product_name.text = inflatedOrder.product?.p_id.toString()
+            itemView.order_customer_name.text = inflatedOrder.customer?.c_name
+            itemView.order_product_name.text = inflatedOrder.product?.p_name
 
 
             itemView.setOnClickListener {

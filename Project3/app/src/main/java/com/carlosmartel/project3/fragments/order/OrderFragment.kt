@@ -13,6 +13,7 @@ import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 
 import com.carlosmartel.project3.R
 import com.carlosmartel.project3.data.entities.Order
@@ -25,6 +26,7 @@ class OrderFragment : Fragment() {
     private lateinit var orderViewModel: OrderViewModel
     private lateinit var recyclerView: RecyclerView
     private lateinit var recyclerAdapter: OrderListAdapter
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,20 +52,15 @@ class OrderFragment : Fragment() {
                 recyclerAdapter.notifyDataSetChanged()
             }
         })
+
+        orderViewModel.getAllOrders().observe(this, Observer {
+            if (it != null){
+                recyclerAdapter.setOrders(it)
+                recyclerAdapter.notifyDataSetChanged()
+            }
+        })
+
         /*
-        orderViewModel.getAllOrders().observe(this, Observer {
-            if (it != null){
-                recyclerAdapter.setOrders(it)
-                recyclerAdapter.notifyDataSetChanged()
-            }
-        })
-        */
-        orderViewModel.getAllOrders().observe(this, Observer {
-            if (it != null){
-                recyclerAdapter.setOrders(it)
-                recyclerAdapter.notifyDataSetChanged()
-            }
-        })
         //In order to delete a customer we just have to swipe left or right
         ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
             0,
@@ -88,7 +85,7 @@ class OrderFragment : Fragment() {
             }
         }).attachToRecyclerView(recyclerView)
 
-        /*
+
         recyclerAdapter.setOnItemClickListener(object : OrderListAdapter.OnItemClickListener {
             override fun onItemClick(order: Order) {
                 listener?.updateOrder(order)
@@ -99,6 +96,29 @@ class OrderFragment : Fragment() {
             }
         })
         */
+        //In order to delete a customer we just have to swipe left or right
+        ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
+            0,
+            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+        ) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val undoOrder = recyclerAdapter.getInflatedOrderAt(viewHolder.adapterPosition).order!!
+                orderViewModel.delete(recyclerAdapter.getInflatedOrderAt(viewHolder.adapterPosition).order!!)
+                Snackbar.make(view!!, R.string.customer_deleted, Snackbar.LENGTH_SHORT)
+                    .setAction(R.string.snack_undo) {
+                        orderViewModel.insert(undoOrder)
+                    }
+                    .show()
+            }
+        }).attachToRecyclerView(recyclerView)
         recyclerAdapter.setOnInflatedItemClickListener(object: OrderListAdapter.OnInflatedItemClickListener{
             override fun onItemClick(inflatedOrder: InflatedOrder) {
                 listener?.updateInflatedOrder(inflatedOrder)
