@@ -1,23 +1,23 @@
-package com.carlosmartel.project3.SelectCustomerActivity
+package com.carlosmartel.project3.selectCustomerActivity
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
-import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import com.carlosmartel.project3.MainActivity
 import com.carlosmartel.project3.R
 import com.carlosmartel.project3.data.entities.Customer
-import com.carlosmartel.project3.data.repositories.CustomerRepository
 import com.carlosmartel.project3.fragments.customer.CustomerViewModel
+import java.util.*
 
 class SelectCustomerActivity : AppCompatActivity() {
 
     private lateinit var customerViewModel: CustomerViewModel
     private lateinit var recyclerView: RecyclerView
     private lateinit var recyclerAdapter: SelectCustomerListAdapter
+
+    private lateinit var customerSelected: Customer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,8 +32,19 @@ class SelectCustomerActivity : AppCompatActivity() {
         customerViewModel = ViewModelProviders.of(this).get(CustomerViewModel::class.java)
 
         customerViewModel.getAllCustomers().observe(this, Observer {
-            if(it != null)
+            if(it != null){
                 recyclerAdapter.setCustomers(it)
+                recyclerAdapter.notifyDataSetChanged()
+            }
+        })
+
+        recyclerAdapter.setOnCustomerClickListener(object: SelectCustomerListAdapter.OnCustomerClickListener{
+            override fun onCustomerClick(customer: Customer) {
+                customerSelected = customer
+                recyclerAdapter.setCustomerSelected(customer)
+                println(customerSelected.c_name)
+            }
+
         })
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }

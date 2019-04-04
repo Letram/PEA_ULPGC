@@ -9,7 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SelectCustomerActivity.SelectCustomerActivity"
+        <activity android:name=".selectCustomerActivity.SelectCustomerActivity"
             android:parentActivityName=".AddEditOrderActivity.AddEditOrderActivity"></activity>
         <activity
             android:name=".AddEditOrderActivity.AddEditOrderActivity"

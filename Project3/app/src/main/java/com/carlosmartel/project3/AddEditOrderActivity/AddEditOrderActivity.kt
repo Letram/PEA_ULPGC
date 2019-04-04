@@ -8,7 +8,7 @@ import android.view.View
 import android.widget.DatePicker
 import android.widget.TextView
 import com.carlosmartel.project3.R
-import com.carlosmartel.project3.SelectCustomerActivity.SelectCustomerActivity
+import com.carlosmartel.project3.selectCustomerActivity.SelectCustomerActivity
 import java.text.DateFormat
 import java.util.*
 
@@ -35,7 +35,7 @@ class AddEditOrderActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
         datePickerText = findViewById(R.id.date_text)
     }
 
-    fun openDatepicker(view: View){
+    fun openDatepicker() {
         val datePicker = DatepickerDialog()
         datePicker.show(supportFragmentManager, "DatePicker")
     }
