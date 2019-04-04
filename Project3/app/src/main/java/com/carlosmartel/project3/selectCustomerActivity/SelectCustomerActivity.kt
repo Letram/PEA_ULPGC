@@ -1,11 +1,16 @@
 package com.carlosmartel.project3.selectCustomerActivity
 
+import android.app.Activity
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.view.Menu
+import android.view.MenuItem
+import com.carlosmartel.project3.CustomData
 import com.carlosmartel.project3.R
 import com.carlosmartel.project3.data.entities.Customer
 import com.carlosmartel.project3.fragments.customer.CustomerViewModel
@@ -47,7 +52,29 @@ class SelectCustomerActivity : AppCompatActivity() {
 
         })
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        title = resources.getString(R.string.select_customer)
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.select_menu, menu)
+        return true
+    }
 
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        return when(item?.itemId){
+            R.id.select -> {
+                selectCustomer()
+                return true
+            }
+            else -> true
+        }
+    }
+
+    private fun selectCustomer() {
+        val data = Intent()
+        data.putExtra(CustomData.EXTRA_CUSTOMER, customerSelected)
+        setResult(Activity.RESULT_OK, data)
+        finish()
+    }
 }

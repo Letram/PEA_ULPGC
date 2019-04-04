@@ -255,8 +255,6 @@ class MainActivity :
 
             Toast.makeText(this, R.string.product_deleted, Toast.LENGTH_SHORT).show()
 
-        } else
-
-            Toast.makeText(this, "fml", Toast.LENGTH_SHORT).show()
+        } else Toast.makeText(this, "fml", Toast.LENGTH_SHORT).show()
     }
 }

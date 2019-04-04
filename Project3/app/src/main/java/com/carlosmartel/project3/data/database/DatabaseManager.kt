@@ -63,11 +63,16 @@ abstract class DatabaseManager: RoomDatabase(){
                 customerQuery.insert(Customer(address = "Casa", c_name = "Pepe"))
                 customerQuery.insert(Customer(address = "Casa2", c_name = "Pepe2"))
                 customerQuery.insert(Customer(address = "Casa3", c_name = "Pepe3"))
+
+                productQuery.insert(Product(p_name = "Product1", description = "Description1", price = 12.5F))
+                productQuery.insert(Product(p_name = "Product2", description = "Description2", price = 1F))
+                productQuery.insert(Product(p_name = "Product3", description = "Description3", price = 99F))
+
                 return null
             }
 
             private var customerQuery: CustomerQuery = instance!!.customerQuery()
-
+            private var productQuery: ProductQuery = instance!!.productQuery()
         }
     }
 }
