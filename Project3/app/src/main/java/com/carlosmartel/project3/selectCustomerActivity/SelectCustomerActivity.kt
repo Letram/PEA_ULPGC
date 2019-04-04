@@ -14,7 +14,6 @@ import com.carlosmartel.project3.CustomData
 import com.carlosmartel.project3.R
 import com.carlosmartel.project3.data.entities.Customer
 import com.carlosmartel.project3.fragments.customer.CustomerViewModel
-import java.util.*
 
 class SelectCustomerActivity : AppCompatActivity() {
 
