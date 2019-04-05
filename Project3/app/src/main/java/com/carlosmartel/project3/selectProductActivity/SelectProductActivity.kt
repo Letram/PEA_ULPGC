@@ -27,12 +27,17 @@ class SelectProductActivity : AppCompatActivity() {
         setContentView(R.layout.activity_select_product)
         recyclerView = findViewById(R.id.select_product_rv)
         recyclerAdapter = SelectProductListAdapter()
+        productViewModel = ViewModelProviders.of(this).get(ProductViewModel::class.java)
 
         recyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = recyclerAdapter
         }
-        productViewModel = ViewModelProviders.of(this).get(ProductViewModel::class.java)
+
+        if(intent.hasExtra(CustomData.EXTRA_PRODUCT)){
+            productSelected = intent.getParcelableExtra(CustomData.EXTRA_PRODUCT)
+            recyclerAdapter.setProductSelected(productSelected)
+        }
 
         productViewModel.getAllProducts().observe(this, Observer {
             if(it != null){

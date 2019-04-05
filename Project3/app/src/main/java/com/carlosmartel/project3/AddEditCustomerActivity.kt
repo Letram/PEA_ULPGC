@@ -25,10 +25,7 @@ class AddEditCustomerActivity : AppCompatActivity() {
         customerNameEdit = this.findViewById(R.id.name_edit)
         customerAddressEdit = this.findViewById(R.id.address_edit)
 
-        supportActionBar!!.apply {
-            setHomeAsUpIndicator(R.drawable.ic_close)
-            setDisplayHomeAsUpEnabled(true)
-        }
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         //get customer c_name from intent when creating activity from clicking on a customer from the list
         //we are now just putting a default title when adding a customer using the fab

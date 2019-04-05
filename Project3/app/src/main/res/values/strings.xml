@@ -47,4 +47,6 @@
     <string name="select">Select</string>
     <string name="select_customer">Select customer</string>
     <string name="select_product">Select product</string>
+    <string name="add_order_title">Add order</string>
+    <string name="order_created">Order created!</string>
 </resources>

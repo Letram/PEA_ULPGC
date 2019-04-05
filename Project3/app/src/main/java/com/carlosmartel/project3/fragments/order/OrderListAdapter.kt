@@ -37,7 +37,7 @@ class OrderListAdapter : RecyclerView.Adapter<OrderListAdapter.OrderViewHolder>(
         fun bindInflated(inflatedOrder: InflatedOrder, listener: OnInflatedItemClickListener) {
             itemView.order_customer_name.text = inflatedOrder.customer?.c_name
             itemView.order_product_name.text = inflatedOrder.product?.p_name
-
+            itemView.order_code.text = inflatedOrder.order?.code
 
             itemView.setOnClickListener {
                 if (adapterPosition != RecyclerView.NO_POSITION)
@@ -101,7 +101,7 @@ class OrderListAdapter : RecyclerView.Adapter<OrderListAdapter.OrderViewHolder>(
         this.inflatedListener = listener
     }
 
-    fun setInflatedOrders(inflatedOrder: List<InflatedOrder>) {
+    fun setInflatedOrders(inflatedOrders: List<InflatedOrder>) {
         this.inflatedOrders = inflatedOrders
     }
 }

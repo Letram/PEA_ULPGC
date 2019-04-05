@@ -24,10 +24,12 @@ import com.carlosmartel.project3.fragments.MyFragmentPagerAdapter
 import com.carlosmartel.project3.fragments.customer.CustomerFragment
 import com.carlosmartel.project3.fragments.customer.CustomerViewModel
 import com.carlosmartel.project3.fragments.order.OrderFragment
+import com.carlosmartel.project3.fragments.order.OrderViewModel
 import com.carlosmartel.project3.fragments.product.ProductFragment
 import com.carlosmartel.project3.fragments.product.ProductViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
+import java.util.*
 
 class MainActivity :
     AppCompatActivity(),
@@ -35,6 +37,11 @@ class MainActivity :
     OrderFragment.OnFragmentInteractionListener,
     ProductFragment.OnFragmentInteractionListener,
     CustomerFragment.OnFragmentInteractionListener {
+
+    private lateinit var viewPager: ViewPager
+    private lateinit var mAdapter: MyFragmentPagerAdapter
+    private lateinit var tabLayout: TabLayout
+
     override fun updateInflatedOrder(inflatedOrder: InflatedOrder) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -103,10 +110,6 @@ class MainActivity :
         startActivityForResult(intent, CustomData.EDIT_CUSTOMER_REQ)
     }
 
-    private lateinit var viewPager: ViewPager
-    private lateinit var mAdapter: MyFragmentPagerAdapter
-    private lateinit var tabLayout: TabLayout
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -120,7 +123,7 @@ class MainActivity :
                 }
                 1 -> {
                     val intent = Intent(this@MainActivity, AddEditOrderActivity::class.java)
-                    startActivity(intent)
+                    startActivityForResult(intent, CustomData.ADD_ORDER_REQ)
                 }
                 else -> {
                     val intent = Intent(this@MainActivity, AddEditProductActivity::class.java)
@@ -247,6 +250,20 @@ class MainActivity :
             ViewModelProviders.of(this).get(ProductViewModel::class.java).update(productAux)
             Toast.makeText(this, "Customer updated", Toast.LENGTH_SHORT).show()
 
+        } else if (requestCode == CustomData.ADD_ORDER_REQ && resultCode == Activity.RESULT_OK){
+            if(data != null){
+                val uid: Int = data.getIntExtra(CustomData.EXTRA_ORDER_UID, -1)
+                val pid: Int = data.getIntExtra(CustomData.EXTRA_ORDER_PID, -1)
+                val code: String = data.getStringExtra(CustomData.EXTRA_ORDER_CODE)
+                val date: Date = data.getSerializableExtra(CustomData.EXTRA_ORDER_DATE) as Date
+                val quantity: Int = data.getIntExtra(CustomData.EXTRA_ORDER_QTY, 0)
+
+                val newOrder = Order(code = code, uid = uid, productID = pid, date = date, quantity = quantity.toShort())
+
+                ViewModelProviders.of(this).get(OrderViewModel::class.java).insert(newOrder)
+                Toast.makeText(this, R.string.order_created, Toast.LENGTH_SHORT).show()
+
+            }
         } else if (requestCode == CustomData.EDIT_CUSTOMER_REQ && resultCode == CustomData.DEL_CUSTOMER_REQ) {
 
             Toast.makeText(this, R.string.customer_deleted, Toast.LENGTH_SHORT).show()
