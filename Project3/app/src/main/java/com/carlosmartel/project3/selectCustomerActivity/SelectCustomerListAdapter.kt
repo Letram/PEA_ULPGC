@@ -17,7 +17,7 @@ class SelectCustomerListAdapter : RecyclerView.Adapter<SelectCustomerListAdapter
 
     class SelectCustomerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(customer: Customer, listener: OnCustomerClickListener) {
-            itemView.customer_name.text = customer.c_name
+            itemView.product_item_name.text = customer.c_name
             itemView.setOnClickListener {
                 if (adapterPosition != RecyclerView.NO_POSITION) {
                     listener.onCustomerClick(customer)

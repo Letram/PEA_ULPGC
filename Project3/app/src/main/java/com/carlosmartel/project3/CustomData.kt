@@ -20,6 +20,6 @@ class CustomData {
         const val EDIT_PRODUCT_REQ: Int = 5
         const val DEL_PRODUCT_REQ: Int = 6
         const val SELECT_CUSTOMER_REQ: Int = 7
-        const val SELECT_PRODUCT_REQ: Int = 7
+        const val SELECT_PRODUCT_REQ: Int = 8
     }
 }

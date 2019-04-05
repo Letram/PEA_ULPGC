@@ -5,6 +5,6 @@
     android:layout_height="match_parent"
     android:id="@+id/select_customer_rv"
     tools:context=".selectCustomerActivity.SelectCustomerActivity"
-    tools:listitem="@layout/customer_list_item">
+    tools:listitem="@layout/select_customer_item">
 
 </android.support.v7.widget.RecyclerView>

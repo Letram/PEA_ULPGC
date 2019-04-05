@@ -5,8 +5,6 @@ import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import android.widget.DatePicker
 import android.widget.TextView
@@ -15,12 +13,15 @@ import com.carlosmartel.project3.R
 import com.carlosmartel.project3.data.entities.Customer
 import com.carlosmartel.project3.data.entities.Product
 import com.carlosmartel.project3.selectCustomerActivity.SelectCustomerActivity
+import com.carlosmartel.project3.selectProductActivity.SelectProductActivity
 import java.text.DateFormat
 import java.util.*
 
 
 class AddEditOrderActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
     private lateinit var datePickerText: TextView
+    private lateinit var customerNameText: TextView
+    private lateinit var productNameText: TextView
 
     private lateinit var currentCustomer: Customer
     private lateinit var currentProduct: Product
@@ -39,7 +40,10 @@ class AddEditOrderActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_edit_order)
+
         datePickerText = findViewById(R.id.date_text)
+        customerNameText = findViewById(R.id.product_item_name)
+        productNameText = findViewById(R.id.product_name)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
@@ -50,6 +54,12 @@ class AddEditOrderActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
         if(requestCode == CustomData.SELECT_CUSTOMER_REQ && resultCode == Activity.RESULT_OK){
             if(data != null){
                 currentCustomer = data.getParcelableExtra(CustomData.EXTRA_CUSTOMER)
+                customerNameText.text = currentCustomer.c_name
+            }
+        }else if(requestCode == CustomData.SELECT_PRODUCT_REQ && resultCode == Activity.RESULT_OK){
+            if(data != null){
+                currentProduct = data.getParcelableExtra(CustomData.EXTRA_PRODUCT)
+                productNameText.text = currentProduct.p_name
             }
         }
     }
@@ -62,5 +72,10 @@ class AddEditOrderActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
     fun openCustomerSelector(view:View){
         val intent = Intent(this, SelectCustomerActivity::class.java)
         startActivityForResult(intent, CustomData.SELECT_CUSTOMER_REQ)
+    }
+
+    fun openProductSelector(view: View){
+        val intent = Intent(this, SelectProductActivity::class.java)
+        startActivityForResult(intent, CustomData.SELECT_PRODUCT_REQ)
     }
 }

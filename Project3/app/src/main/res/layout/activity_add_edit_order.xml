@@ -102,7 +102,7 @@
         app:layout_constraintStart_toEndOf="@+id/textView9" />
 
     <EditText
-        android:id="@+id/customer_name"
+        android:id="@+id/product_item_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -127,7 +127,7 @@
         android:clickable="false"
         android:text="@string/name_placeholder"
         app:layout_constraintStart_toStartOf="@+id/guideline13"
-        app:layout_constraintTop_toBottomOf="@+id/customer_name" />
+        app:layout_constraintTop_toBottomOf="@+id/product_item_name" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline15"
@@ -144,8 +144,8 @@
         android:layout_marginEnd="8dp"
         android:text="@string/select"
         app:layout_constraintEnd_toStartOf="@+id/guideline14"
-        app:layout_constraintStart_toEndOf="@+id/customer_name"
-        app:layout_constraintTop_toTopOf="@+id/customer_name"
+        app:layout_constraintStart_toEndOf="@+id/product_item_name"
+        app:layout_constraintTop_toTopOf="@+id/product_item_name"
         android:onClick="openCustomerSelector"/>
 
     <Button
@@ -156,8 +156,10 @@
         android:layout_marginEnd="8dp"
         android:text="@string/select"
         app:layout_constraintEnd_toStartOf="@+id/guideline14"
-        app:layout_constraintStart_toEndOf="@+id/customer_name"
-        app:layout_constraintTop_toTopOf="@+id/product_name" />
+        app:layout_constraintStart_toEndOf="@+id/product_item_name"
+        app:layout_constraintTop_toTopOf="@+id/product_name"
+        android:onClick="openProductSelector"
+    />
 
     <EditText
         android:id="@+id/date_text"

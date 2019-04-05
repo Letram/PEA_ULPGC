@@ -46,7 +46,7 @@ class SelectCustomerActivity : AppCompatActivity() {
             override fun onCustomerClick(customer: Customer) {
                 customerSelected = customer
                 recyclerAdapter.setCustomerSelected(customer)
-                println(customerSelected.c_name)
+                println("Customer from select -> ${customerSelected.c_name}")
             }
 
         })

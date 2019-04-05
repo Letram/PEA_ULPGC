@@ -13,8 +13,8 @@
     <string name="description_placeholder">Put description here…</string>
     <string name="address_placeholder">Customer address here…</string>
     <string name="price_placeholder">Price goes here…</string>
-    <string name="name_label">Name </string>
-    <string name="address_label">Address </string>
+    <string name="name_label">Name</string>
+    <string name="address_label">Address</string>
     <string name="save">Save</string>
     <string name="add_customer_title">%1$s</string>
     <string name="save_customer_toast">Please, insert a name and an address to continue</string>
@@ -46,4 +46,5 @@
     <string name="order_date">Date…</string>
     <string name="select">Select</string>
     <string name="select_customer">Select customer</string>
+    <string name="select_product">Select product</string>
 </resources>
