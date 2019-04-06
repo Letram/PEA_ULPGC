@@ -6,14 +6,17 @@ import android.content.Context
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
+import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.carlosmartel.project3.CustomData
 import com.carlosmartel.project3.R
-import com.carlosmartel.project3.data.models.Customer
+import com.carlosmartel.project3.data.entities.Customer
+import java.util.*
 
 class CustomerFragment : Fragment() {
 
@@ -21,6 +24,7 @@ class CustomerFragment : Fragment() {
     private lateinit var customerViewModel: CustomerViewModel
     private lateinit var recyclerView: RecyclerView
     private lateinit var recyclerAdapter: CustomerListAdapter
+    private lateinit var customersWithOrders: List<Int>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +38,8 @@ class CustomerFragment : Fragment() {
 
         recyclerView = v.findViewById(R.id.recycler_view)
         recyclerAdapter = CustomerListAdapter()
+        customerViewModel = ViewModelProviders.of(this.activity!!)
+            .get(CustomerViewModel(application = activity!!.application)::class.java)
 
         recyclerView.apply {
             layoutManager = LinearLayoutManager(context)
@@ -41,14 +47,19 @@ class CustomerFragment : Fragment() {
         }
 
 
-        customerViewModel = ViewModelProviders.of(this.activity!!)
-            .get(CustomerViewModel(application = activity!!.application)::class.java)
         customerViewModel.getAllCustomers().observe(this, Observer {
             if (it != null) {
                 recyclerAdapter.setCustomers(customers = it)
                 recyclerAdapter.notifyDataSetChanged()
             }
         })
+        customerViewModel.getAllCustomersWithOrders().observe(this, Observer {
+            if(it != null){
+                customersWithOrders = it
+            }
+        })
+/*
+        //A SWIPE CANNOT BE UNDONE, THUS IS JUST DEACTIVATED
 
         //In order to delete a customer we just have to swipe left or right
         ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
@@ -65,27 +76,42 @@ class CustomerFragment : Fragment() {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val undoCustomer = recyclerAdapter.getCustomerAt(viewHolder.adapterPosition)
-                customerViewModel.delete(recyclerAdapter.getCustomerAt(viewHolder.adapterPosition))
-                Snackbar.make(view!!, R.string.customer_deleted, Snackbar.LENGTH_SHORT)
-                    .setAction(R.string.snack_undo) { _ ->
-                        customerViewModel.insert(undoCustomer)
-                    }
-                    .show()
+                if(customersWithOrders.contains(undoCustomer.u_id)){
+                    openDialog()
+                }else{
+                    customerViewModel.delete(recyclerAdapter.getCustomerAt(viewHolder.adapterPosition))
+                    Snackbar.make(view!!, R.string.customer_deleted, Snackbar.LENGTH_SHORT)
+                        .setAction(R.string.snack_undo) {
+                            customerViewModel.insert(undoCustomer)
+                        }
+                        .show()
+                }
             }
         }).attachToRecyclerView(recyclerView)
-
+*/
         recyclerAdapter.setOnItemClickListener(object : CustomerListAdapter.OnItemClickListener {
             override fun onItemClick(customer: Customer) {
                 listener?.updateCustomer(customer)
             }
 
             override fun onItemLongClick(customer: Customer) {
-                listener?.deleteCustomer(customer)
+                if(customersWithOrders.contains(customer.u_id)){
+                    openDialog()
+                }else
+                    listener?.deleteCustomer(customer)
             }
         })
         return v
     }
 
+    private fun openDialog(){
+        val dialog = AlertDialog.Builder(activity!!)
+        dialog.setTitle(R.string.dialog_customer_title)
+        dialog.setMessage(R.string.dialog_cant_delete_customer)
+        dialog.setPositiveButton(R.string.OK){ _, _ -> }
+        dialog.setCancelable(false)
+        dialog.show()
+    }
     override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is OnFragmentInteractionListener) {

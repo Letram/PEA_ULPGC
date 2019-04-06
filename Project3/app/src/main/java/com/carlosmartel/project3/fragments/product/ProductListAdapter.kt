@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.carlosmartel.project3.R
-import com.carlosmartel.project3.data.models.Product
+import com.carlosmartel.project3.data.entities.Product
 import kotlinx.android.synthetic.main.product_list_item.view.*
 
 class ProductListAdapter : RecyclerView.Adapter<ProductListAdapter.ProductViewHolder>() {
@@ -16,7 +16,7 @@ class ProductListAdapter : RecyclerView.Adapter<ProductListAdapter.ProductViewHo
     class ProductViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         fun bind(product: Product, clickListener: OnItemClickListener) {
-            itemView.productNameLabel.text = product.name
+            itemView.productNameLabel.text = product.p_name
             itemView.productPriceLabel.text = product.price.toString()
 
 

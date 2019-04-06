@@ -5,11 +5,12 @@ import android.arch.lifecycle.LiveData
 import android.os.AsyncTask
 import com.carlosmartel.project3.data.dao.CustomerQuery
 import com.carlosmartel.project3.data.database.DatabaseManager
-import com.carlosmartel.project3.data.models.Customer
+import com.carlosmartel.project3.data.entities.Customer
 
 class CustomerRepository (application: Application){
     private val customerQuery: CustomerQuery = DatabaseManager.getInstance(application)!!.customerQuery()
     private var allCustomers: LiveData<List<Customer>> = customerQuery.getAllCustomers()
+    private var allCustomersWithOrders: LiveData<List<Int>> = customerQuery.getAllCustomersWithOrders()
 
     fun insert(customer: Customer){
         InsertCustomerAsync(customerQuery).execute(customer)
@@ -58,5 +59,9 @@ class CustomerRepository (application: Application){
 
     fun getAllCustomers(): LiveData<List<Customer>> {
         return allCustomers
+    }
+
+    fun getAllCustomersWithOrders(): LiveData<List<Int>> {
+        return allCustomersWithOrders
     }
 }

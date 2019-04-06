@@ -5,11 +5,13 @@ import android.arch.lifecycle.LiveData
 import android.os.AsyncTask
 import com.carlosmartel.project3.data.dao.OrderQuery
 import com.carlosmartel.project3.data.database.DatabaseManager
-import com.carlosmartel.project3.data.models.Order
+import com.carlosmartel.project3.data.entities.Order
+import com.carlosmartel.project3.data.pojo.InflatedOrder
 
 class OrderRepository (application: Application){
     private val orderQuery: OrderQuery = DatabaseManager.getInstance(application)!!.orderQuery()
     private var allOrders: LiveData<List<Order>> = orderQuery.getAllOrders()
+    private var allInflatedOrders: LiveData<List<InflatedOrder>> = orderQuery.getAllInflatedOrders()
 
     fun insert(order: Order){
         InsertOrderAsync(orderQuery).execute(order)
@@ -58,5 +60,9 @@ class OrderRepository (application: Application){
 
     fun getAllOrders(): LiveData<List<Order>> {
         return allOrders
+    }
+
+    fun getAllInflatedOrders(): LiveData<List<InflatedOrder>>{
+        return allInflatedOrders
     }
 }

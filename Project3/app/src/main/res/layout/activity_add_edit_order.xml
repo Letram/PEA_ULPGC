@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AddEditOrderActivity">
+    tools:context=".AddEditOrderActivity.AddEditOrderActivity">
 
     <TextView
         android:id="@+id/textView7"
@@ -85,7 +85,7 @@
         android:inputType="number"
         app:layout_constraintBaseline_toBaselineOf="@+id/textView7"
         app:layout_constraintEnd_toStartOf="@+id/guideline14"
-        app:layout_constraintStart_toEndOf="@+id/textView7" />
+        app:layout_constraintStart_toEndOf="@+id/textView7"/>
 
     <EditText
         android:id="@+id/price_text"
@@ -93,22 +93,25 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        android:editable="false"
         android:ems="10"
-        android:inputType="number"
+        android:inputType="none"
+        android:focusable="false"
+        android:clickable="false"
         app:layout_constraintBaseline_toBaselineOf="@+id/textView9"
         app:layout_constraintEnd_toStartOf="@+id/guideline14"
         app:layout_constraintStart_toEndOf="@+id/textView9" />
 
     <EditText
-        android:id="@+id/customer_name"
+        android:id="@+id/product_item_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Name"
+        android:inputType="none"
+        android:focusable="false"
+        android:clickable="false"
+        android:text="@string/name_placeholder"
         app:layout_constraintStart_toStartOf="@+id/guideline13"
         app:layout_constraintTop_toTopOf="@+id/guideline15" />
 
@@ -119,10 +122,12 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="32dp"
         android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Name"
+        android:inputType="none"
+        android:focusable="false"
+        android:clickable="false"
+        android:text="@string/name_placeholder"
         app:layout_constraintStart_toStartOf="@+id/guideline13"
-        app:layout_constraintTop_toBottomOf="@+id/customer_name" />
+        app:layout_constraintTop_toBottomOf="@+id/product_item_name" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline15"
@@ -137,10 +142,11 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:layout_marginEnd="8dp"
-        android:text="Button"
+        android:text="@string/select"
         app:layout_constraintEnd_toStartOf="@+id/guideline14"
-        app:layout_constraintStart_toEndOf="@+id/customer_name"
-        app:layout_constraintTop_toTopOf="@+id/customer_name" />
+        app:layout_constraintStart_toEndOf="@+id/product_item_name"
+        app:layout_constraintTop_toTopOf="@+id/product_item_name"
+        android:onClick="openCustomerSelector"/>
 
     <Button
         android:id="@+id/select_product_btn"
@@ -148,26 +154,32 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:layout_marginEnd="8dp"
-        android:text="Button"
+        android:text="@string/select"
         app:layout_constraintEnd_toStartOf="@+id/guideline14"
-        app:layout_constraintStart_toEndOf="@+id/customer_name"
-        app:layout_constraintTop_toTopOf="@+id/product_name" />
+        app:layout_constraintStart_toEndOf="@+id/product_item_name"
+        app:layout_constraintTop_toTopOf="@+id/product_name"
+        android:onClick="openProductSelector"
+    />
 
     <EditText
-        android:id="@+id/editText8"
+        android:id="@+id/date_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
+        android:clickable="true"
         android:ems="10"
+        android:focusableInTouchMode="false"
         android:inputType="date"
         android:text="@string/order_date"
         android:textSize="@dimen/text_big"
         app:layout_constraintBottom_toTopOf="@+id/guideline15"
         app:layout_constraintEnd_toStartOf="@+id/guideline14"
         app:layout_constraintStart_toStartOf="@+id/guideline13"
-        app:layout_constraintTop_toBottomOf="@+id/code_text" />
+        app:layout_constraintTop_toBottomOf="@+id/code_text"
+        android:focusable="false"
+        android:onClick="openDatepicker"/>
 
 </android.support.constraint.ConstraintLayout>

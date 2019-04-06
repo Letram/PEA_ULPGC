@@ -5,11 +5,12 @@ import android.arch.lifecycle.LiveData
 import android.os.AsyncTask
 import com.carlosmartel.project3.data.dao.ProductQuery
 import com.carlosmartel.project3.data.database.DatabaseManager
-import com.carlosmartel.project3.data.models.Product
+import com.carlosmartel.project3.data.entities.Product
 
 class ProductRepository (application: Application){
     private val productQuery: ProductQuery = DatabaseManager.getInstance(application)!!.productQuery()
     private var allProducts: LiveData<List<Product>> = productQuery.getAllProducts()
+    private var allProductsWithOrders: LiveData<List<Int>> = productQuery.getAllProductsWithOrders()
 
     fun insert(product: Product){
         InsertProductAsync(productQuery).execute(product)
@@ -58,5 +59,9 @@ class ProductRepository (application: Application){
 
     fun getAllProducts(): LiveData<List<Product>> {
         return allProducts
+    }
+
+    fun getAlProductsWithOrders(): LiveData<List<Int>> {
+        return allProductsWithOrders
     }
 }

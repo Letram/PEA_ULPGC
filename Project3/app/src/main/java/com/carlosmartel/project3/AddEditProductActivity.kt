@@ -1,6 +1,7 @@
 package com.carlosmartel.project3
 
 import android.app.Activity
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
@@ -10,7 +11,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.EditText
 import android.widget.Toast
-import com.carlosmartel.project3.data.models.Product
+import com.carlosmartel.project3.data.entities.Product
 import com.carlosmartel.project3.fragments.product.ProductViewModel
 
 class AddEditProductActivity : AppCompatActivity() {
@@ -18,6 +19,8 @@ class AddEditProductActivity : AppCompatActivity() {
     private lateinit var productName: EditText
     private lateinit var productDescription: EditText
     private lateinit var productPrice: EditText
+    private lateinit var productsWithOrders: List<Int>
+    private lateinit var productViewModel: ProductViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,6 +29,7 @@ class AddEditProductActivity : AppCompatActivity() {
         productName = findViewById(R.id.product_name)
         productDescription = findViewById(R.id.product_description)
         productPrice = findViewById(R.id.product_price)
+        productViewModel = ViewModelProviders.of(this).get(ProductViewModel::class.java)
 
         supportActionBar!!.apply {
             setHomeAsUpIndicator(R.drawable.ic_close)
@@ -36,10 +40,13 @@ class AddEditProductActivity : AppCompatActivity() {
             productName.setText(intent.getStringExtra(CustomData.EXTRA_NAME))
             productDescription.setText(intent.getStringExtra(CustomData.EXTRA_DESCRIPTION))
             productPrice.setText(intent.getFloatExtra(CustomData.EXTRA_PRICE, -1F).toString())
+            productViewModel.getAllProductsWithOrders().observe(this, Observer {
+                if(it != null)
+                    productsWithOrders = it
+            })
         } else
-            title = if (!intent.hasExtra(CustomData.EXTRA_ID)) getString(
-                R.string.add_product_title
-            ) else intent.getStringExtra(CustomData.EXTRA_NAME)
+            title = getString(R.string.add_product_title)
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -66,21 +73,34 @@ class AddEditProductActivity : AppCompatActivity() {
     }
 
     private fun deleteProduct() {
-        val deleteProduct = Product(
-            name = intent.getStringExtra(CustomData.EXTRA_NAME),
-            description = intent.getStringExtra(CustomData.EXTRA_DESCRIPTION),
-            price = intent.getFloatExtra(CustomData.EXTRA_PRICE, -1F),
-            productID = intent.getIntExtra(CustomData.EXTRA_ID, -1)
-        )
-        val dialog = AlertDialog.Builder(this@AddEditProductActivity)
-        dialog.setTitle(R.string.dialog_title)
-        dialog.setMessage(R.string.dialog_product_confirmation)
-        dialog.setPositiveButton(R.string.dialog_delete) { _, _ ->
-            ViewModelProviders.of(this).get(ProductViewModel::class.java).delete(deleteProduct)
-            setResult(CustomData.DEL_PRODUCT_REQ)
-            finish()
+        if(productsWithOrders.contains(intent.getIntExtra(CustomData.EXTRA_ID, -1)))
+            openDialog()
+        else{
+            val deleteProduct = Product(
+                p_name = intent.getStringExtra(CustomData.EXTRA_NAME),
+                description = intent.getStringExtra(CustomData.EXTRA_DESCRIPTION),
+                price = intent.getFloatExtra(CustomData.EXTRA_PRICE, -1F),
+                p_id = intent.getIntExtra(CustomData.EXTRA_ID, -1)
+            )
+            val dialog = AlertDialog.Builder(this@AddEditProductActivity)
+            dialog.setTitle(R.string.dialog_product_title)
+            dialog.setMessage(R.string.dialog_product_confirmation)
+            dialog.setPositiveButton(R.string.dialog_delete) { _, _ ->
+                ViewModelProviders.of(this).get(ProductViewModel::class.java).delete(deleteProduct)
+                setResult(CustomData.DEL_PRODUCT_REQ)
+                finish()
+            }
+            dialog.setNegativeButton(R.string.dialog_cancel) { _, _ -> }
+            dialog.show()
         }
-        dialog.setNegativeButton(R.string.dialog_cancel) { _, _ -> }
+    }
+
+    private fun openDialog(){
+        val dialog = AlertDialog.Builder(this)
+        dialog.setTitle(R.string.dialog_product_title)
+        dialog.setMessage(R.string.dialog_cant_delete_product)
+        dialog.setPositiveButton(R.string.OK){ _, _ -> }
+        dialog.setCancelable(false)
         dialog.show()
     }
 
