@@ -6,6 +6,7 @@ import android.content.Context
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
+import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
@@ -21,6 +22,7 @@ class ProductFragment : Fragment() {
     private lateinit var productViewModel: ProductViewModel
     private lateinit var recyclerView: RecyclerView
     private lateinit var recyclerAdapter: ProductListAdapter
+    private lateinit var productsWithOrders: List<Int>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,7 +49,11 @@ class ProductFragment : Fragment() {
                 recyclerAdapter.notifyDataSetChanged()
             }
         })
-
+        productViewModel.getAllProductsWithOrders().observe(this, Observer {
+            if(it != null)
+                productsWithOrders = it
+        })
+/*
         //In order to delete a customer we just have to swipe left or right
         ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
             0,
@@ -71,18 +77,30 @@ class ProductFragment : Fragment() {
                     .show()
             }
         }).attachToRecyclerView(recyclerView)
-
+*/
         recyclerAdapter.setOnItemClickListener(object : ProductListAdapter.OnItemClickListener {
             override fun onItemClick(product: Product) {
                 listener?.updateProduct(product)
             }
 
             override fun onItemLongClick(product: Product) {
-                listener?.deleteProduct(product)
+                if(productsWithOrders.contains(product.p_id))
+                    openDialog()
+                else
+                    listener?.deleteProduct(product)
             }
-
         })
         return view
+    }
+
+
+    private fun openDialog(){
+        val dialog = AlertDialog.Builder(activity!!)
+        dialog.setTitle(R.string.dialog_product_title)
+        dialog.setMessage(R.string.dialog_cant_delete_product)
+        dialog.setPositiveButton(R.string.OK){ _, _ -> }
+        dialog.setCancelable(false)
+        dialog.show()
     }
 
     override fun onAttach(context: Context) {

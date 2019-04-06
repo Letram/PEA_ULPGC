@@ -11,12 +11,13 @@ class CustomData {
         const val EXTRA_PRICE:String = "EXTRA_PRICE"
         const val EXTRA_CUSTOMER: String = "EXTRA_CUSTOMER"
         const val EXTRA_PRODUCT: String = "EXTRA_PRODUCT"
+        const val EXTRA_ORDER: String = "EXTRA_ORDER"
         const val EXTRA_ORDER_UID: String = "EXTRA_ORDER_UID"
         const val EXTRA_ORDER_PID: String = "EXTRA_ORDER_PID"
-        const val EXTRA_ORDER_PRICE: String = "EXTRA_ORDER_PRICE"
         const val EXTRA_ORDER_QTY: String = "EXTRA_ORDER_QTY"
         const val EXTRA_ORDER_DATE: String  = "EXTRA_ORDER_DATE"
         const val EXTRA_ORDER_CODE: String = "EXTRA_ORDER_CODE"
+        const val EXTRA_ORDER_ID: String = "EXTRA_ORDER_ID"
 
         //requests
         const val ADD_CUSTOMER_REQ: Int = 1

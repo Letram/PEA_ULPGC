@@ -10,9 +10,11 @@ class ProductViewModel constructor(application: Application) : AndroidViewModel(
 
     private var productRepository: ProductRepository = ProductRepository(application)
     private var allProducts: LiveData<List<Product>>
+    private var allProductsWithOrders: LiveData<List<Int>>
 
     init {
         allProducts = productRepository.getAllProducts()
+        allProductsWithOrders = productRepository.getAlProductsWithOrders()
     }
 
     fun insert(product: Product) {
@@ -33,5 +35,9 @@ class ProductViewModel constructor(application: Application) : AndroidViewModel(
 
     fun getAllProducts(): LiveData<List<Product>> {
         return allProducts
+    }
+
+    fun getAllProductsWithOrders(): LiveData<List<Int>> {
+        return allProductsWithOrders
     }
 }

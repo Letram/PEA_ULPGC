@@ -46,13 +46,16 @@ class SelectCustomerActivity : AppCompatActivity() {
             override fun onCustomerClick(customer: Customer) {
                 customerSelected = customer
                 recyclerAdapter.setCustomerSelected(customer)
-                println("Customer from select -> ${customerSelected.c_name}")
             }
 
         })
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         title = resources.getString(R.string.select_customer)
+        if(intent.hasExtra(CustomData.EXTRA_CUSTOMER)){
+            customerSelected = intent.getParcelableExtra(CustomData.EXTRA_CUSTOMER)
+            recyclerAdapter.setCustomerSelected(customerSelected)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

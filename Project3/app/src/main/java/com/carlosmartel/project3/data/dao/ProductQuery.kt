@@ -12,6 +12,9 @@ interface ProductQuery{
     @Query("SELECT * FROM Product")
     fun getAllProducts(): LiveData<List<Product>>
 
+    @Query("SELECT DISTINCT p_id FROM Product, `Order` WHERE Product.p_id = `Order`.productID")
+    fun getAllProductsWithOrders(): LiveData<List<Int>>
+
     @Insert
     fun insertAll(vararg products: Product)
 

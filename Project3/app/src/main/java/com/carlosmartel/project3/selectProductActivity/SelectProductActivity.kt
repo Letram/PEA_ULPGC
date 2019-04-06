@@ -50,13 +50,15 @@ class SelectProductActivity : AppCompatActivity() {
             override fun onProductClick(product: Product) {
                 productSelected = product
                 recyclerAdapter.setProductSelected(product)
-                println("Product from select -> ${productSelected.p_name}")
             }
-
         })
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         title = resources.getString(R.string.select_product)
+        if(intent.hasExtra(CustomData.EXTRA_PRODUCT)){
+            productSelected = intent.getParcelableExtra(CustomData.EXTRA_PRODUCT)
+            recyclerAdapter.setProductSelected(productSelected)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

@@ -2,8 +2,10 @@ package com.carlosmartel.project3.AddEditOrderActivity
 
 import android.app.Activity
 import android.app.DatePickerDialog
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
@@ -15,9 +17,12 @@ import android.widget.TextView
 import com.carlosmartel.project3.CustomData
 import com.carlosmartel.project3.R
 import com.carlosmartel.project3.data.entities.Customer
+import com.carlosmartel.project3.data.entities.Order
 import com.carlosmartel.project3.data.entities.Product
+import com.carlosmartel.project3.fragments.order.OrderViewModel
 import com.carlosmartel.project3.selectCustomerActivity.SelectCustomerActivity
 import com.carlosmartel.project3.selectProductActivity.SelectProductActivity
+import kotlinx.android.synthetic.main.activity_add_edit_order.*
 import java.text.DateFormat
 import java.util.*
 
@@ -32,10 +37,12 @@ class AddEditOrderActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
 
     private var currentCustomer: Customer? = null
     private var currentProduct: Product? = null
+    private var currentOrder: Order? = null
 
     private var quantity: Int = 0
     private var price: Float = 0F
     private lateinit var date: Date
+
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
         val c = Calendar.getInstance()
         c.set(Calendar.YEAR, year)
@@ -75,11 +82,28 @@ class AddEditOrderActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
         })
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        title = getString(R.string.add_order_title)
+
+        if(intent.hasExtra(CustomData.EXTRA_ORDER)){
+            currentProduct = intent.getParcelableExtra(CustomData.EXTRA_PRODUCT)
+            currentCustomer = intent.getParcelableExtra(CustomData.EXTRA_CUSTOMER)
+            currentOrder = intent.getParcelableExtra(CustomData.EXTRA_ORDER)
+
+            title = currentOrder?.code
+            datePickerText.text = DateFormat.getDateInstance(DateFormat.MEDIUM).format(currentOrder?.date)
+            date = currentOrder?.date!!
+            orderCodeText.text = currentOrder?.code
+            productNameText.text = currentProduct?.p_name
+            customerNameText.text = currentCustomer?.c_name
+            productQuantityText.text = currentOrder?.quantity.toString()
+            quantity = currentOrder?.quantity!!.toInt()
+            setPriceWithQuantity()
+
+        }else title = getString(R.string.add_order_title)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.add_menu, menu)
+        if(intent.hasExtra(CustomData.EXTRA_ORDER)) menuInflater.inflate(R.menu.edit_menu, menu)
+        else menuInflater.inflate(R.menu.add_menu, menu)
         return true
     }
 
@@ -89,16 +113,31 @@ class AddEditOrderActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
                 saveOrder()
                 true
             }
-            /*
+
             R.id.delete -> {
-                deleteCustomer()
+                deleteOrder()
                 true
             }
-            */
+
             else -> {
                 super.onOptionsItemSelected(item)
             }
         }
+    }
+
+    private fun deleteOrder() {
+        val deleteOrder = intent.getParcelableExtra<Order>(CustomData.EXTRA_ORDER)
+
+        val dialog = AlertDialog.Builder(this@AddEditOrderActivity)
+        dialog.setTitle(R.string.dialog_order_title)
+        dialog.setMessage(R.string.dialog_order_confirmation)
+        dialog.setPositiveButton(R.string.dialog_delete){ _, _ ->
+            ViewModelProviders.of(this).get(OrderViewModel::class.java).delete(deleteOrder)
+            setResult(CustomData.DEL_ORDER_REQ)
+            finish()
+        }
+        dialog.setNegativeButton(R.string.dialog_cancel){_,_ ->}
+        dialog.show()
     }
 
     private fun saveOrder() {
@@ -113,6 +152,8 @@ class AddEditOrderActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
         data.putExtra(CustomData.EXTRA_ORDER_DATE, date)
         data.putExtra(CustomData.EXTRA_ORDER_CODE, code)
 
+        if(intent.hasExtra(CustomData.EXTRA_ORDER))
+            data.putExtra(CustomData.EXTRA_ORDER_ID, currentOrder?.orderID)
         setResult(Activity.RESULT_OK, data)
         finish()
     }
