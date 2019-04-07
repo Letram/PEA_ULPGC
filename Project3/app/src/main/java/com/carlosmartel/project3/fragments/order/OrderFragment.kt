@@ -1,6 +1,5 @@
 package com.carlosmartel.project3.fragments.order
 
-import android.arch.lifecycle.LifecycleService
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
@@ -13,8 +12,6 @@ import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-
 import com.carlosmartel.project3.R
 import com.carlosmartel.project3.data.entities.Order
 import com.carlosmartel.project3.data.pojo.InflatedOrder
@@ -27,10 +24,6 @@ class OrderFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var recyclerAdapter: OrderListAdapter
 
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

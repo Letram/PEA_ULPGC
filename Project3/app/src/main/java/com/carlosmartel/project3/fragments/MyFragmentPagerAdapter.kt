@@ -8,7 +8,7 @@ import com.carlosmartel.project3.fragments.order.OrderFragment
 import com.carlosmartel.project3.fragments.product.ProductFragment
 
 class MyFragmentPagerAdapter(fm: FragmentManager): FragmentPagerAdapter(fm){
-    private var titles: List<String> = ArrayList<String>()
+    private var titles: List<String> = ArrayList()
 
     override fun getPageTitle(position: Int): CharSequence? {
         return titles[position]

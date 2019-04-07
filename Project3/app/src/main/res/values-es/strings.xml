@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="navigation_drawer_open">Abrir panel lateral</string>
+    <string name="navigation_drawer_close">Cerrar panel lateral</string>
+    <string name="customer_tab">Clientes</string>
+    <string name="order_tab">Pedidos</string>
+    <string name="product_tab">Productos</string>
+    <string name="name_placeholder">Escriba el nombre aquí</string>
+    <string name="description_placeholder">Escriba la descripción aquí</string>
+    <string name="address_placeholder">Escriba la dirección aquí</string>
+    <string name="price_placeholder">Escriba el precio aquí</string>
+    <string name="name_label">Nombre</string>
+    <string name="address_label">Dirección</string>
+    <string name="save">Guardar</string>
+    <string name="add_customer_title">Añadir cliente</string>
+    <string name="save_customer_toast">Por favor, rellene todos los campos para continuar</string>
+    <string name="customer_saved_snack">Cliente guardado con éxito</string>
+    <string name="customer_deleted">Cliente borrado con éxito</string>
+    <string name="nav_customer">Clientes</string>
+    <string name="nav_product">Productos</string>
+    <string name="nav_order">Pedidos</string>
+    <string name="dialog_customer_title">Borrar cliente</string>
+    <string name="dialog_product_title">Borrar producto</string>
+    <string name="dialog_order_title">Borrar pedido</string>
+    <string name="dialog_customer_confirmation">¿Está seguro de querer borrar este cliente?</string>
+    <string name="dialog_product_confirmation">¿Está seguro de querer borrar este producto?</string>
+    <string name="dialog_delete">Borrar</string>
+    <string name="dialog_cancel">Cancelar</string>
+    <string name="snack_undo">Deshacer</string>
+    <string name="delete">Borrar</string>
+    <string name="product_description_label">Descripción</string>
+    <string name="product_price_label">Precio</string>
+    <string name="add_product_title">Añadir producto</string>
+    <string name="save_product_toast">Por favor, rellene todos los campos para continuar</string>
+    <string name="product_saved_toast">Producto guardado con éxito</string>
+    <string name="product_deleted">Producto borrado con éxito</string>
+    <string name="code_placeholder">Código del pedido</string>
+    <string name="order_code">Código</string>
+    <string name="order_qty">Cantidad</string>
+    <string name="order_price">Precio</string>
+    <string name="order_date">Fecha</string>
+    <string name="select">Seleccionar</string>
+    <string name="select_customer">Seleccionar cliente</string>
+    <string name="select_product">Seleccionar producto</string>
+    <string name="add_order_title">Añadir pedido</string>
+    <string name="order_created">Pedido añadido con éxito</string>
+    <string name="dialog_order_confirmation">¿Está seguro de querer borrar este producto?</string>
+    <string name="order_deleted">Pedido borrado con éxito</string>
+    <string name="order_updated">Pedido actualizado con éxito</string>
+    <string name="dialog_cant_delete_customer">No se puede borrar este cliente debido a que existen pedidos relacionados
+        con él. Borre primero los pedidos para poder realizar la operación
+    </string>
+    <string name="dialog_cant_delete_product">"No se puede borrar este producto debido a que existen pedidos
+        relacionados con él. Borre primero los pedidos para poder realizar la operación "
+    </string>
+    <string name="customer_updated">Cliente actualizado con éxito</string>
+    <string name="product_updated">Producto actualizado con éxito</string>
+    <string name="app_name">Proyecto 3</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Proyecto 3</string>
+    <string name="action_settings">Ajustes</string>
+    <string name="OK">OK</string>
+</resources>

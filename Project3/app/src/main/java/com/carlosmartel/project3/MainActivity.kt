@@ -118,7 +118,7 @@ class MainActivity :
         dialog.setPositiveButton(R.string.dialog_delete) { _, _ ->
             ViewModelProviders.of(this).get(CustomerViewModel::class.java).delete(customer)
             Snackbar.make(viewPager, R.string.customer_deleted, Snackbar.LENGTH_SHORT)
-                .setAction(R.string.snack_undo) { _ ->
+                .setAction(R.string.snack_undo) {
                     ViewModelProviders.of(this).get(CustomerViewModel::class.java).insert(undoCustomer)
                 }
                 .show()

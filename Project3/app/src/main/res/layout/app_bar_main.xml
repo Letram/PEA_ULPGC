@@ -31,20 +31,17 @@
             android:layout_height="match_parent">
 
             <android.support.design.widget.TabItem
-                android:id="@+id/customerTab"
-                android:layout_width="wrap_content"
+                    android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/customer_tab" />
 
             <android.support.design.widget.TabItem
-                android:id="@+id/orderTab"
-                android:layout_width="wrap_content"
+                    android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/order_tab" />
 
             <android.support.design.widget.TabItem
-                android:id="@+id/productTab"
-                android:layout_width="wrap_content"
+                    android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/product_tab" />
         </android.support.design.widget.TabLayout>
