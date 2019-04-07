@@ -1,11 +1,12 @@
-package com.carlosmartel.project3.selectProductActivity
+package com.carlosmartel.project3.activities.selectProductActivity
 
 import android.app.Activity
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AlertDialog
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.Menu
@@ -34,19 +35,23 @@ class SelectProductActivity : AppCompatActivity() {
             adapter = recyclerAdapter
         }
 
-        if(intent.hasExtra(CustomData.EXTRA_PRODUCT)){
+        if (intent.hasExtra(CustomData.EXTRA_PRODUCT)) {
             productSelected = intent.getParcelableExtra(CustomData.EXTRA_PRODUCT)
             recyclerAdapter.setProductSelected(productSelected)
         }
 
         productViewModel.getAllProducts().observe(this, Observer {
-            if(it != null){
-                recyclerAdapter.setProducts(it)
-                recyclerAdapter.notifyDataSetChanged()
+            if (it != null) {
+                if (it.isEmpty()) openDialog()
+                else {
+                    recyclerAdapter.setProducts(it)
+                    recyclerAdapter.notifyDataSetChanged()
+                }
             }
         })
 
-        recyclerAdapter.setOnProductClickListener(object: SelectProductListAdapter.OnProductClickListener{
+        recyclerAdapter.setOnProductClickListener(object :
+            SelectProductListAdapter.OnProductClickListener {
             override fun onProductClick(product: Product) {
                 productSelected = product
                 recyclerAdapter.setProductSelected(product)
@@ -55,11 +60,21 @@ class SelectProductActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         title = resources.getString(R.string.select_product)
-        if(intent.hasExtra(CustomData.EXTRA_PRODUCT)){
+        if (intent.hasExtra(CustomData.EXTRA_PRODUCT)) {
             productSelected = intent.getParcelableExtra(CustomData.EXTRA_PRODUCT)
             recyclerAdapter.setProductSelected(productSelected)
         }
     }
+
+    private fun openDialog() {
+        val dialog = AlertDialog.Builder(this)
+        dialog.setTitle(R.string.select_product)
+        dialog.setMessage(R.string.dialog_select_info)
+        dialog.setPositiveButton(R.string.OK) { _, _ -> finish() }
+        dialog.setCancelable(false)
+        dialog.show()
+    }
+
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.select_menu, menu)
@@ -67,7 +82,7 @@ class SelectProductActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        return when(item?.itemId){
+        return when (item?.itemId) {
             R.id.select -> {
                 selectProduct()
                 return true

@@ -4,7 +4,7 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
                                         android:id="@+id/select_product_rv"
-                                        tools:context=".selectCustomerActivity.SelectCustomerActivity"
+                                        tools:context=".activities.selectCustomerActivity.SelectCustomerActivity"
                                         tools:listitem="@layout/select_product_item">
 
 </android.support.v7.widget.RecyclerView>

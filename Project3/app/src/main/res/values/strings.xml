@@ -60,4 +60,8 @@
     </string>
     <string name="customer_updated">Customer updated!</string>
     <string name="product_updated">Product updated!</string>
+    <string name="save_order_toast">Please fill all fields to complete your request</string>
+    <string name="dialog_select_info">There is no data in the database for the related object. Please come again once
+        more data is available.
+    </string>
 </resources>

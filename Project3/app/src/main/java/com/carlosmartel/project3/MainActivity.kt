@@ -4,8 +4,8 @@ import android.app.Activity
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.design.widget.NavigationView
+import android.support.design.widget.Snackbar
 import android.support.design.widget.TabLayout
 import android.support.v4.view.GravityCompat
 import android.support.v4.view.ViewPager
@@ -15,7 +15,9 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
-import com.carlosmartel.project3.addEditOrderActivity.AddEditOrderActivity
+import com.carlosmartel.project3.activities.AddEditCustomerActivity
+import com.carlosmartel.project3.activities.AddEditProductActivity
+import com.carlosmartel.project3.activities.addEditOrderActivity.AddEditOrderActivity
 import com.carlosmartel.project3.data.entities.Customer
 import com.carlosmartel.project3.data.entities.Order
 import com.carlosmartel.project3.data.entities.Product

@@ -1,4 +1,4 @@
-package com.carlosmartel.project3.selectCustomerActivity
+package com.carlosmartel.project3.activities.selectCustomerActivity
 
 import android.graphics.Color
 import android.support.v7.widget.RecyclerView
@@ -29,7 +29,9 @@ class SelectCustomerListAdapter : RecyclerView.Adapter<SelectCustomerListAdapter
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): SelectCustomerViewHolder {
         val selectCustomerView = LayoutInflater.from(p0.context).inflate(R.layout.select_customer_item, p0, false)
-        return SelectCustomerViewHolder(selectCustomerView)
+        return SelectCustomerViewHolder(
+            selectCustomerView
+        )
     }
 
     override fun getItemCount(): Int {

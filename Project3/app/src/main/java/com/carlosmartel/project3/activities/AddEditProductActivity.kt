@@ -1,4 +1,4 @@
-package com.carlosmartel.project3
+package com.carlosmartel.project3.activities
 
 import android.app.Activity
 import android.arch.lifecycle.Observer
@@ -11,6 +11,8 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.EditText
 import android.widget.Toast
+import com.carlosmartel.project3.CustomData
+import com.carlosmartel.project3.R
 import com.carlosmartel.project3.data.entities.Product
 import com.carlosmartel.project3.fragments.product.ProductViewModel
 

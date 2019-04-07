@@ -1,4 +1,4 @@
-package com.carlosmartel.project3.selectProductActivity
+package com.carlosmartel.project3.activities.selectProductActivity
 
 import android.graphics.Color
 import android.support.v7.widget.RecyclerView
@@ -28,7 +28,9 @@ class SelectProductListAdapter: RecyclerView.Adapter<SelectProductListAdapter.Se
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): SelectProductViewHolder {
         val selectProductView = LayoutInflater.from(p0.context).inflate(R.layout.select_product_item, p0, false)
-        return SelectProductViewHolder(selectProductView)
+        return SelectProductViewHolder(
+            selectProductView
+        )
     }
 
     override fun getItemCount(): Int {

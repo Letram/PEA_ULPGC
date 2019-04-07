@@ -105,7 +105,7 @@ class OrderFragment : Fragment() {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val undoOrder = recyclerAdapter.getInflatedOrderAt(viewHolder.adapterPosition).order!!
                 orderViewModel.delete(recyclerAdapter.getInflatedOrderAt(viewHolder.adapterPosition).order!!)
-                Snackbar.make(view!!, R.string.customer_deleted, Snackbar.LENGTH_SHORT)
+                Snackbar.make(view!!, R.string.order_deleted, Snackbar.LENGTH_SHORT)
                     .setAction(R.string.snack_undo) {
                         orderViewModel.insert(undoOrder)
                     }

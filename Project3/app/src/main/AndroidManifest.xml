@@ -10,19 +10,19 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme" tools:ignore="GoogleAppIndexingWarning">
         <activity
-                android:name=".selectProductActivity.SelectProductActivity"
-                android:parentActivityName=".addEditOrderActivity.AddEditOrderActivity"/>
+                android:name=".activities.selectProductActivity.SelectProductActivity"
+                android:parentActivityName=".activities.addEditOrderActivity.AddEditOrderActivity"/>
         <activity
-                android:name=".selectCustomerActivity.SelectCustomerActivity"
-                android:parentActivityName=".addEditOrderActivity.AddEditOrderActivity"/>
+                android:name=".activities.selectCustomerActivity.SelectCustomerActivity"
+                android:parentActivityName=".activities.addEditOrderActivity.AddEditOrderActivity"/>
         <activity
-                android:name=".addEditOrderActivity.AddEditOrderActivity"
+                android:name=".activities.addEditOrderActivity.AddEditOrderActivity"
                 android:parentActivityName=".MainActivity"/>
         <activity
-                android:name=".AddEditProductActivity"
+                android:name=".activities.AddEditProductActivity"
                 android:parentActivityName=".MainActivity"/>
         <activity
-                android:name=".AddEditCustomerActivity"
+                android:name=".activities.AddEditCustomerActivity"
                 android:parentActivityName=".MainActivity"/>
         <activity
                 android:name=".MainActivity"

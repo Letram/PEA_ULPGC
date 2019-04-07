@@ -61,4 +61,8 @@
     <string name="nav_header_desc">Proyecto 3</string>
     <string name="action_settings">Ajustes</string>
     <string name="OK">OK</string>
+    <string name="dialog_select_info">No hay datos de este objecto en el sistema. Por favor, vuelva más tarde cuando se
+        hayan añadido
+    </string>
+    <string name="save_order_toast">Por favor, rellene todos los campos para continuar</string>
 </resources>
