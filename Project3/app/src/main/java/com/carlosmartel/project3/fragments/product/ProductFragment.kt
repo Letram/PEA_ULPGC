@@ -108,7 +108,7 @@ class ProductFragment : Fragment() {
         if (context is OnFragmentInteractionListener) {
             listener = context
         } else {
-            throw RuntimeException(context.toString() + " must implement OnProductFragmentInteractionListener") as Throwable
+            throw RuntimeException(context.toString() + " must implement OnProductFragmentInteractionListener")
         }
     }
 

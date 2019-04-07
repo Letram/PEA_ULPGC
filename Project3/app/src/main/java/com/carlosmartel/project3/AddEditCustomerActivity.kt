@@ -27,6 +27,10 @@ class AddEditCustomerActivity : AppCompatActivity() {
         setContentView(R.layout.activity_add_customer)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         customerViewModel = ViewModelProviders.of(this).get(CustomerViewModel::class.java)
+        customerViewModel.getAllCustomersWithOrders().observe(this, Observer {
+            if (it != null)
+                customersWithOrders = it
+        })
 
         customerNameEdit = this.findViewById(R.id.name_edit)
         customerAddressEdit = this.findViewById(R.id.address_edit)
@@ -37,10 +41,6 @@ class AddEditCustomerActivity : AppCompatActivity() {
             customerNameEdit.setText(intent.getStringExtra(CustomData.EXTRA_NAME))
             customerAddressEdit.setText(intent.getStringExtra(CustomData.EXTRA_ADDRESS))
             prevCustomer = intent.getParcelableExtra(CustomData.EXTRA_CUSTOMER)
-            customerViewModel.getAllCustomersWithOrders().observe(this, Observer {
-                if (it != null)
-                    customersWithOrders = it
-            })
         } else
             title = getString(R.string.add_customer_title)
     }

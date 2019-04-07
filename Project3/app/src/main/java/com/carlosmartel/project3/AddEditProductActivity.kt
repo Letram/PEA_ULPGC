@@ -13,6 +13,7 @@ import android.widget.EditText
 import android.widget.Toast
 import com.carlosmartel.project3.data.entities.Product
 import com.carlosmartel.project3.fragments.product.ProductViewModel
+import kotlinx.android.synthetic.main.activity_add_edit_product.*
 
 class AddEditProductActivity : AppCompatActivity() {
 
@@ -22,6 +23,8 @@ class AddEditProductActivity : AppCompatActivity() {
     private lateinit var productsWithOrders: List<Int>
     private lateinit var productViewModel: ProductViewModel
 
+    private var prevProduct: Product? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_edit_product)
@@ -30,20 +33,19 @@ class AddEditProductActivity : AppCompatActivity() {
         productDescription = findViewById(R.id.product_description)
         productPrice = findViewById(R.id.product_price)
         productViewModel = ViewModelProviders.of(this).get(ProductViewModel::class.java)
+        productViewModel.getAllProductsWithOrders().observe(this, Observer {
+            if (it != null)
+                productsWithOrders = it
+        })
 
-        supportActionBar!!.apply {
-            setHomeAsUpIndicator(R.drawable.ic_close)
-            setDisplayHomeAsUpEnabled(true)
-        }
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
         if (intent.hasExtra(CustomData.EXTRA_NAME)) {
             title = intent.getStringExtra(CustomData.EXTRA_NAME)
             productName.setText(intent.getStringExtra(CustomData.EXTRA_NAME))
             productDescription.setText(intent.getStringExtra(CustomData.EXTRA_DESCRIPTION))
             productPrice.setText(intent.getFloatExtra(CustomData.EXTRA_PRICE, -1F).toString())
-            productViewModel.getAllProductsWithOrders().observe(this, Observer {
-                if(it != null)
-                    productsWithOrders = it
-            })
+            prevProduct = intent.getParcelableExtra(CustomData.EXTRA_PRODUCT)
         } else
             title = getString(R.string.add_product_title)
 
@@ -51,7 +53,7 @@ class AddEditProductActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         //return super.onCreateOptionsMenu(menu)
-        if (intent.hasExtra(CustomData.EXTRA_ID)) menuInflater.inflate(R.menu.edit_menu, menu)
+        if (prevProduct != null) menuInflater.inflate(R.menu.edit_menu, menu)
         else menuInflater.inflate(R.menu.add_menu, menu)
         return true
     }
@@ -73,15 +75,10 @@ class AddEditProductActivity : AppCompatActivity() {
     }
 
     private fun deleteProduct() {
-        if(productsWithOrders.contains(intent.getIntExtra(CustomData.EXTRA_ID, -1)))
+        if(productsWithOrders.contains(prevProduct?.p_id))
             openDialog()
         else{
-            val deleteProduct = Product(
-                p_name = intent.getStringExtra(CustomData.EXTRA_NAME),
-                description = intent.getStringExtra(CustomData.EXTRA_DESCRIPTION),
-                price = intent.getFloatExtra(CustomData.EXTRA_PRICE, -1F),
-                p_id = intent.getIntExtra(CustomData.EXTRA_ID, -1)
-            )
+            val deleteProduct = prevProduct!!
             val dialog = AlertDialog.Builder(this@AddEditProductActivity)
             dialog.setTitle(R.string.dialog_product_title)
             dialog.setMessage(R.string.dialog_product_confirmation)
@@ -118,7 +115,7 @@ class AddEditProductActivity : AppCompatActivity() {
         data.putExtra(CustomData.EXTRA_DESCRIPTION, description)
         data.putExtra(CustomData.EXTRA_PRICE, price.toFloat())
 
-        if (intent.hasExtra(CustomData.EXTRA_ID) && intent.getIntExtra(CustomData.EXTRA_ID, -1) != -1){
+        if (prevProduct != null){
             data.putExtra(CustomData.EXTRA_ID, intent.getIntExtra(CustomData.EXTRA_ID, -1))
             data.putExtra(CustomData.EXTRA_PRODUCT, intent.getParcelableExtra(CustomData.EXTRA_PRODUCT) as Product)
         }
@@ -129,6 +126,26 @@ class AddEditProductActivity : AppCompatActivity() {
     private fun valid(name: String, description: String, price: String): Boolean {
         val res = name.trim().isEmpty() || description.trim().isEmpty() || price.trim().isEmpty()
         return !res
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        outState?.run {
+            putParcelable(CustomData.EXTRA_PRODUCT, prevProduct)
+            putString(CustomData.EXTRA_NAME, productName.text.toString())
+            putString(CustomData.EXTRA_DESCRIPTION, productDescription.text.toString())
+            putFloat(CustomData.EXTRA_PRICE, productPrice.text.toString().toFloat())
+        }
+        super.onSaveInstanceState(outState)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+        savedInstanceState?.run {
+            prevProduct = savedInstanceState.getParcelable(CustomData.EXTRA_PRODUCT)
+            productName.setText(savedInstanceState.getString(CustomData.EXTRA_NAME))
+            productDescription.setText(savedInstanceState.getString(CustomData.EXTRA_DESCRIPTION))
+            productPrice.setText(savedInstanceState.getFloat(CustomData.EXTRA_PRICE).toString())
+        }
+        super.onRestoreInstanceState(savedInstanceState)
     }
 
 }

@@ -53,7 +53,6 @@ class AddEditOrderActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
         date = c.time
     }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_edit_order)
@@ -102,7 +101,7 @@ class AddEditOrderActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        if(intent.hasExtra(CustomData.EXTRA_ORDER)) menuInflater.inflate(R.menu.edit_menu, menu)
+        if(currentOrder != null) menuInflater.inflate(R.menu.edit_menu, menu)
         else menuInflater.inflate(R.menu.add_menu, menu)
         return true
     }
@@ -125,14 +124,31 @@ class AddEditOrderActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
         }
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if(requestCode == CustomData.SELECT_CUSTOMER_REQ && resultCode == Activity.RESULT_OK){
+            if(data != null){
+                currentCustomer = data.getParcelableExtra(CustomData.EXTRA_CUSTOMER)
+                customerNameText.text = currentCustomer?.c_name
+            }
+        }else if(requestCode == CustomData.SELECT_PRODUCT_REQ && resultCode == Activity.RESULT_OK){
+            if(data != null){
+                currentProduct = data.getParcelableExtra(CustomData.EXTRA_PRODUCT)
+                productNameText.text = currentProduct?.p_name
+                setPriceWithQuantity()
+            }
+        }
+    }
+
     private fun deleteOrder() {
-        val deleteOrder = intent.getParcelableExtra<Order>(CustomData.EXTRA_ORDER)
+        val deleteOrder = currentOrder
 
         val dialog = AlertDialog.Builder(this@AddEditOrderActivity)
         dialog.setTitle(R.string.dialog_order_title)
         dialog.setMessage(R.string.dialog_order_confirmation)
         dialog.setPositiveButton(R.string.dialog_delete){ _, _ ->
-            ViewModelProviders.of(this).get(OrderViewModel::class.java).delete(deleteOrder)
+            ViewModelProviders.of(this).get(OrderViewModel::class.java).delete(deleteOrder!!)
             setResult(CustomData.DEL_ORDER_REQ)
             finish()
         }
@@ -152,7 +168,7 @@ class AddEditOrderActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
         data.putExtra(CustomData.EXTRA_ORDER_DATE, date)
         data.putExtra(CustomData.EXTRA_ORDER_CODE, code)
 
-        if(intent.hasExtra(CustomData.EXTRA_ORDER))
+        if(currentOrder != null)
             data.putExtra(CustomData.EXTRA_ORDER_ID, currentOrder?.orderID)
         setResult(Activity.RESULT_OK, data)
         finish()
@@ -161,23 +177,6 @@ class AddEditOrderActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
     private fun setPriceWithQuantity() {
         price = quantity * currentProduct?.price!!
         productPriceText.text = price.toString()
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if(requestCode == CustomData.SELECT_CUSTOMER_REQ && resultCode == Activity.RESULT_OK){
-            if(data != null){
-                currentCustomer = data.getParcelableExtra(CustomData.EXTRA_CUSTOMER)
-                customerNameText.text = currentCustomer?.c_name
-            }
-        }else if(requestCode == CustomData.SELECT_PRODUCT_REQ && resultCode == Activity.RESULT_OK){
-            if(data != null){
-                currentProduct = data.getParcelableExtra(CustomData.EXTRA_PRODUCT)
-                productNameText.text = currentProduct?.p_name
-                setPriceWithQuantity()
-            }
-        }
     }
 
     fun openDatepicker(view: View) {
@@ -197,5 +196,33 @@ class AddEditOrderActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
         if(currentProduct != null)
             intent.putExtra(CustomData.EXTRA_PRODUCT, currentProduct!!)
         startActivityForResult(intent, CustomData.SELECT_PRODUCT_REQ)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        outState?.run {
+            putParcelable(CustomData.EXTRA_PRODUCT, currentProduct)
+            putParcelable(CustomData.EXTRA_CUSTOMER, currentCustomer)
+            putParcelable(CustomData.EXTRA_ORDER, currentOrder)
+        }
+        super.onSaveInstanceState(outState)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+        savedInstanceState?.run {
+            currentProduct = savedInstanceState.getParcelable(CustomData.EXTRA_PRODUCT)
+            currentCustomer = savedInstanceState.getParcelable(CustomData.EXTRA_CUSTOMER)
+            currentOrder = savedInstanceState.getParcelable(CustomData.EXTRA_ORDER)
+
+            title = currentOrder?.code
+            datePickerText.text = DateFormat.getDateInstance(DateFormat.MEDIUM).format(currentOrder?.date)
+            date = currentOrder?.date!!
+            orderCodeText.text = currentOrder?.code
+            productNameText.text = currentProduct?.p_name
+            customerNameText.text = currentCustomer?.c_name
+            productQuantityText.text = currentOrder?.quantity.toString()
+            quantity = currentOrder?.quantity!!.toInt()
+            setPriceWithQuantity()
+        }
+        super.onRestoreInstanceState(savedInstanceState)
     }
 }
