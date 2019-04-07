@@ -9,11 +9,12 @@
     <TextView
             android:id="@+id/textView7"
             android:layout_width="wrap_content"
-            android:layout_height="16dp"
+            android:layout_height="wrap_content"
             android:text="@string/order_qty"
             android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="@+id/guideline15"
             android:layout_marginBottom="8dp" app:layout_constraintBottom_toTopOf="@+id/price_text"
-            app:layout_constraintStart_toStartOf="@+id/guideline17" android:layout_marginStart="8dp"/>
+            app:layout_constraintStart_toStartOf="@+id/guideline17" android:layout_marginStart="8dp"
+            android:textSize="@dimen/text_normal"/>
 
     <TextView
             android:id="@+id/textView8"
@@ -23,7 +24,7 @@
             android:layout_marginTop="16dp"
             android:text="@string/order_code"
             app:layout_constraintStart_toStartOf="@+id/guideline13"
-            app:layout_constraintTop_toTopOf="@+id/guideline11"/>
+            app:layout_constraintTop_toTopOf="@+id/guideline11" android:textSize="@dimen/text_normal"/>
 
     <TextView
             android:id="@+id/textView9"
@@ -33,7 +34,7 @@
             android:layout_marginBottom="8dp"
             android:text="@string/order_price"
             app:layout_constraintBottom_toTopOf="@+id/guideline12"
-            app:layout_constraintStart_toStartOf="@+id/guideline13"/>
+            app:layout_constraintStart_toStartOf="@+id/guideline13" android:textSize="@dimen/text_normal"/>
 
     <android.support.constraint.Guideline
             android:id="@+id/guideline11"
@@ -91,7 +92,8 @@
             android:inputType="number"
             app:layout_constraintBaseline_toBaselineOf="@+id/textView7"
             app:layout_constraintEnd_toStartOf="@+id/guideline14"
-            app:layout_constraintStart_toEndOf="@+id/textView7" android:importantForAutofill="no" tools:targetApi="o"/>
+            app:layout_constraintStart_toEndOf="@+id/textView7" android:importantForAutofill="no" tools:targetApi="o"
+            android:textSize="@dimen/text_small"/>
 
     <EditText
             android:id="@+id/price_text"
@@ -105,7 +107,8 @@
             android:clickable="false"
             app:layout_constraintBaseline_toBaselineOf="@+id/textView9"
             app:layout_constraintEnd_toStartOf="@+id/guideline14"
-            app:layout_constraintStart_toEndOf="@+id/textView9" android:importantForAutofill="no" tools:targetApi="o"/>
+            app:layout_constraintStart_toEndOf="@+id/textView9" android:importantForAutofill="no" tools:targetApi="o"
+            android:textSize="@dimen/text_small"/>
 
     <EditText
             android:id="@+id/customer_item_name"
@@ -121,7 +124,7 @@
             app:layout_constraintStart_toStartOf="@+id/guideline13"
             app:layout_constraintTop_toBottomOf="@+id/guideline15"
             app:layout_constraintBottom_toTopOf="@+id/product_name" android:importantForAutofill="no"
-            tools:targetApi="o"/>
+            tools:targetApi="o" android:textSize="@dimen/text_small"/>
 
     <EditText
             android:id="@+id/product_name"
@@ -137,7 +140,7 @@
             app:layout_constraintStart_toStartOf="@+id/guideline13"
             app:layout_constraintTop_toBottomOf="@+id/customer_item_name" android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toTopOf="@+id/price_text" android:importantForAutofill="no"
-            tools:targetApi="o"/>
+            tools:targetApi="o" android:textSize="@dimen/text_small"/>
 
     <android.support.constraint.Guideline
             android:id="@+id/guideline15"
