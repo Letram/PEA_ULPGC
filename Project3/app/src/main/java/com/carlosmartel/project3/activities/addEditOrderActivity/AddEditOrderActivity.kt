@@ -1,4 +1,4 @@
-package com.carlosmartel.project3.addEditOrderActivity
+package com.carlosmartel.project3.activities.addEditOrderActivity
 
 import android.app.Activity
 import android.app.DatePickerDialog
@@ -14,14 +14,15 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.DatePicker
 import android.widget.TextView
+import android.widget.Toast
 import com.carlosmartel.project3.CustomData
 import com.carlosmartel.project3.R
+import com.carlosmartel.project3.activities.selectCustomerActivity.SelectCustomerActivity
+import com.carlosmartel.project3.activities.selectProductActivity.SelectProductActivity
 import com.carlosmartel.project3.data.entities.Customer
 import com.carlosmartel.project3.data.entities.Order
 import com.carlosmartel.project3.data.entities.Product
 import com.carlosmartel.project3.fragments.order.OrderViewModel
-import com.carlosmartel.project3.selectCustomerActivity.SelectCustomerActivity
-import com.carlosmartel.project3.selectProductActivity.SelectProductActivity
 import java.text.DateFormat
 import java.util.*
 
@@ -65,14 +66,14 @@ class AddEditOrderActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
         productPriceText = findViewById(R.id.price_text)
         orderCodeText = findViewById(R.id.code_text)
 
-        productQuantityText.addTextChangedListener(object: TextWatcher {
+        productQuantityText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {}
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if(currentProduct != null){
-                    quantity = if(s.isNullOrEmpty()) 0
+                if (currentProduct != null) {
+                    quantity = if (s.isNullOrEmpty()) 0
                     else s.toString().toInt()
                     setPriceWithQuantity()
                 }
@@ -82,7 +83,7 @@ class AddEditOrderActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        if(intent.hasExtra(CustomData.EXTRA_ORDER)){
+        if (intent.hasExtra(CustomData.EXTRA_ORDER)) {
             currentProduct = intent.getParcelableExtra(CustomData.EXTRA_PRODUCT)
             currentCustomer = intent.getParcelableExtra(CustomData.EXTRA_CUSTOMER)
             currentOrder = intent.getParcelableExtra(CustomData.EXTRA_ORDER)
@@ -97,11 +98,11 @@ class AddEditOrderActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
             quantity = currentOrder?.quantity!!.toInt()
             setPriceWithQuantity()
 
-        }else title = getString(R.string.add_order_title)
+        } else title = getString(R.string.add_order_title)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        if(currentOrder != null) menuInflater.inflate(R.menu.edit_menu, menu)
+        if (currentOrder != null) menuInflater.inflate(R.menu.edit_menu, menu)
         else menuInflater.inflate(R.menu.add_menu, menu)
         return true
     }
@@ -127,13 +128,13 @@ class AddEditOrderActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if(requestCode == CustomData.SELECT_CUSTOMER_REQ && resultCode == Activity.RESULT_OK){
-            if(data != null){
+        if (requestCode == CustomData.SELECT_CUSTOMER_REQ && resultCode == Activity.RESULT_OK) {
+            if (data != null) {
                 currentCustomer = data.getParcelableExtra(CustomData.EXTRA_CUSTOMER)
                 customerNameText.text = currentCustomer?.c_name
             }
-        }else if(requestCode == CustomData.SELECT_PRODUCT_REQ && resultCode == Activity.RESULT_OK){
-            if(data != null){
+        } else if (requestCode == CustomData.SELECT_PRODUCT_REQ && resultCode == Activity.RESULT_OK) {
+            if (data != null) {
                 currentProduct = data.getParcelableExtra(CustomData.EXTRA_PRODUCT)
                 productNameText.text = currentProduct?.p_name
                 setPriceWithQuantity()
@@ -147,19 +148,25 @@ class AddEditOrderActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
         val dialog = AlertDialog.Builder(this@AddEditOrderActivity)
         dialog.setTitle(R.string.dialog_order_title)
         dialog.setMessage(R.string.dialog_order_confirmation)
-        dialog.setPositiveButton(R.string.dialog_delete){ _, _ ->
+        dialog.setPositiveButton(R.string.dialog_delete) { _, _ ->
             ViewModelProviders.of(this).get(OrderViewModel::class.java).delete(deleteOrder!!)
             setResult(CustomData.DEL_ORDER_REQ)
             finish()
         }
-        dialog.setNegativeButton(R.string.dialog_cancel){_,_ ->}
+        dialog.setNegativeButton(R.string.dialog_cancel) { _, _ -> }
         dialog.show()
     }
 
     private fun saveOrder() {
+        if (!valid()) {
+            Toast.makeText(this, R.string.save_order_toast, Toast.LENGTH_SHORT).show()
+            return
+        }
+
         val uid: Int = currentCustomer?.u_id!!
         val pid: Int = currentProduct?.p_id!!
         val code: String = orderCodeText.text.toString()
+
 
         val data = Intent()
         data.putExtra(CustomData.EXTRA_ORDER_UID, uid)
@@ -168,10 +175,21 @@ class AddEditOrderActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
         data.putExtra(CustomData.EXTRA_ORDER_DATE, date)
         data.putExtra(CustomData.EXTRA_ORDER_CODE, code)
 
-        if(currentOrder != null)
+        if (currentOrder != null)
             data.putExtra(CustomData.EXTRA_ORDER_ID, currentOrder?.orderID)
         setResult(Activity.RESULT_OK, data)
         finish()
+    }
+
+    private fun valid(): Boolean {
+        if (orderCodeText.text.isNullOrBlank() ||
+            currentCustomer == null ||
+            currentProduct == null ||
+            productQuantityText.text.isNullOrBlank() ||
+            productPriceText.text.isNullOrBlank()
+        )
+            return false
+        return true
     }
 
     private fun setPriceWithQuantity() {
@@ -184,16 +202,16 @@ class AddEditOrderActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
         datePicker.show(supportFragmentManager, "DatePicker")
     }
 
-    fun openCustomerSelector(view:View){
+    fun openCustomerSelector(view: View) {
         val intent = Intent(this, SelectCustomerActivity::class.java)
-        if(currentCustomer != null)
+        if (currentCustomer != null)
             intent.putExtra(CustomData.EXTRA_CUSTOMER, currentCustomer!!)
         startActivityForResult(intent, CustomData.SELECT_CUSTOMER_REQ)
     }
 
-    fun openProductSelector(view: View){
+    fun openProductSelector(view: View) {
         val intent = Intent(this, SelectProductActivity::class.java)
-        if(currentProduct != null)
+        if (currentProduct != null)
             intent.putExtra(CustomData.EXTRA_PRODUCT, currentProduct!!)
         startActivityForResult(intent, CustomData.SELECT_PRODUCT_REQ)
     }

@@ -1,4 +1,4 @@
-package com.carlosmartel.project3.addEditOrderActivity
+package com.carlosmartel.project3.activities.addEditOrderActivity
 
 import android.app.DatePickerDialog
 import android.app.Dialog
