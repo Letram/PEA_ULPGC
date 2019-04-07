@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.carlosmartel.project3">
+          xmlns:tools="http://schemas.android.com/tools" package="com.carlosmartel.project3">
 
     <application
             android:allowBackup="true"
@@ -8,14 +8,15 @@
             android:label="@string/app_name"
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
-            android:theme="@style/AppTheme">
-        <activity android:name=".selectProductActivity.SelectProductActivity">
-        </activity>
+            android:theme="@style/AppTheme" tools:ignore="GoogleAppIndexingWarning">
+        <activity
+                android:name=".selectProductActivity.SelectProductActivity"
+                android:parentActivityName=".addEditOrderActivity.AddEditOrderActivity"/>
         <activity
                 android:name=".selectCustomerActivity.SelectCustomerActivity"
-                android:parentActivityName=".AddEditOrderActivity.AddEditOrderActivity"/>
+                android:parentActivityName=".addEditOrderActivity.AddEditOrderActivity"/>
         <activity
-                android:name=".AddEditOrderActivity.AddEditOrderActivity"
+                android:name=".addEditOrderActivity.AddEditOrderActivity"
                 android:parentActivityName=".MainActivity"/>
         <activity
                 android:name=".AddEditProductActivity"

@@ -72,7 +72,7 @@ class SelectProductActivity : AppCompatActivity() {
                 selectProduct()
                 return true
             }
-            else -> true
+            else -> super.onOptionsItemSelected(item)
         }
     }
 

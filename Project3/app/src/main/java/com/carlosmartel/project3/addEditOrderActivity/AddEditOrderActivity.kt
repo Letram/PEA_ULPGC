@@ -1,4 +1,4 @@
-package com.carlosmartel.project3.AddEditOrderActivity
+package com.carlosmartel.project3.addEditOrderActivity
 
 import android.app.Activity
 import android.app.DatePickerDialog
@@ -22,7 +22,6 @@ import com.carlosmartel.project3.data.entities.Product
 import com.carlosmartel.project3.fragments.order.OrderViewModel
 import com.carlosmartel.project3.selectCustomerActivity.SelectCustomerActivity
 import com.carlosmartel.project3.selectProductActivity.SelectProductActivity
-import kotlinx.android.synthetic.main.activity_add_edit_order.*
 import java.text.DateFormat
 import java.util.*
 
@@ -41,7 +40,7 @@ class AddEditOrderActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
 
     private var quantity: Int = 0
     private var price: Float = 0F
-    private lateinit var date: Date
+    private var date: Date = Date()
 
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
         val c = Calendar.getInstance()
@@ -60,7 +59,8 @@ class AddEditOrderActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
         setContentView(R.layout.activity_add_edit_order)
 
         datePickerText = findViewById(R.id.date_text)
-        customerNameText = findViewById(R.id.product_item_name)
+        datePickerText.text = DateFormat.getDateInstance(DateFormat.MEDIUM).format(date)
+        customerNameText = findViewById(R.id.customer_item_name)
         productNameText = findViewById(R.id.product_name)
         productQuantityText = findViewById(R.id.qty_text)
         productPriceText = findViewById(R.id.price_text)

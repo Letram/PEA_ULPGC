@@ -16,7 +16,7 @@ class SelectProductListAdapter: RecyclerView.Adapter<SelectProductListAdapter.Se
 
     class SelectProductViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(product: Product, listener: OnProductClickListener) {
-            itemView.product_item_name.text = product.p_name
+            itemView.customer_item_name.text = product.p_name
             itemView.product_item_price.text = product.price.toString()
             itemView.setOnClickListener {
                 if (adapterPosition != RecyclerView.NO_POSITION) {

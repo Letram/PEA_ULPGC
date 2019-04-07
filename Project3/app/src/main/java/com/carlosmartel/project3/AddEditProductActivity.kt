@@ -118,8 +118,10 @@ class AddEditProductActivity : AppCompatActivity() {
         data.putExtra(CustomData.EXTRA_DESCRIPTION, description)
         data.putExtra(CustomData.EXTRA_PRICE, price.toFloat())
 
-        if (intent.hasExtra(CustomData.EXTRA_ID) && intent.getIntExtra(CustomData.EXTRA_ID, -1) != -1)
+        if (intent.hasExtra(CustomData.EXTRA_ID) && intent.getIntExtra(CustomData.EXTRA_ID, -1) != -1){
             data.putExtra(CustomData.EXTRA_ID, intent.getIntExtra(CustomData.EXTRA_ID, -1))
+            data.putExtra(CustomData.EXTRA_PRODUCT, intent.getParcelableExtra(CustomData.EXTRA_PRODUCT) as Product)
+        }
         setResult(Activity.RESULT_OK, data)
         finish()
     }

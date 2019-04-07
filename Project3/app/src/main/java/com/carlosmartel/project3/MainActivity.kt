@@ -15,7 +15,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
-import com.carlosmartel.project3.AddEditOrderActivity.AddEditOrderActivity
+import com.carlosmartel.project3.addEditOrderActivity.AddEditOrderActivity
 import com.carlosmartel.project3.data.entities.Customer
 import com.carlosmartel.project3.data.entities.Order
 import com.carlosmartel.project3.data.entities.Product
@@ -84,6 +84,7 @@ class MainActivity :
         intent.putExtra(CustomData.EXTRA_DESCRIPTION, product.description)
         intent.putExtra(CustomData.EXTRA_PRICE, product.price)
         intent.putExtra(CustomData.EXTRA_ID, product.p_id)
+        intent.putExtra(CustomData.EXTRA_PRODUCT, product)
         startActivityForResult(intent, CustomData.EDIT_PRODUCT_REQ)
     }
 
@@ -131,6 +132,7 @@ class MainActivity :
         intent.putExtra(CustomData.EXTRA_NAME, customer.c_name)
         intent.putExtra(CustomData.EXTRA_ADDRESS, customer.address)
         intent.putExtra(CustomData.EXTRA_ID, customer.u_id)
+        intent.putExtra(CustomData.EXTRA_CUSTOMER, customer)
         startActivityForResult(intent, CustomData.EDIT_CUSTOMER_REQ)
     }
 
@@ -243,10 +245,15 @@ class MainActivity :
             }
             val name = data.getStringExtra(CustomData.EXTRA_NAME)
             val address = data.getStringExtra(CustomData.EXTRA_ADDRESS)
+            val undoCustomer = data.getParcelableExtra<Customer>(CustomData.EXTRA_CUSTOMER)
             val customerAux = Customer(address = address, c_name = name)
             customerAux.u_id = uid
             ViewModelProviders.of(this).get(CustomerViewModel::class.java).update(customerAux)
-            Toast.makeText(this, "Customer updated", Toast.LENGTH_SHORT).show()
+            Snackbar.make(viewPager, R.string.customer_updated, Snackbar.LENGTH_SHORT)
+                .setAction(R.string.snack_undo) {
+                    ViewModelProviders.of(this).get(CustomerViewModel::class.java).update(undoCustomer)
+                }
+                .show()
 
         } else if (requestCode == CustomData.ADD_PRODUCT_REQ && resultCode == Activity.RESULT_OK) {
 
@@ -269,10 +276,15 @@ class MainActivity :
             val name = data.getStringExtra(CustomData.EXTRA_NAME)
             val description = data.getStringExtra(CustomData.EXTRA_DESCRIPTION)
             val price = data.getFloatExtra(CustomData.EXTRA_PRICE, -1F)
+            val undoProduct = data.getParcelableExtra<Product>(CustomData.EXTRA_PRODUCT)
             val productAux = Product(p_name = name, description = description, price = price)
             productAux.p_id = productID
             ViewModelProviders.of(this).get(ProductViewModel::class.java).update(productAux)
-            Toast.makeText(this, "Customer updated", Toast.LENGTH_SHORT).show()
+            Snackbar.make(viewPager, R.string.product_updated, Snackbar.LENGTH_SHORT)
+                .setAction(R.string.snack_undo) {
+                    ViewModelProviders.of(this).get(ProductViewModel::class.java).update(undoProduct)
+                }
+                .show()
 
         } else if (requestCode == CustomData.ADD_ORDER_REQ && resultCode == Activity.RESULT_OK){
             if(data != null){

@@ -61,4 +61,6 @@
     <string name="dialog_cant_delete_product">This product has some orders related to it. Delete those before you delete
         this.
     </string>
+    <string name="customer_updated">Customer updated!</string>
+    <string name="product_updated">Product updated!</string>
 </resources>

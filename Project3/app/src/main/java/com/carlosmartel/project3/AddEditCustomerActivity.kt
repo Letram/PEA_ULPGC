@@ -19,39 +19,37 @@ class AddEditCustomerActivity : AppCompatActivity() {
     private lateinit var customerNameEdit: EditText
     private lateinit var customerAddressEdit: EditText
     private lateinit var customersWithOrders: List<Int>
+    private var prevCustomer: Customer? = null
     private lateinit var customerViewModel: CustomerViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_customer)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        customerViewModel = ViewModelProviders.of(this).get(CustomerViewModel::class.java)
 
         customerNameEdit = this.findViewById(R.id.name_edit)
         customerAddressEdit = this.findViewById(R.id.address_edit)
-        customerViewModel = ViewModelProviders.of(this).get(CustomerViewModel::class.java)
 
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-        //get customer c_name from intent when creating activity from clicking on a customer from the list
-        //we are now just putting a default title when adding a customer using the fab
-
+        //first time coming to this view (not recreating)
         if (intent.hasExtra(CustomData.EXTRA_NAME)) {
             title = intent.getStringExtra(CustomData.EXTRA_NAME)
             customerNameEdit.setText(intent.getStringExtra(CustomData.EXTRA_NAME))
             customerAddressEdit.setText(intent.getStringExtra(CustomData.EXTRA_ADDRESS))
+            prevCustomer = intent.getParcelableExtra(CustomData.EXTRA_CUSTOMER)
             customerViewModel.getAllCustomersWithOrders().observe(this, Observer {
-                if(it != null)
+                if (it != null)
                     customersWithOrders = it
             })
         } else
             title = getString(R.string.add_customer_title)
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         //maybe here we can use the layout of the menu we want depending on whether we created this activity via fab or clicking on an existing customer
 
         //default add_customer_menu, we could change this to another one if something in the intent says so.
-        if (intent.hasExtra(CustomData.EXTRA_ID)) menuInflater.inflate(R.menu.edit_menu, menu)
+        if (prevCustomer != null) menuInflater.inflate(R.menu.edit_menu, menu)
         else menuInflater.inflate(R.menu.add_menu, menu)
         return true
     }
@@ -73,32 +71,28 @@ class AddEditCustomerActivity : AppCompatActivity() {
     }
 
     private fun deleteCustomer() {
-        if(customersWithOrders.contains(intent.getIntExtra(CustomData.EXTRA_ID, -1)))
+        if (customersWithOrders.contains(intent.getIntExtra(CustomData.EXTRA_ID, -1)))
             openDialog()
-        else{
-            val deleteCustomer = Customer(
-                intent.getIntExtra(CustomData.EXTRA_ID, -1),
-                intent.getStringExtra(CustomData.EXTRA_ADDRESS),
-                intent.getStringExtra(CustomData.EXTRA_NAME)
-            )
+        else {
+            val deleteCustomer = prevCustomer!!
             val dialog = AlertDialog.Builder(this@AddEditCustomerActivity)
             dialog.setTitle(R.string.dialog_customer_title)
             dialog.setMessage(R.string.dialog_customer_confirmation)
-            dialog.setPositiveButton(R.string.dialog_delete){ _, _ ->
+            dialog.setPositiveButton(R.string.dialog_delete) { _, _ ->
                 ViewModelProviders.of(this).get(CustomerViewModel::class.java).delete(deleteCustomer)
                 setResult(CustomData.DEL_CUSTOMER_REQ)
                 finish()
             }
-            dialog.setNegativeButton(R.string.dialog_cancel){_,_ ->}
+            dialog.setNegativeButton(R.string.dialog_cancel) { _, _ -> }
             dialog.show()
         }
     }
 
-    private fun openDialog(){
+    private fun openDialog() {
         val dialog = AlertDialog.Builder(this)
         dialog.setTitle(R.string.dialog_customer_title)
         dialog.setMessage(R.string.dialog_cant_delete_product)
-        dialog.setPositiveButton(R.string.OK){ _, _ -> }
+        dialog.setPositiveButton(R.string.OK) { _, _ -> }
         dialog.setCancelable(false)
         dialog.show()
     }
@@ -117,9 +111,29 @@ class AddEditCustomerActivity : AppCompatActivity() {
         data.putExtra(CustomData.EXTRA_ADDRESS, address)
 
 
-        if (intent.hasExtra(CustomData.EXTRA_ID) && intent.getIntExtra(CustomData.EXTRA_ID, -1) != -1)
-            data.putExtra(CustomData.EXTRA_ID, intent.getIntExtra(CustomData.EXTRA_ID, -1))
+        if (prevCustomer != null) {
+            data.putExtra(CustomData.EXTRA_ID, prevCustomer?.u_id)
+            data.putExtra(CustomData.EXTRA_CUSTOMER, prevCustomer)
+        }
         setResult(Activity.RESULT_OK, data)
         finish()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        if (outState != null) {
+            outState.putString(CustomData.EXTRA_NAME, customerNameEdit.text.toString())
+            outState.putString(CustomData.EXTRA_ADDRESS, customerAddressEdit.text.toString())
+            outState.putParcelable(CustomData.EXTRA_CUSTOMER, prevCustomer)
+        }
+        super.onSaveInstanceState(outState)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+        if (savedInstanceState != null) {
+            prevCustomer = savedInstanceState.getParcelable(CustomData.EXTRA_CUSTOMER)!!
+            customerNameEdit.setText(savedInstanceState.getString(CustomData.EXTRA_NAME))
+            customerAddressEdit.setText(savedInstanceState.getString(CustomData.EXTRA_ADDRESS))
+        }
+        super.onRestoreInstanceState(savedInstanceState)
     }
 }

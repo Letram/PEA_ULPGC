@@ -69,7 +69,7 @@ class SelectCustomerActivity : AppCompatActivity() {
                 selectCustomer()
                 return true
             }
-            else -> true
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
