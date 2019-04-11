@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools" package="com.carlosmartel.project3">
+          xmlns:tools="http://schemas.android.com/tools" package="com.carlosmartel.project4">
+
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
+            android:name=".data.json.backend.BackendVolley"
             android:allowBackup="true"
             android:icon="@mipmap/ic_launcher"
             android:label="@string/app_name"
@@ -10,22 +13,22 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme" tools:ignore="GoogleAppIndexingWarning">
         <activity
-                android:name=".activities.selectProductActivity.SelectProductActivity"
-                android:parentActivityName=".activities.addEditOrderActivity.AddEditOrderActivity"/>
+                android:name="com.carlosmartel.project4.activities.selectProductActivity.SelectProductActivity"
+                android:parentActivityName="com.carlosmartel.project4.activities.addEditOrderActivity.AddEditOrderActivity"/>
         <activity
-                android:name=".activities.selectCustomerActivity.SelectCustomerActivity"
-                android:parentActivityName=".activities.addEditOrderActivity.AddEditOrderActivity"/>
+                android:name="com.carlosmartel.project4.activities.selectCustomerActivity.SelectCustomerActivity"
+                android:parentActivityName="com.carlosmartel.project4.activities.addEditOrderActivity.AddEditOrderActivity"/>
         <activity
-                android:name=".activities.addEditOrderActivity.AddEditOrderActivity"
-                android:parentActivityName=".MainActivity"/>
+                android:name="com.carlosmartel.project4.activities.addEditOrderActivity.AddEditOrderActivity"
+                android:parentActivityName="com.carlosmartel.project4.MainActivity"/>
         <activity
-                android:name=".activities.AddEditProductActivity"
-                android:parentActivityName=".MainActivity"/>
+                android:name="com.carlosmartel.project4.activities.AddEditProductActivity"
+                android:parentActivityName="com.carlosmartel.project4.MainActivity"/>
         <activity
-                android:name=".activities.AddEditCustomerActivity"
-                android:parentActivityName=".MainActivity"/>
+                android:name="com.carlosmartel.project4.activities.AddEditCustomerActivity"
+                android:parentActivityName="com.carlosmartel.project4.MainActivity"/>
         <activity
-                android:name=".MainActivity"
+                android:name="com.carlosmartel.project4.MainActivity"
                 android:label="@string/app_name"
                 android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
