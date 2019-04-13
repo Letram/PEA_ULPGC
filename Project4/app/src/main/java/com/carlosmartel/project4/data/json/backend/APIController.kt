@@ -2,18 +2,23 @@ package com.carlosmartel.project4.data.json.backend
 
 import org.json.JSONObject
 
-class APIController constructor(serviceInjection: ServiceInterface): ServiceInterface {
-    private val service: ServiceInterface = serviceInjection
+class APIController constructor(customerServiceInjection: CustomerServiceInterface) : CustomerServiceInterface {
 
-    override fun getOrders(path: String, params: JSONObject, completionHandler: (response: JSONObject?) -> Unit) {
-        service.getOrders(path, params, completionHandler)
-    }
+    private val customerService: CustomerServiceInterface = customerServiceInjection
 
     override fun insertCustomer(path: String, params: JSONObject, completionHandler: (response: JSONObject?) -> Unit) {
-        service.insertCustomer(path, params, completionHandler)
+        customerService.insertCustomer(path, params, completionHandler)
     }
 
     override fun getCustomers(path: String, params: JSONObject?, completionHandler: (response: JSONObject?) -> Unit) {
-        service.getCustomers(path, params, completionHandler)
+        customerService.getCustomers(path, params, completionHandler)
+    }
+
+    override fun deleteCustomer(path: String, params: JSONObject, completionHandler: (response: JSONObject?) -> Unit) {
+        customerService.deleteCustomer(path, params, completionHandler)
+    }
+
+    override fun updateCustomer(path: String, params: JSONObject, completionHandler: (response: JSONObject?) -> Unit) {
+        customerService.updateCustomer(path, params, completionHandler)
     }
 }

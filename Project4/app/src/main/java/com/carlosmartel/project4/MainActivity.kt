@@ -113,17 +113,13 @@ class MainActivity :
     }
 
     override fun deleteCustomer(customer: Customer) {
-        val undoCustomer = Customer(customer.u_id, customer.address, customer.c_name)
+
+        Customer(customer.u_id, customer.address, customer.c_name)
         val dialog = AlertDialog.Builder(this@MainActivity)
         dialog.setTitle(R.string.dialog_customer_title)
         dialog.setMessage(R.string.dialog_customer_confirmation)
         dialog.setPositiveButton(R.string.dialog_delete) { _, _ ->
-            ViewModelProviders.of(this).get(CustomerViewModel::class.java).delete(customer)
-            Snackbar.make(viewPager, R.string.customer_deleted, Snackbar.LENGTH_SHORT)
-                .setAction(R.string.snack_undo) {
-                    ViewModelProviders.of(this).get(CustomerViewModel::class.java).insert(undoCustomer)
-                }
-                .show()
+            ViewModelProviders.of(this).get(CustomerViewModel::class.java).deleteJSON(customer.u_id)
         }
         dialog.setNegativeButton(R.string.dialog_cancel) { _, _ -> }
         dialog.show()
@@ -233,9 +229,9 @@ class MainActivity :
             if (data != null) {
                 val name: String = data.getStringExtra(CustomData.EXTRA_NAME)
                 val address: String = data.getStringExtra(CustomData.EXTRA_ADDRESS)
-                val newCustomer = Customer(address = address, c_name = name)
-                ViewModelProviders.of(this).get(CustomerViewModel::class.java).insert(newCustomer)
-                Toast.makeText(this, R.string.customer_saved_snack, Toast.LENGTH_SHORT).show()
+
+                //JSON Insert
+                ViewModelProviders.of(this).get(CustomerViewModel::class.java).insertJSON(name, address)
             }
 
         } else if (requestCode == CustomData.EDIT_CUSTOMER_REQ && resultCode == Activity.RESULT_OK) {
@@ -247,15 +243,8 @@ class MainActivity :
             }
             val name = data.getStringExtra(CustomData.EXTRA_NAME)
             val address = data.getStringExtra(CustomData.EXTRA_ADDRESS)
-            val undoCustomer = data.getParcelableExtra<Customer>(CustomData.EXTRA_CUSTOMER)
-            val customerAux = Customer(address = address, c_name = name)
-            customerAux.u_id = uid
-            ViewModelProviders.of(this).get(CustomerViewModel::class.java).update(customerAux)
-            Snackbar.make(viewPager, R.string.customer_updated, Snackbar.LENGTH_SHORT)
-                .setAction(R.string.snack_undo) {
-                    ViewModelProviders.of(this).get(CustomerViewModel::class.java).update(undoCustomer)
-                }
-                .show()
+
+            ViewModelProviders.of(this).get(CustomerViewModel::class.java).updateJSON(uid, name, address)
 
         } else if (requestCode == CustomData.ADD_PRODUCT_REQ && resultCode == Activity.RESULT_OK) {
 

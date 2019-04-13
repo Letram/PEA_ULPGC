@@ -1,5 +1,7 @@
 package com.carlosmartel.project4.fragments.customer
 
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -12,19 +14,18 @@ import android.view.ViewGroup
 import com.carlosmartel.project4.R
 import com.carlosmartel.project4.data.entities.Customer
 import com.carlosmartel.project4.data.json.backend.APIController
-import com.carlosmartel.project4.data.json.backend.JsonService
-import com.carlosmartel.project4.data.json.constants.JsonData
-import org.json.JSONObject
+import com.carlosmartel.project4.data.json.backend.JsonCustomerService
 
 class CustomerFragment : Fragment() {
 
     private var listener: OnFragmentInteractionListener? = null
-    //private lateinit var customerViewModel: CustomerViewModel
+    private lateinit var customerViewModel: CustomerViewModel
     private lateinit var recyclerView: RecyclerView
     private lateinit var recyclerAdapter: CustomerListAdapter
     private lateinit var customersWithOrders: List<Int>
 
     private lateinit var jsonAPI: APIController
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -33,63 +34,39 @@ class CustomerFragment : Fragment() {
 
         recyclerView = v.findViewById(R.id.recycler_view)
         recyclerAdapter = CustomerListAdapter()
-        jsonAPI = APIController(JsonService())
+        jsonAPI = APIController(JsonCustomerService())
 
-        //customerViewModel = ViewModelProviders.of(this.activity!!).get(CustomerViewModel(application = activity!!.application)::class.java)
+        customerViewModel = ViewModelProviders.of(this.activity!!)
+            .get(CustomerViewModel(application = activity!!.application)::class.java)
 
         recyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = recyclerAdapter
         }
 
-/*
-        customerViewModel.getAllCustomers().observe(this, Observer {
+        customerViewModel.getAllCustomersJSON().observe(this, Observer {
             if (it != null) {
                 recyclerAdapter.setCustomers(customers = it)
                 recyclerAdapter.notifyDataSetChanged()
             }
         })
-        customerViewModel.getAllCustomersWithOrders().observe(this, Observer {
-            if(it != null){
-                customersWithOrders = it
-            }
-        })
-*/
+
         recyclerAdapter.setOnItemClickListener(object : CustomerListAdapter.OnItemClickListener {
             override fun onItemClick(customer: Customer) {
                 listener?.updateCustomer(customer)
             }
 
+            //todo: check if the customer has orders related to him
             override fun onItemLongClick(customer: Customer) {
+                listener?.deleteCustomer(customer)
+/*
                 if (customersWithOrders.contains(customer.u_id)) {
                     openDialog()
                 } else
                     listener?.deleteCustomer(customer)
+*/
             }
         })
-
-        jsonAPI.getCustomers(JsonData.GET_CUSTOMERS, null) { response ->
-            val customers: MutableList<Customer> = ArrayList()
-
-            if (response != null) {
-                val fault = response.getInt("fault")
-                if (fault == 0) {
-                    val array = response.getJSONArray("data")
-                    for (i in 0..array.length()) {
-                        val obj = array.getJSONObject(i)
-                        val customerAux = Customer(
-                            address = obj.getString(JsonData.CUSTOMER_ADDRESS),
-                            c_name = obj.getString(JsonData.CUSTOMER_NAME)
-                        )
-                        customerAux.u_id = obj.getString(JsonData.CUSTOMER_ID).toInt()
-                        customers.add(customerAux)
-                    }
-                    recyclerAdapter.setCustomers(customers)
-                    recyclerAdapter.notifyDataSetChanged()
-                }
-            }
-        }
-
         return v
     }
 
