@@ -53,6 +53,7 @@ class ProductFragment : Fragment() {
                 listener?.updateProduct(product)
             }
 
+            //todo: check if the product has orders related to it
             override fun onItemLongClick(product: Product) {
                 listener?.deleteProduct(product)
                 /*
