@@ -1,12 +1,12 @@
-package com.carlosmartel.project4.data.json.backend
+package com.carlosmartel.project4.data.json.backend.customerJson
 
 import android.util.Log
-import com.android.volley.AuthFailureError
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.VolleyLog
 import com.android.volley.toolbox.JsonObjectRequest
-import com.carlosmartel.project4.data.json.constants.JsonData
+import com.carlosmartel.project4.data.json.backend.BackendVolley
+import com.carlosmartel.project4.data.json.backend.JsonData
 import org.json.JSONObject
 
 class JsonCustomerService : CustomerServiceInterface {

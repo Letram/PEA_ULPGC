@@ -13,8 +13,8 @@ import android.view.View
 import android.view.ViewGroup
 import com.carlosmartel.project4.R
 import com.carlosmartel.project4.data.entities.Customer
-import com.carlosmartel.project4.data.json.backend.APIController
-import com.carlosmartel.project4.data.json.backend.JsonCustomerService
+import com.carlosmartel.project4.data.json.backend.customerJson.CustomerAPIController
+import com.carlosmartel.project4.data.json.backend.customerJson.JsonCustomerService
 
 class CustomerFragment : Fragment() {
 
@@ -24,7 +24,7 @@ class CustomerFragment : Fragment() {
     private lateinit var recyclerAdapter: CustomerListAdapter
     private lateinit var customersWithOrders: List<Int>
 
-    private lateinit var jsonAPI: APIController
+    private lateinit var jsonCustomerAPI: CustomerAPIController
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,7 +34,7 @@ class CustomerFragment : Fragment() {
 
         recyclerView = v.findViewById(R.id.recycler_view)
         recyclerAdapter = CustomerListAdapter()
-        jsonAPI = APIController(JsonCustomerService())
+        jsonCustomerAPI = CustomerAPIController(JsonCustomerService())
 
         customerViewModel = ViewModelProviders.of(this.activity!!)
             .get(CustomerViewModel(application = activity!!.application)::class.java)

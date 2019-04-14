@@ -91,30 +91,17 @@ class MainActivity :
     }
 
     override fun deleteProduct(product: Product) {
-        val undoProduct = Product(
-            p_id = product.p_id,
-            p_name = product.p_name,
-            description = product.description,
-            price = product.price
-        )
         val dialog = AlertDialog.Builder(this@MainActivity)
         dialog.setTitle(R.string.dialog_product_title)
         dialog.setMessage(R.string.dialog_product_confirmation)
         dialog.setPositiveButton(R.string.dialog_delete) { _, _ ->
-            ViewModelProviders.of(this).get(ProductViewModel::class.java).delete(product)
-            Snackbar.make(viewPager, R.string.customer_deleted, Snackbar.LENGTH_SHORT)
-                .setAction(R.string.snack_undo) {
-                    ViewModelProviders.of(this).get(ProductViewModel::class.java).insert(undoProduct)
-                }
-                .show()
+            ViewModelProviders.of(this).get(ProductViewModel::class.java).deleteJSON(product.p_id)
         }
         dialog.setNegativeButton(R.string.dialog_cancel) { _, _ -> }
         dialog.show()
     }
 
     override fun deleteCustomer(customer: Customer) {
-
-        Customer(customer.u_id, customer.address, customer.c_name)
         val dialog = AlertDialog.Builder(this@MainActivity)
         dialog.setTitle(R.string.dialog_customer_title)
         dialog.setMessage(R.string.dialog_customer_confirmation)
@@ -253,7 +240,8 @@ class MainActivity :
                 val description: String = data.getStringExtra(CustomData.EXTRA_DESCRIPTION)
                 val price: Float = data.getFloatExtra(CustomData.EXTRA_PRICE, 0F)
                 val newProduct = Product(description = description, p_name = name, price = price)
-                ViewModelProviders.of(this).get(ProductViewModel::class.java).insert(newProduct)
+                ViewModelProviders.of(this).get(ProductViewModel::class.java)
+                    .insertJSON(newProduct.p_name, newProduct.description, newProduct.price)
                 Toast.makeText(this, R.string.product_saved_toast, Toast.LENGTH_SHORT).show()
             }
 
@@ -270,29 +258,26 @@ class MainActivity :
             val undoProduct = data.getParcelableExtra<Product>(CustomData.EXTRA_PRODUCT)
             val productAux = Product(p_name = name, description = description, price = price)
             productAux.p_id = productID
-            ViewModelProviders.of(this).get(ProductViewModel::class.java).update(productAux)
-            Snackbar.make(viewPager, R.string.product_updated, Snackbar.LENGTH_SHORT)
-                .setAction(R.string.snack_undo) {
-                    ViewModelProviders.of(this).get(ProductViewModel::class.java).update(undoProduct)
-                }
-                .show()
+            ViewModelProviders.of(this).get(ProductViewModel::class.java)
+                .updateJSON(productAux.p_id, productAux.p_name, productAux.description, productAux.price)
 
-        } else if (requestCode == CustomData.ADD_ORDER_REQ && resultCode == Activity.RESULT_OK){
-            if(data != null){
+        } else if (requestCode == CustomData.ADD_ORDER_REQ && resultCode == Activity.RESULT_OK) {
+            if (data != null) {
                 val uid: Int = data.getIntExtra(CustomData.EXTRA_ORDER_UID, -1)
                 val pid: Int = data.getIntExtra(CustomData.EXTRA_ORDER_PID, -1)
                 val code: String = data.getStringExtra(CustomData.EXTRA_ORDER_CODE)
                 val date: Date = data.getSerializableExtra(CustomData.EXTRA_ORDER_DATE) as Date
                 val quantity: Int = data.getIntExtra(CustomData.EXTRA_ORDER_QTY, 0)
 
-                val newOrder = Order(code = code, uid = uid, productID = pid, date = date, quantity = quantity.toShort())
+                val newOrder =
+                    Order(code = code, uid = uid, productID = pid, date = date, quantity = quantity.toShort())
 
                 ViewModelProviders.of(this).get(OrderViewModel::class.java).insert(newOrder)
                 Toast.makeText(this, R.string.order_created, Toast.LENGTH_SHORT).show()
 
             }
-        } else if (requestCode == CustomData.EDIT_ORDER_REQ && resultCode == Activity.RESULT_OK){
-            if(data != null){
+        } else if (requestCode == CustomData.EDIT_ORDER_REQ && resultCode == Activity.RESULT_OK) {
+            if (data != null) {
                 val uid: Int = data.getIntExtra(CustomData.EXTRA_ORDER_UID, -1)
                 val pid: Int = data.getIntExtra(CustomData.EXTRA_ORDER_PID, -1)
                 val oid: Int = data.getIntExtra(CustomData.EXTRA_ORDER_ID, -1)
@@ -300,7 +285,8 @@ class MainActivity :
                 val date: Date = data.getSerializableExtra(CustomData.EXTRA_ORDER_DATE) as Date
                 val qty: Int = data.getIntExtra(CustomData.EXTRA_ORDER_QTY, 0)
 
-                val updateOrder = Order(orderID = oid, uid = uid, productID = pid, date = date, code = code, quantity = qty.toShort())
+                val updateOrder =
+                    Order(orderID = oid, uid = uid, productID = pid, date = date, code = code, quantity = qty.toShort())
 
                 ViewModelProviders.of(this).get(OrderViewModel::class.java).update(updateOrder)
                 Toast.makeText(this, R.string.order_updated, Toast.LENGTH_SHORT).show()
@@ -313,7 +299,7 @@ class MainActivity :
 
             Toast.makeText(this, R.string.product_deleted, Toast.LENGTH_SHORT).show()
 
-        } else if(requestCode == CustomData.EDIT_ORDER_REQ && resultCode == CustomData.DEL_ORDER_REQ){
+        } else if (requestCode == CustomData.EDIT_ORDER_REQ && resultCode == CustomData.DEL_ORDER_REQ) {
 
             Toast.makeText(this, R.string.order_deleted, Toast.LENGTH_SHORT).show()
 

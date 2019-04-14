@@ -1,8 +1,9 @@
-package com.carlosmartel.project4.data.json.backend
+package com.carlosmartel.project4.data.json.backend.customerJson
 
 import org.json.JSONObject
 
-class APIController constructor(customerServiceInjection: CustomerServiceInterface) : CustomerServiceInterface {
+class CustomerAPIController constructor(customerServiceInjection: CustomerServiceInterface) :
+    CustomerServiceInterface {
 
     private val customerService: CustomerServiceInterface = customerServiceInjection
 

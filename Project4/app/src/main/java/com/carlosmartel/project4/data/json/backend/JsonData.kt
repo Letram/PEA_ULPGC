@@ -1,4 +1,4 @@
-package com.carlosmartel.project4.data.json.constants
+package com.carlosmartel.project4.data.json.backend
 
 class JsonData {
     companion object {
@@ -14,6 +14,18 @@ class JsonData {
         const val CUSTOMER_NAME: String = "name"
         const val CUSTOMER_ADDRESS: String = "address"
         const val CUSTOMER_ID: String = "IDCustomer"
+
+        //Product Queries
+        const val GET_PRODUCTS = "?QueryProducts"
+        const val INSERT_PRODUCT = "?InsertProduct"
+        const val DELETE_PRODUCT = "?DeleteProduct"
+        const val UPDATE_PRODUCT = "?UpdateProduct"
+
+        //Product data
+        const val PRODUCT_NAME: String = "name"
+        const val PRODUCT_DESCRIPTION: String = "description"
+        const val PRODUCT_PRICE: String = "price"
+        const val PRODUCT_ID: String = "IDProduct"
 
         //Order Queries
         const val GET_ORDERS = "?QueryOrders"

@@ -13,6 +13,8 @@ import android.view.View
 import android.view.ViewGroup
 import com.carlosmartel.project4.R
 import com.carlosmartel.project4.data.entities.Product
+import com.carlosmartel.project4.data.json.backend.productJson.JsonProductService
+import com.carlosmartel.project4.data.json.backend.productJson.ProductAPIController
 
 class ProductFragment : Fragment() {
 
@@ -22,6 +24,8 @@ class ProductFragment : Fragment() {
     private lateinit var recyclerAdapter: ProductListAdapter
     private lateinit var productsWithOrders: List<Int>
 
+    private lateinit var jsonProductAPI: ProductAPIController
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -30,69 +34,44 @@ class ProductFragment : Fragment() {
 
         recyclerView = view.findViewById(R.id.product_recycler_view)
         recyclerAdapter = ProductListAdapter()
-
+        jsonProductAPI = ProductAPIController(JsonProductService())
         recyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = recyclerAdapter
         }
         productViewModel = ViewModelProviders.of(this.activity!!)
             .get(ProductViewModel(application = activity!!.application)::class.java)
-        productViewModel.getAllProducts().observe(this, Observer {
+
+        productViewModel.getAllProductsJSON().observe(this, Observer {
             if (it != null) {
-                recyclerAdapter.setProducts(products = it)
+                recyclerAdapter.setProducts(it)
                 recyclerAdapter.notifyDataSetChanged()
             }
         })
-        productViewModel.getAllProductsWithOrders().observe(this, Observer {
-            if(it != null)
-                productsWithOrders = it
-        })
-/*
-        //In order to delete a customer we just have to swipe left or right
-        ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
-            0,
-            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
-        ) {
-            override fun onMove(
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder,
-                target: RecyclerView.ViewHolder
-            ): Boolean {
-                return false
-            }
-
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val undoProduct = recyclerAdapter.getProductAt(viewHolder.adapterPosition)
-                productViewModel.delete(recyclerAdapter.getProductAt(viewHolder.adapterPosition))
-                Snackbar.make(view!!, R.string.customer_deleted, Snackbar.LENGTH_SHORT)
-                    .setAction(R.string.snack_undo) {
-                        productViewModel.insert(undoProduct)
-                    }
-                    .show()
-            }
-        }).attachToRecyclerView(recyclerView)
-*/
         recyclerAdapter.setOnItemClickListener(object : ProductListAdapter.OnItemClickListener {
             override fun onItemClick(product: Product) {
                 listener?.updateProduct(product)
             }
 
             override fun onItemLongClick(product: Product) {
-                if(productsWithOrders.contains(product.p_id))
+                listener?.deleteProduct(product)
+                /*
+                if (productsWithOrders.contains(product.p_id))
                     openDialog()
                 else
                     listener?.deleteProduct(product)
+                */
             }
         })
         return view
     }
 
 
-    private fun openDialog(){
+    private fun openDialog() {
         val dialog = AlertDialog.Builder(activity!!)
         dialog.setTitle(R.string.dialog_product_title)
         dialog.setMessage(R.string.dialog_cant_delete_product)
-        dialog.setPositiveButton(R.string.OK){ _, _ -> }
+        dialog.setPositiveButton(R.string.OK) { _, _ -> }
         dialog.setCancelable(false)
         dialog.show()
     }
