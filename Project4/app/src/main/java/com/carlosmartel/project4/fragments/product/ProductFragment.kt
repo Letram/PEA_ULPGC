@@ -15,14 +15,20 @@ import com.carlosmartel.project4.R
 import com.carlosmartel.project4.data.entities.Product
 import com.carlosmartel.project4.data.json.backend.productJson.JsonProductService
 import com.carlosmartel.project4.data.json.backend.productJson.ProductAPIController
+import com.carlosmartel.project4.data.pojo.InflatedOrderJson
+import com.carlosmartel.project4.fragments.order.OrderViewModel
 
 class ProductFragment : Fragment() {
 
     private var listener: OnFragmentInteractionListener? = null
     private lateinit var productViewModel: ProductViewModel
+    private lateinit var orderViewModel: OrderViewModel
+
     private lateinit var recyclerView: RecyclerView
     private lateinit var recyclerAdapter: ProductListAdapter
+
     private lateinit var productsWithOrders: List<Int>
+    private lateinit var orders: List<InflatedOrderJson>
 
     private lateinit var jsonProductAPI: ProductAPIController
 
@@ -39,8 +45,9 @@ class ProductFragment : Fragment() {
             layoutManager = LinearLayoutManager(context)
             adapter = recyclerAdapter
         }
-        productViewModel = ViewModelProviders.of(this.activity!!)
-            .get(ProductViewModel(application = activity!!.application)::class.java)
+        productViewModel =
+            ViewModelProviders.of(this.activity!!).get(ProductViewModel(activity!!.application)::class.java)
+        orderViewModel = ViewModelProviders.of(this.activity!!).get(OrderViewModel(activity!!.application)::class.java)
 
         productViewModel.getAllProductsJSON().observe(this, Observer {
             if (it != null) {
@@ -48,20 +55,24 @@ class ProductFragment : Fragment() {
                 recyclerAdapter.notifyDataSetChanged()
             }
         })
+        orderViewModel.getAllInflatedOrdersJSON().observe(this, Observer {
+            if (it != null) {
+                orders = it
+            }
+        })
         recyclerAdapter.setOnItemClickListener(object : ProductListAdapter.OnItemClickListener {
             override fun onItemClick(product: Product) {
                 listener?.updateProduct(product)
             }
 
-            //todo: check if the product has orders related to it
             override fun onItemLongClick(product: Product) {
+                for (infOrder in orders) {
+                    if (infOrder.order.productID == product.p_id) {
+                        openDialog()
+                        return
+                    }
+                }
                 listener?.deleteProduct(product)
-                /*
-                if (productsWithOrders.contains(product.p_id))
-                    openDialog()
-                else
-                    listener?.deleteProduct(product)
-                */
             }
         })
         return view

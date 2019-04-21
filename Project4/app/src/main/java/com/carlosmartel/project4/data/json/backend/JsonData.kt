@@ -11,9 +11,9 @@ class JsonData {
         const val UPDATE_CUSTOMER = "?UpdateCustomer"
 
         //Customer data
-        const val CUSTOMER_NAME: String = "name"
-        const val CUSTOMER_ADDRESS: String = "address"
-        const val CUSTOMER_ID: String = "IDCustomer"
+        const val CUSTOMER_NAME = "name"
+        const val CUSTOMER_ADDRESS = "address"
+        const val CUSTOMER_ID = "IDCustomer"
 
         //Product Queries
         const val GET_PRODUCTS = "?QueryProducts"
@@ -22,15 +22,24 @@ class JsonData {
         const val UPDATE_PRODUCT = "?UpdateProduct"
 
         //Product data
-        const val PRODUCT_NAME: String = "name"
-        const val PRODUCT_DESCRIPTION: String = "description"
-        const val PRODUCT_PRICE: String = "price"
-        const val PRODUCT_ID: String = "IDProduct"
+        const val PRODUCT_NAME = "name"
+        const val PRODUCT_DESCRIPTION = "description"
+        const val PRODUCT_PRICE = "price"
+        const val PRODUCT_ID = "IDProduct"
 
         //Order Queries
         const val GET_ORDERS = "?QueryOrders"
         const val INSERT_ORDER = "?InsertOrder"
+        const val DELETE_ORDER = "?DeleteOrder"
+        const val UPDATE_ORDER = "?UpdateOrder"
 
+        //Order data
+        const val ORDER_CODE = "code"
+        const val ORDER_QTY = "quantity"
+        const val ORDER_DATE = "date"
+        const val ORDER_ID = "IDOrder"
+        const val ORDER_CUSTOMER_NAME = "customerName"
+        const val ORDER_PRODUCT_NAME = "productName"
     }
 }
 

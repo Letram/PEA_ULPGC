@@ -53,7 +53,7 @@ class CustomerViewModel constructor(application: Application) : AndroidViewModel
     }
 
     //JSON
-    fun refresh() {
+    private fun refresh() {
         refreshCustomers()
     }
 

@@ -15,14 +15,20 @@ import com.carlosmartel.project4.R
 import com.carlosmartel.project4.data.entities.Customer
 import com.carlosmartel.project4.data.json.backend.customerJson.CustomerAPIController
 import com.carlosmartel.project4.data.json.backend.customerJson.JsonCustomerService
+import com.carlosmartel.project4.data.pojo.InflatedOrderJson
+import com.carlosmartel.project4.fragments.order.OrderViewModel
 
 class CustomerFragment : Fragment() {
 
     private var listener: OnFragmentInteractionListener? = null
     private lateinit var customerViewModel: CustomerViewModel
+    private lateinit var orderViewModel: OrderViewModel
+
     private lateinit var recyclerView: RecyclerView
     private lateinit var recyclerAdapter: CustomerListAdapter
+
     private lateinit var customersWithOrders: List<Int>
+    private lateinit var orders: List<InflatedOrderJson>
 
     private lateinit var jsonCustomerAPI: CustomerAPIController
 
@@ -36,8 +42,9 @@ class CustomerFragment : Fragment() {
         recyclerAdapter = CustomerListAdapter()
         jsonCustomerAPI = CustomerAPIController(JsonCustomerService())
 
-        customerViewModel = ViewModelProviders.of(this.activity!!)
-            .get(CustomerViewModel(application = activity!!.application)::class.java)
+        customerViewModel =
+            ViewModelProviders.of(this.activity!!).get(CustomerViewModel(activity!!.application)::class.java)
+        orderViewModel = ViewModelProviders.of(this.activity!!).get(OrderViewModel(activity!!.application)::class.java)
 
         recyclerView.apply {
             layoutManager = LinearLayoutManager(context)
@@ -51,6 +58,12 @@ class CustomerFragment : Fragment() {
             }
         })
 
+        orderViewModel.getAllInflatedOrdersJSON().observe(this, Observer {
+            if (it != null) {
+                orders = it
+            }
+        })
+
         recyclerAdapter.setOnItemClickListener(object : CustomerListAdapter.OnItemClickListener {
             override fun onItemClick(customer: Customer) {
                 listener?.updateCustomer(customer)
@@ -58,13 +71,13 @@ class CustomerFragment : Fragment() {
 
             //todo: check if the customer has orders related to him
             override fun onItemLongClick(customer: Customer) {
+                for (infOrder in orders) {
+                    if (infOrder.order.uid == customer.u_id) {
+                        openDialog()
+                        return
+                    }
+                }
                 listener?.deleteCustomer(customer)
-/*
-                if (customersWithOrders.contains(customer.u_id)) {
-                    openDialog()
-                } else
-                    listener?.deleteCustomer(customer)
-*/
             }
         })
         return v
