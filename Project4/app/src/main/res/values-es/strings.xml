@@ -65,4 +65,7 @@
         hayan añadido
     </string>
     <string name="save_order_toast">Por favor, rellene todos los campos para continuar</string>
+    <string name="another_name">Ya existe un producto con este nombre.</string>
+    <string name="another_name_customer">Ya existe un cliente con este nombre.</string>
+    <string name="another_name_order">Ya existe un pedido con este código.</string>
 </resources>

@@ -27,7 +27,6 @@ class CustomerFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var recyclerAdapter: CustomerListAdapter
 
-    private lateinit var customersWithOrders: List<Int>
     private lateinit var orders: List<InflatedOrderJson>
 
     private lateinit var jsonCustomerAPI: CustomerAPIController

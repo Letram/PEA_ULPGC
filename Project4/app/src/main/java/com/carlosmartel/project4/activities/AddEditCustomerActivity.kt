@@ -14,25 +14,38 @@ import android.widget.Toast
 import com.carlosmartel.project4.CustomData
 import com.carlosmartel.project4.R
 import com.carlosmartel.project4.data.entities.Customer
+import com.carlosmartel.project4.data.pojo.InflatedOrderJson
 import com.carlosmartel.project4.fragments.customer.CustomerViewModel
+import com.carlosmartel.project4.fragments.order.OrderViewModel
 
 class AddEditCustomerActivity : AppCompatActivity() {
 
     private lateinit var customerNameEdit: EditText
     private lateinit var customerAddressEdit: EditText
-    private lateinit var customersWithOrders: List<Int>
     private var prevCustomer: Customer? = null
     private lateinit var customerViewModel: CustomerViewModel
+
+    private lateinit var orderViewModel: OrderViewModel
+    private lateinit var orders: List<InflatedOrderJson>
+    private lateinit var customers: List<Customer>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_customer)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         customerViewModel = ViewModelProviders.of(this).get(CustomerViewModel::class.java)
-        customerViewModel.getAllCustomersWithOrders().observe(this, Observer {
+        customerViewModel.getAllCustomersJSON().observe(this, Observer {
             if (it != null)
-                customersWithOrders = it
+                customers = it
         })
+
+        orderViewModel = ViewModelProviders.of(this).get(OrderViewModel(application)::class.java)
+        orderViewModel.getAllInflatedOrdersJSON().observe(this, Observer {
+            if (it != null) {
+                orders = it
+            }
+        })
+
 
         customerNameEdit = this.findViewById(R.id.name_edit)
         customerAddressEdit = this.findViewById(R.id.address_edit)
@@ -73,7 +86,7 @@ class AddEditCustomerActivity : AppCompatActivity() {
     }
 
     private fun deleteCustomer() {
-        if (customersWithOrders.contains(intent.getIntExtra(CustomData.EXTRA_ID, -1)))
+        if (hasOrders(prevCustomer))
             openDialog()
         else {
             val deleteCustomer = prevCustomer!!
@@ -88,6 +101,15 @@ class AddEditCustomerActivity : AppCompatActivity() {
             dialog.setNegativeButton(R.string.dialog_cancel) { _, _ -> }
             dialog.show()
         }
+    }
+
+    private fun hasOrders(prevCustomer: Customer?): Boolean {
+        for (infOrder in orders) {
+            if (infOrder.order.uid == prevCustomer!!.u_id) {
+                return true
+            }
+        }
+        return false
     }
 
     private fun openDialog() {
@@ -108,6 +130,11 @@ class AddEditCustomerActivity : AppCompatActivity() {
             return
         }
 
+        if (isRepeated(name)) {
+            Toast.makeText(this, R.string.another_name_customer, Toast.LENGTH_SHORT).show()
+            return
+        }
+
         val data = Intent()
         data.putExtra(CustomData.EXTRA_NAME, name)
         data.putExtra(CustomData.EXTRA_ADDRESS, address)
@@ -119,6 +146,15 @@ class AddEditCustomerActivity : AppCompatActivity() {
         }
         setResult(Activity.RESULT_OK, data)
         finish()
+    }
+
+    private fun isRepeated(name: String): Boolean {
+        for (customer in customers) {
+            if (customer.c_name == name) {
+                return true
+            }
+        }
+        return false
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {

@@ -14,6 +14,8 @@ import android.widget.Toast
 import com.carlosmartel.project4.CustomData
 import com.carlosmartel.project4.R
 import com.carlosmartel.project4.data.entities.Product
+import com.carlosmartel.project4.data.pojo.InflatedOrderJson
+import com.carlosmartel.project4.fragments.order.OrderViewModel
 import com.carlosmartel.project4.fragments.product.ProductViewModel
 
 class AddEditProductActivity : AppCompatActivity() {
@@ -21,8 +23,12 @@ class AddEditProductActivity : AppCompatActivity() {
     private lateinit var productName: EditText
     private lateinit var productDescription: EditText
     private lateinit var productPrice: EditText
-    private lateinit var productsWithOrders: List<Int>
     private lateinit var productViewModel: ProductViewModel
+
+    private lateinit var orderViewModel: OrderViewModel
+    private lateinit var orders: List<InflatedOrderJson>
+    private lateinit var products: List<Product>
+
 
     private var prevProduct: Product? = null
 
@@ -33,10 +39,17 @@ class AddEditProductActivity : AppCompatActivity() {
         productName = findViewById(R.id.product_name)
         productDescription = findViewById(R.id.product_description)
         productPrice = findViewById(R.id.product_price)
-        productViewModel = ViewModelProviders.of(this).get(ProductViewModel::class.java)
-        productViewModel.getAllProductsWithOrders().observe(this, Observer {
+        productViewModel = ViewModelProviders.of(this).get(ProductViewModel(application)::class.java)
+
+        productViewModel.getAllProductsJSON().observe(this, Observer {
             if (it != null)
-                productsWithOrders = it
+                products = it
+        })
+        orderViewModel = ViewModelProviders.of(this).get(OrderViewModel(application)::class.java)
+        orderViewModel.getAllInflatedOrdersJSON().observe(this, Observer {
+            if (it != null) {
+                orders = it
+            }
         })
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -76,9 +89,9 @@ class AddEditProductActivity : AppCompatActivity() {
     }
 
     private fun deleteProduct() {
-        if(productsWithOrders.contains(prevProduct?.p_id))
+        if (hasOrders(prevProduct))
             openDialog()
-        else{
+        else {
             val deleteProduct = prevProduct!!
             val dialog = AlertDialog.Builder(this@AddEditProductActivity)
             dialog.setTitle(R.string.dialog_product_title)
@@ -93,11 +106,20 @@ class AddEditProductActivity : AppCompatActivity() {
         }
     }
 
-    private fun openDialog(){
+    private fun hasOrders(prevProduct: Product?): Boolean {
+        for (infOrder in orders) {
+            if (infOrder.order.productID == prevProduct!!.p_id) {
+                return true
+            }
+        }
+        return false
+    }
+
+    private fun openDialog() {
         val dialog = AlertDialog.Builder(this)
         dialog.setTitle(R.string.dialog_product_title)
         dialog.setMessage(R.string.dialog_cant_delete_product)
-        dialog.setPositiveButton(R.string.OK){ _, _ -> }
+        dialog.setPositiveButton(R.string.OK) { _, _ -> }
         dialog.setCancelable(false)
         dialog.show()
     }
@@ -111,17 +133,30 @@ class AddEditProductActivity : AppCompatActivity() {
             Toast.makeText(this, R.string.save_product_toast, Toast.LENGTH_SHORT).show()
             return
         }
+        if (isRepeated(name)) {
+            Toast.makeText(this, R.string.another_name, Toast.LENGTH_SHORT).show()
+            return
+        }
         val data = Intent()
         data.putExtra(CustomData.EXTRA_NAME, name)
         data.putExtra(CustomData.EXTRA_DESCRIPTION, description)
         data.putExtra(CustomData.EXTRA_PRICE, price.toFloat())
 
-        if (prevProduct != null){
+        if (prevProduct != null) {
             data.putExtra(CustomData.EXTRA_ID, intent.getIntExtra(CustomData.EXTRA_ID, -1))
             data.putExtra(CustomData.EXTRA_PRODUCT, intent.getParcelableExtra(CustomData.EXTRA_PRODUCT) as Product)
         }
         setResult(Activity.RESULT_OK, data)
         finish()
+    }
+
+    private fun isRepeated(name: String): Boolean {
+        for (product in products) {
+            if (product.p_name == name) {
+                return true
+            }
+        }
+        return false
     }
 
     private fun valid(name: String, description: String, price: String): Boolean {

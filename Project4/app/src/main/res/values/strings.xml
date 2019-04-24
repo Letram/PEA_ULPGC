@@ -64,4 +64,7 @@
     <string name="dialog_select_info">There is no data in the database for the related object. Please come again once
         more data is available.
     </string>
+    <string name="another_name">There is a product with that name already.</string>
+    <string name="another_name_customer">This customer name already exists</string>
+    <string name="another_name_order">There is a order with that code already.</string>
 </resources>

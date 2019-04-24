@@ -22,6 +22,7 @@ import com.carlosmartel.project4.activities.selectProductActivity.SelectProductA
 import com.carlosmartel.project4.data.entities.Customer
 import com.carlosmartel.project4.data.entities.Order
 import com.carlosmartel.project4.data.entities.Product
+import com.carlosmartel.project4.data.pojo.InflatedOrderJson
 import com.carlosmartel.project4.fragments.order.OrderViewModel
 import java.text.DateFormat
 import java.util.*
@@ -34,6 +35,9 @@ class AddEditOrderActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
     private lateinit var productQuantityText: TextView
     private lateinit var productPriceText: TextView
     private lateinit var orderCodeText: TextView
+
+    private lateinit var orderViewModel: OrderViewModel
+    private lateinit var orders: List<InflatedOrderJson>
 
     private var currentCustomer: Customer? = null
     private var currentProduct: Product? = null
@@ -78,7 +82,12 @@ class AddEditOrderActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
                     setPriceWithQuantity()
                 }
             }
+        })
 
+        orderViewModel = ViewModelProviders.of(this).get(OrderViewModel(application)::class.java)
+        orderViewModel.getAllInflatedOrdersJSON().observe(this, android.arch.lifecycle.Observer {
+            if (it != null)
+                orders = it
         })
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -163,6 +172,10 @@ class AddEditOrderActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
             return
         }
 
+        if (isRepeated(orderCodeText.text.toString())) {
+            Toast.makeText(this, R.string.another_name_order, Toast.LENGTH_SHORT).show()
+            return
+        }
         val uid: Int = currentCustomer?.u_id!!
         val pid: Int = currentProduct?.p_id!!
         val code: String = orderCodeText.text.toString()
@@ -179,6 +192,15 @@ class AddEditOrderActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
             data.putExtra(CustomData.EXTRA_ORDER_ID, currentOrder?.orderID)
         setResult(Activity.RESULT_OK, data)
         finish()
+    }
+
+    private fun isRepeated(code: String): Boolean {
+        for (order in orders) {
+            if (order.order.code == code) {
+                return true
+            }
+        }
+        return false
     }
 
     private fun valid(): Boolean {
