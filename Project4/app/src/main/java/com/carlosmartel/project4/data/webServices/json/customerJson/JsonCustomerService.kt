@@ -1,21 +1,22 @@
-package com.carlosmartel.project4.data.json.backend.orderjJson
+package com.carlosmartel.project4.data.webServices.json.customerJson
 
 import android.util.Log
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.VolleyLog
 import com.android.volley.toolbox.JsonObjectRequest
-import com.carlosmartel.project4.data.json.backend.BackendVolley
-import com.carlosmartel.project4.data.json.backend.JsonData
+import com.carlosmartel.project4.data.webServices.json.BackendVolley
+import com.carlosmartel.project4.data.webServices.WebData
 import org.json.JSONObject
 
-class JsonOrderService : OrderServiceInterface {
-    val TAG = JsonOrderService::class.java.simpleName
+class JsonCustomerService : CustomerServiceInterface {
 
-    override fun insertOrder(path: String, params: JSONObject, completionHandler: (response: JSONObject?) -> Unit) {
+    val TAG = JsonCustomerService::class.java.simpleName
+
+    override fun insertCustomer(path: String, params: JSONObject, completionHandler: (response: JSONObject?) -> Unit) {
         val jsonObjReq = JsonObjectRequest(
             Request.Method.POST,
-            JsonData.URL + path,
+            WebData.URL + path,
             params,
             Response.Listener<JSONObject> { response ->
                 Log.d(TAG, "/post request OK! Response: $response")
@@ -29,9 +30,9 @@ class JsonOrderService : OrderServiceInterface {
         BackendVolley.instance?.addToRequestQueue(jsonObjReq, TAG)
     }
 
-    override fun getOrders(path: String, params: JSONObject?, completionHandler: (response: JSONObject?) -> Unit) {
+    override fun getCustomers(path: String, params: JSONObject?, completionHandler: (response: JSONObject?) -> Unit) {
         val jsonObjReq = JsonObjectRequest(
-            Request.Method.GET, JsonData.URL + path, null,
+            Request.Method.GET, WebData.URL + path, null,
             Response.Listener<JSONObject> { response ->
                 completionHandler(response)
             },
@@ -41,12 +42,12 @@ class JsonOrderService : OrderServiceInterface {
         BackendVolley.instance?.addToRequestQueue(jsonObjReq, TAG)
     }
 
-    override fun deleteOrder(path: String, params: JSONObject, completionHandler: (response: JSONObject?) -> Unit) {
+    override fun deleteCustomer(path: String, params: JSONObject, completionHandler: (response: JSONObject?) -> Unit) {
         println(params)
 
         val jsonObjReq = JsonObjectRequest(
             Request.Method.POST,
-            JsonData.URL + path,
+            WebData.URL + path,
             params,
             Response.Listener<JSONObject> { response ->
                 Log.d(TAG, "/delete request OK! Response: $response")
@@ -60,10 +61,10 @@ class JsonOrderService : OrderServiceInterface {
         BackendVolley.instance?.addToRequestQueue(jsonObjReq, TAG)
     }
 
-    override fun updateOrder(path: String, params: JSONObject, completionHandler: (response: JSONObject?) -> Unit) {
+    override fun updateCustomer(path: String, params: JSONObject, completionHandler: (response: JSONObject?) -> Unit) {
         val jsonObjReq = JsonObjectRequest(
             Request.Method.PUT,
-            JsonData.URL + path,
+            WebData.URL + path,
             params,
             Response.Listener<JSONObject> { response ->
                 Log.d(TAG, "/put request OK! Response: $response")

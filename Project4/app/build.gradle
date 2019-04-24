@@ -21,6 +21,9 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+        repositories {
+            maven { url 'https://oss.sonatype.org/content/repositories/ksoap2-android-releases/' }
+        }
     }
 }
 
@@ -37,6 +40,9 @@ dependencies {
 
     //Volley
     implementation 'com.android.volley:volley:1.1.0'
+
+    //SOAP
+    implementation 'com.google.code.ksoap2-android:ksoap2-android:3.6.4'
 
     // Room components
     def room_ver = "1.1.1"

@@ -13,8 +13,8 @@ import android.view.View
 import android.view.ViewGroup
 import com.carlosmartel.project4.R
 import com.carlosmartel.project4.data.entities.Product
-import com.carlosmartel.project4.data.json.backend.productJson.JsonProductService
-import com.carlosmartel.project4.data.json.backend.productJson.ProductAPIController
+import com.carlosmartel.project4.data.webServices.json.productJson.JsonProductService
+import com.carlosmartel.project4.data.webServices.json.productJson.ProductAPIController
 import com.carlosmartel.project4.data.pojo.InflatedOrderJson
 import com.carlosmartel.project4.fragments.order.OrderViewModel
 
@@ -40,7 +40,8 @@ class ProductFragment : Fragment() {
 
         recyclerView = view.findViewById(R.id.product_recycler_view)
         recyclerAdapter = ProductListAdapter()
-        jsonProductAPI = ProductAPIController(JsonProductService())
+        jsonProductAPI =
+            ProductAPIController(JsonProductService())
         recyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = recyclerAdapter

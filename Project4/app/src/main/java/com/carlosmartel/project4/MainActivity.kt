@@ -21,7 +21,7 @@ import com.carlosmartel.project4.activities.addEditOrderActivity.AddEditOrderAct
 import com.carlosmartel.project4.data.entities.Customer
 import com.carlosmartel.project4.data.entities.Order
 import com.carlosmartel.project4.data.entities.Product
-import com.carlosmartel.project4.data.pojo.InflatedOrder
+import com.carlosmartel.project4.data.pojo.InflatedOrderJson
 import com.carlosmartel.project4.fragments.MyFragmentPagerAdapter
 import com.carlosmartel.project4.fragments.customer.CustomerFragment
 import com.carlosmartel.project4.fragments.customer.CustomerViewModel
@@ -31,6 +31,7 @@ import com.carlosmartel.project4.fragments.product.ProductFragment
 import com.carlosmartel.project4.fragments.product.ProductViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
+import java.text.SimpleDateFormat
 import java.util.*
 
 class MainActivity :
@@ -44,11 +45,16 @@ class MainActivity :
     private lateinit var mAdapter: MyFragmentPagerAdapter
     private lateinit var tabLayout: TabLayout
 
-    override fun updateInflatedOrder(inflatedOrder: InflatedOrder) {
+    override fun updateInflatedOrder(inflatedOrder: InflatedOrderJson) {
         val intent = Intent(this, AddEditOrderActivity::class.java)
-        intent.putExtra(CustomData.EXTRA_PRODUCT, inflatedOrder.product!!)
-        intent.putExtra(CustomData.EXTRA_CUSTOMER, inflatedOrder.customer!!)
-        intent.putExtra(CustomData.EXTRA_ORDER, inflatedOrder.order!!)
+        val customerAux = Customer(c_name = inflatedOrder.customerName, address = "")
+        customerAux.u_id = inflatedOrder.order.uid
+        val productAux =
+            Product(p_name = inflatedOrder.productName, price = inflatedOrder.productPrice, description = "")
+        productAux.p_id = inflatedOrder.order.productID
+        intent.putExtra(CustomData.EXTRA_PRODUCT, productAux)
+        intent.putExtra(CustomData.EXTRA_CUSTOMER, customerAux)
+        intent.putExtra(CustomData.EXTRA_ORDER, inflatedOrder.order)
         startActivityForResult(intent, CustomData.EDIT_ORDER_REQ)
     }
 
@@ -69,10 +75,17 @@ class MainActivity :
         dialog.setTitle(R.string.dialog_order_title)
         dialog.setMessage(R.string.dialog_order_confirmation)
         dialog.setPositiveButton(R.string.dialog_delete) { _, _ ->
-            ViewModelProviders.of(this).get(OrderViewModel::class.java).delete(order)
+            ViewModelProviders.of(this).get(OrderViewModel::class.java).deleteJSON(order.orderID)
             Snackbar.make(viewPager, R.string.order_deleted, Snackbar.LENGTH_SHORT)
                 .setAction(R.string.snack_undo) {
-                    ViewModelProviders.of(this).get(OrderViewModel::class.java).insert(undoOrder)
+                    ViewModelProviders.of(this).get(OrderViewModel::class.java)
+                        .insertJSON(
+                            undoOrder.code,
+                            SimpleDateFormat("yyyy-MM-dd").format(undoOrder.date),
+                            undoOrder.uid,
+                            undoOrder.productID,
+                            undoOrder.quantity.toInt()
+                        )
                 }
                 .show()
         }
@@ -269,11 +282,8 @@ class MainActivity :
                 val date: Date = data.getSerializableExtra(CustomData.EXTRA_ORDER_DATE) as Date
                 val quantity: Int = data.getIntExtra(CustomData.EXTRA_ORDER_QTY, 0)
 
-                val newOrder =
-                    Order(code = code, uid = uid, productID = pid, date = date, quantity = quantity.toShort())
-
-                ViewModelProviders.of(this).get(OrderViewModel::class.java).insert(newOrder)
-                Toast.makeText(this, R.string.order_created, Toast.LENGTH_SHORT).show()
+                ViewModelProviders.of(this).get(OrderViewModel::class.java)
+                    .insertJSON(code, SimpleDateFormat("yyyy-MM-dd").format(date), uid, pid, quantity)
 
             }
         } else if (requestCode == CustomData.EDIT_ORDER_REQ && resultCode == Activity.RESULT_OK) {
@@ -288,8 +298,15 @@ class MainActivity :
                 val updateOrder =
                     Order(orderID = oid, uid = uid, productID = pid, date = date, code = code, quantity = qty.toShort())
 
-                ViewModelProviders.of(this).get(OrderViewModel::class.java).update(updateOrder)
-                Toast.makeText(this, R.string.order_updated, Toast.LENGTH_SHORT).show()
+                ViewModelProviders.of(this).get(OrderViewModel::class.java).updateJSON(
+                    orderID = oid,
+                    idCustomer = uid,
+                    idProduct = pid,
+                    code = code,
+                    date = SimpleDateFormat("yyyy-MM-dd").format(date),
+                    quantity = qty
+                )
+
             }
         } else if (requestCode == CustomData.EDIT_CUSTOMER_REQ && resultCode == CustomData.DEL_CUSTOMER_REQ) {
 

@@ -5,9 +5,9 @@ import android.arch.lifecycle.AndroidViewModel
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import com.carlosmartel.project4.data.entities.Customer
-import com.carlosmartel.project4.data.json.backend.customerJson.CustomerAPIController
-import com.carlosmartel.project4.data.json.backend.customerJson.JsonCustomerService
-import com.carlosmartel.project4.data.json.backend.JsonData
+import com.carlosmartel.project4.data.webServices.json.customerJson.CustomerAPIController
+import com.carlosmartel.project4.data.webServices.json.customerJson.JsonCustomerService
+import com.carlosmartel.project4.data.webServices.WebData
 import com.carlosmartel.project4.data.room.repositories.CustomerRepository
 import org.json.JSONObject
 
@@ -58,7 +58,7 @@ class CustomerViewModel constructor(application: Application) : AndroidViewModel
     }
 
     private fun refreshCustomers() {
-        customerApi.getCustomers(JsonData.GET_CUSTOMERS, null) { response ->
+        customerApi.getCustomers(WebData.GET_CUSTOMERS, null) { response ->
             val customers: MutableList<Customer> = ArrayList()
             if (response != null) {
                 val fault = response.getInt("fault")
@@ -67,10 +67,10 @@ class CustomerViewModel constructor(application: Application) : AndroidViewModel
                     for (i in 0 until array.length()) {
                         val obj = array.getJSONObject(i)
                         val customerAux = Customer(
-                            address = obj.getString(JsonData.CUSTOMER_ADDRESS),
-                            c_name = obj.getString(JsonData.CUSTOMER_NAME)
+                            address = obj.getString(WebData.CUSTOMER_ADDRESS),
+                            c_name = obj.getString(WebData.CUSTOMER_NAME)
                         )
-                        customerAux.u_id = obj.getString(JsonData.CUSTOMER_ID).toInt()
+                        customerAux.u_id = obj.getString(WebData.CUSTOMER_ID).toInt()
                         customers.add(customerAux)
                     }
                     allCustomersJson.value = customers
@@ -85,9 +85,9 @@ class CustomerViewModel constructor(application: Application) : AndroidViewModel
 
     fun insertJSON(name: String, address: String) {
         val jsonObject = JSONObject()
-        jsonObject.put(JsonData.CUSTOMER_NAME, name)
-        jsonObject.put(JsonData.CUSTOMER_ADDRESS, address)
-        customerApi.insertCustomer(JsonData.INSERT_CUSTOMER, jsonObject) { response ->
+        jsonObject.put(WebData.CUSTOMER_NAME, name)
+        jsonObject.put(WebData.CUSTOMER_ADDRESS, address)
+        customerApi.insertCustomer(WebData.INSERT_CUSTOMER, jsonObject) { response ->
             if (response != null) {
                 if (response.getInt("fault") == 0)
                     refresh()
@@ -97,8 +97,8 @@ class CustomerViewModel constructor(application: Application) : AndroidViewModel
 
     fun deleteJSON(customerID: Int) {
         val jsonObject = JSONObject()
-        jsonObject.put(JsonData.CUSTOMER_ID, customerID)
-        customerApi.deleteCustomer(JsonData.DELETE_CUSTOMER, jsonObject) { response ->
+        jsonObject.put(WebData.CUSTOMER_ID, customerID)
+        customerApi.deleteCustomer(WebData.DELETE_CUSTOMER, jsonObject) { response ->
             if (response != null) {
                 if (response.getInt("fault") == 0 && response.getBoolean("data"))
                     refresh()
@@ -108,10 +108,10 @@ class CustomerViewModel constructor(application: Application) : AndroidViewModel
 
     fun updateJSON(customerID: Int, name: String, address: String) {
         val jsonObject = JSONObject()
-        jsonObject.put(JsonData.CUSTOMER_ID, customerID)
-        jsonObject.put(JsonData.CUSTOMER_NAME, name)
-        jsonObject.put(JsonData.CUSTOMER_ADDRESS, address)
-        customerApi.updateCustomer(JsonData.UPDATE_CUSTOMER, jsonObject) { response ->
+        jsonObject.put(WebData.CUSTOMER_ID, customerID)
+        jsonObject.put(WebData.CUSTOMER_NAME, name)
+        jsonObject.put(WebData.CUSTOMER_ADDRESS, address)
+        customerApi.updateCustomer(WebData.UPDATE_CUSTOMER, jsonObject) { response ->
             if (response != null) {
                 if (response.getInt("fault") == 0 && response.getBoolean("data"))
                     refresh()

@@ -40,7 +40,7 @@ class SelectProductActivity : AppCompatActivity() {
             recyclerAdapter.setProductSelected(productSelected)
         }
 
-        productViewModel.getAllProducts().observe(this, Observer {
+        productViewModel.getAllProductsJSON().observe(this, Observer {
             if (it != null) {
                 if (it.isEmpty()) openDialog()
                 else {

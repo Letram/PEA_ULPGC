@@ -1,4 +1,4 @@
-package com.carlosmartel.project4.data.json.backend.productJson
+package com.carlosmartel.project4.data.webServices.json.productJson
 
 import org.json.JSONObject
 

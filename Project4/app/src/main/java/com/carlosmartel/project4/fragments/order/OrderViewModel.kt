@@ -5,16 +5,14 @@ import android.arch.lifecycle.AndroidViewModel
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import com.carlosmartel.project4.data.entities.Order
-import com.carlosmartel.project4.data.json.backend.JsonData
-import com.carlosmartel.project4.data.json.backend.orderjJson.JsonOrderService
-import com.carlosmartel.project4.data.json.backend.orderjJson.OrderAPIController
+import com.carlosmartel.project4.data.webServices.WebData
+import com.carlosmartel.project4.data.webServices.json.orderjJson.JsonOrderService
+import com.carlosmartel.project4.data.webServices.json.orderjJson.OrderAPIController
 import com.carlosmartel.project4.data.pojo.InflatedOrder
 import com.carlosmartel.project4.data.pojo.InflatedOrderJson
 import com.carlosmartel.project4.data.room.repositories.OrderRepository
 import org.json.JSONObject
 import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.util.*
 import kotlin.collections.ArrayList
 
 class OrderViewModel (application: Application) : AndroidViewModel(application){
@@ -64,7 +62,7 @@ class OrderViewModel (application: Application) : AndroidViewModel(application){
     }
 
     private fun refreshOrders() {
-        orderApi.getOrders(JsonData.GET_ORDERS, null) { response ->
+        orderApi.getOrders(WebData.GET_ORDERS, null) { response ->
             val orders: MutableList<InflatedOrderJson> = ArrayList()
             if (response != null) {
                 val fault = response.getInt("fault")
@@ -72,20 +70,23 @@ class OrderViewModel (application: Application) : AndroidViewModel(application){
                     val array = response.getJSONArray("data")
                     for (i in 0 until array.length()) {
                         val obj = array.getJSONObject(i)
-                        if (obj.isNull(JsonData.CUSTOMER_ID) || obj.isNull(JsonData.PRODUCT_ID))
+                        if (obj.isNull(WebData.CUSTOMER_ID) || obj.isNull(
+                                WebData.PRODUCT_ID
+                            )
+                        )
                             continue
                         val orderAux = Order(
-                            uid = obj.getInt(JsonData.CUSTOMER_ID),
-                            productID = obj.getInt(JsonData.PRODUCT_ID),
-                            code = obj.getString(JsonData.ORDER_CODE),
-                            date = SimpleDateFormat("yyyy-MM-dd").parse(obj.getString(JsonData.ORDER_DATE)),
-                            quantity = obj.getInt(JsonData.ORDER_QTY).toShort()
+                            uid = obj.getInt(WebData.CUSTOMER_ID),
+                            productID = obj.getInt(WebData.PRODUCT_ID),
+                            code = obj.getString(WebData.ORDER_CODE),
+                            date = SimpleDateFormat("yyyy-MM-dd").parse(obj.getString(WebData.ORDER_DATE)),
+                            quantity = obj.getInt(WebData.ORDER_QTY).toShort()
                         )
-                        orderAux.orderID = obj.getInt(JsonData.ORDER_ID)
+                        orderAux.orderID = obj.getInt(WebData.ORDER_ID)
                         val infOrder = InflatedOrderJson(
-                            customerName = obj.getString(JsonData.ORDER_CUSTOMER_NAME),
-                            productName = obj.getString(JsonData.ORDER_PRODUCT_NAME),
-                            productPrice = obj.getDouble(JsonData.PRODUCT_PRICE).toFloat(),
+                            customerName = obj.getString(WebData.ORDER_CUSTOMER_NAME),
+                            productName = obj.getString(WebData.ORDER_PRODUCT_NAME),
+                            productPrice = obj.getDouble(WebData.PRODUCT_PRICE).toFloat(),
                             order = orderAux
                         )
                         orders.add(infOrder)
@@ -101,11 +102,14 @@ class OrderViewModel (application: Application) : AndroidViewModel(application){
         return allInflatedOrdersJson
     }
 
-    fun insertJSON(name: String, address: String) {
+    fun insertJSON(code: String, date: String, idCustomer: Int, idProduct: Int, quantity: Int) {
         val jsonObject = JSONObject()
-        jsonObject.put(JsonData.CUSTOMER_NAME, name)
-        jsonObject.put(JsonData.CUSTOMER_ADDRESS, address)
-        orderApi.insertOrder(JsonData.INSERT_CUSTOMER, jsonObject) { response ->
+        jsonObject.put(WebData.ORDER_CODE, code)
+        jsonObject.put(WebData.ORDER_QTY, quantity)
+        jsonObject.put(WebData.CUSTOMER_ID, idCustomer)
+        jsonObject.put(WebData.PRODUCT_ID, idProduct)
+        jsonObject.put(WebData.ORDER_DATE, date)
+        orderApi.insertOrder(WebData.INSERT_ORDER, jsonObject) { response ->
             if (response != null) {
                 if (response.getInt("fault") == 0)
                     refresh()
@@ -115,8 +119,8 @@ class OrderViewModel (application: Application) : AndroidViewModel(application){
 
     fun deleteJSON(orderID: Int) {
         val jsonObject = JSONObject()
-        jsonObject.put(JsonData.CUSTOMER_ID, orderID)
-        orderApi.deleteOrder(JsonData.DELETE_CUSTOMER, jsonObject) { response ->
+        jsonObject.put(WebData.ORDER_ID, orderID)
+        orderApi.deleteOrder(WebData.DELETE_ORDER, jsonObject) { response ->
             if (response != null) {
                 if (response.getInt("fault") == 0 && response.getBoolean("data"))
                     refresh()
@@ -124,12 +128,15 @@ class OrderViewModel (application: Application) : AndroidViewModel(application){
         }
     }
 
-    fun updateJSON(orderID: Int, name: String, address: String) {
+    fun updateJSON(orderID: Int, code: String, quantity: Int, idCustomer: Int, idProduct: Int, date: String) {
         val jsonObject = JSONObject()
-        jsonObject.put(JsonData.CUSTOMER_ID, orderID)
-        jsonObject.put(JsonData.CUSTOMER_NAME, name)
-        jsonObject.put(JsonData.CUSTOMER_ADDRESS, address)
-        orderApi.updateOrder(JsonData.UPDATE_CUSTOMER, jsonObject) { response ->
+        jsonObject.put(WebData.ORDER_ID, orderID)
+        jsonObject.put(WebData.ORDER_CODE, code)
+        jsonObject.put(WebData.CUSTOMER_ID, idCustomer)
+        jsonObject.put(WebData.PRODUCT_ID, idProduct)
+        jsonObject.put(WebData.ORDER_DATE, date)
+        jsonObject.put(WebData.ORDER_QTY, quantity)
+        orderApi.updateOrder(WebData.UPDATE_ORDER, jsonObject) { response ->
             if (response != null) {
                 if (response.getInt("fault") == 0 && response.getBoolean("data"))
                     refresh()

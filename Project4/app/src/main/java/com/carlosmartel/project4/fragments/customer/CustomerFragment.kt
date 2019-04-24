@@ -13,8 +13,8 @@ import android.view.View
 import android.view.ViewGroup
 import com.carlosmartel.project4.R
 import com.carlosmartel.project4.data.entities.Customer
-import com.carlosmartel.project4.data.json.backend.customerJson.CustomerAPIController
-import com.carlosmartel.project4.data.json.backend.customerJson.JsonCustomerService
+import com.carlosmartel.project4.data.webServices.json.customerJson.CustomerAPIController
+import com.carlosmartel.project4.data.webServices.json.customerJson.JsonCustomerService
 import com.carlosmartel.project4.data.pojo.InflatedOrderJson
 import com.carlosmartel.project4.fragments.order.OrderViewModel
 
@@ -40,7 +40,8 @@ class CustomerFragment : Fragment() {
 
         recyclerView = v.findViewById(R.id.recycler_view)
         recyclerAdapter = CustomerListAdapter()
-        jsonCustomerAPI = CustomerAPIController(JsonCustomerService())
+        jsonCustomerAPI =
+            CustomerAPIController(JsonCustomerService())
 
         customerViewModel =
             ViewModelProviders.of(this.activity!!).get(CustomerViewModel(activity!!.application)::class.java)

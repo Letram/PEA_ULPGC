@@ -4,17 +4,15 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.carlosmartel.project4.R
 import com.carlosmartel.project4.data.entities.Order
-import com.carlosmartel.project4.data.pojo.InflatedOrder
+import com.carlosmartel.project4.data.pojo.InflatedOrderJson
 
 class OrderFragment : Fragment() {
 
@@ -22,7 +20,7 @@ class OrderFragment : Fragment() {
 
     private lateinit var orderViewModel: OrderViewModel
     private lateinit var recyclerView: RecyclerView
-    private lateinit var recyclerAdapter: OrderListAdapter
+    private lateinit var recyclerAdapter: OrderListAdapterJson
 
 
     override fun onCreateView(
@@ -33,13 +31,13 @@ class OrderFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_order, container, false)
 
         recyclerView = view.findViewById(R.id.order_recycler_view)
-        recyclerAdapter = OrderListAdapter()
+        recyclerAdapter = OrderListAdapterJson()
         recyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = recyclerAdapter
         }
         orderViewModel = ViewModelProviders.of(this.activity!!).get(OrderViewModel(application = activity!!.application)::class.java)
-        orderViewModel.getAllInflatedOrders().observe(this, Observer {
+        orderViewModel.getAllInflatedOrdersJSON().observe(this, Observer {
             if(it != null){
                 recyclerAdapter.setInflatedOrders(it)
                 recyclerAdapter.notifyDataSetChanged()
@@ -53,74 +51,14 @@ class OrderFragment : Fragment() {
             }
         })
 
-        /*
-        //In order to delete a customer we just have to swipe left or right
-        ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
-            0,
-            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
-        ) {
-            override fun onMove(
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder,
-                target: RecyclerView.ViewHolder
-            ): Boolean {
-                return false
-            }
-
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val undoOrder = recyclerAdapter.getOrderAt(viewHolder.adapterPosition)
-                orderViewModel.delete(recyclerAdapter.getOrderAt(viewHolder.adapterPosition))
-                Snackbar.make(view!!, R.string.customer_deleted, Snackbar.LENGTH_SHORT)
-                    .setAction(R.string.snack_undo) {
-                        orderViewModel.insert(undoOrder)
-                    }
-                    .show()
-            }
-        }).attachToRecyclerView(recyclerView)
-
-
-        recyclerAdapter.setOnItemClickListener(object : OrderListAdapter.OnItemClickListener {
-            override fun onItemClick(order: Order) {
-                listener?.updateOrder(order)
-            }
-
-            override fun onItemLongClick(order: Order) {
-                listener?.deleteOrder(order)
-            }
-        })
-        */
-        //In order to delete a customer we just have to swipe left or right
-        ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
-            0,
-            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
-        ) {
-            override fun onMove(
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder,
-                target: RecyclerView.ViewHolder
-            ): Boolean {
-                return false
-            }
-
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val undoOrder = recyclerAdapter.getInflatedOrderAt(viewHolder.adapterPosition).order!!
-                orderViewModel.delete(recyclerAdapter.getInflatedOrderAt(viewHolder.adapterPosition).order!!)
-                Snackbar.make(view!!, R.string.order_deleted, Snackbar.LENGTH_SHORT)
-                    .setAction(R.string.snack_undo) {
-                        orderViewModel.insert(undoOrder)
-                    }
-                    .show()
-            }
-        }).attachToRecyclerView(recyclerView)
-        recyclerAdapter.setOnInflatedItemClickListener(object: OrderListAdapter.OnInflatedItemClickListener{
-            override fun onItemClick(inflatedOrder: InflatedOrder) {
+        recyclerAdapter.setOnInflatedItemClickListener(object : OrderListAdapterJson.OnInflatedItemClickListener {
+            override fun onItemClick(inflatedOrder: InflatedOrderJson) {
                 listener?.updateInflatedOrder(inflatedOrder)
             }
 
-            override fun onItemLongClick(inflatedOrder: InflatedOrder) {
-                listener?.deleteOrder(inflatedOrder.order!!)
+            override fun onItemLongClick(inflatedOrder: InflatedOrderJson) {
+                listener?.deleteOrder(inflatedOrder.order)
             }
-
         })
         return view
     }
@@ -141,7 +79,7 @@ class OrderFragment : Fragment() {
     interface OnFragmentInteractionListener {
         fun updateOrder(order: Order)
         fun deleteOrder(order: Order)
-        fun updateInflatedOrder(inflatedOrder: InflatedOrder)
+        fun updateInflatedOrder(inflatedOrder: InflatedOrderJson)
     }
 
     companion object {

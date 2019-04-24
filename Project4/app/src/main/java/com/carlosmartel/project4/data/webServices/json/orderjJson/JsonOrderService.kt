@@ -1,35 +1,21 @@
-package com.carlosmartel.project4.data.json.backend.productJson
+package com.carlosmartel.project4.data.webServices.json.orderjJson
 
 import android.util.Log
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.VolleyLog
 import com.android.volley.toolbox.JsonObjectRequest
-import com.carlosmartel.project4.data.json.backend.BackendVolley
-import com.carlosmartel.project4.data.json.backend.customerJson.JsonCustomerService
-import com.carlosmartel.project4.data.json.backend.JsonData
+import com.carlosmartel.project4.data.webServices.json.BackendVolley
+import com.carlosmartel.project4.data.webServices.WebData
 import org.json.JSONObject
 
-class JsonProductService : ProductServiceInterface {
+class JsonOrderService : OrderServiceInterface {
+    val TAG = JsonOrderService::class.java.simpleName
 
-    val TAG = JsonCustomerService::class.java.simpleName
-
-    override fun getProducts(path: String, params: JSONObject?, completionHandler: (response: JSONObject?) -> Unit) {
-        val jsonObjReq = JsonObjectRequest(
-            Request.Method.GET, JsonData.URL + path, null,
-            Response.Listener<JSONObject> { response ->
-                completionHandler(response)
-            },
-            Response.ErrorListener {
-                completionHandler(null)
-            })
-        BackendVolley.instance?.addToRequestQueue(jsonObjReq, TAG)
-    }
-
-    override fun insertProduct(path: String, params: JSONObject, completionHandler: (response: JSONObject?) -> Unit) {
+    override fun insertOrder(path: String, params: JSONObject, completionHandler: (response: JSONObject?) -> Unit) {
         val jsonObjReq = JsonObjectRequest(
             Request.Method.POST,
-            JsonData.URL + path,
+            WebData.URL + path,
             params,
             Response.Listener<JSONObject> { response ->
                 Log.d(TAG, "/post request OK! Response: $response")
@@ -43,10 +29,24 @@ class JsonProductService : ProductServiceInterface {
         BackendVolley.instance?.addToRequestQueue(jsonObjReq, TAG)
     }
 
-    override fun deleteProduct(path: String, params: JSONObject, completionHandler: (response: JSONObject?) -> Unit) {
+    override fun getOrders(path: String, params: JSONObject?, completionHandler: (response: JSONObject?) -> Unit) {
+        val jsonObjReq = JsonObjectRequest(
+            Request.Method.GET, WebData.URL + path, null,
+            Response.Listener<JSONObject> { response ->
+                completionHandler(response)
+            },
+            Response.ErrorListener {
+                completionHandler(null)
+            })
+        BackendVolley.instance?.addToRequestQueue(jsonObjReq, TAG)
+    }
+
+    override fun deleteOrder(path: String, params: JSONObject, completionHandler: (response: JSONObject?) -> Unit) {
+        println(params)
+
         val jsonObjReq = JsonObjectRequest(
             Request.Method.POST,
-            JsonData.URL + path,
+            WebData.URL + path,
             params,
             Response.Listener<JSONObject> { response ->
                 Log.d(TAG, "/delete request OK! Response: $response")
@@ -60,10 +60,10 @@ class JsonProductService : ProductServiceInterface {
         BackendVolley.instance?.addToRequestQueue(jsonObjReq, TAG)
     }
 
-    override fun updateProduct(path: String, params: JSONObject, completionHandler: (response: JSONObject?) -> Unit) {
+    override fun updateOrder(path: String, params: JSONObject, completionHandler: (response: JSONObject?) -> Unit) {
         val jsonObjReq = JsonObjectRequest(
             Request.Method.PUT,
-            JsonData.URL + path,
+            WebData.URL + path,
             params,
             Response.Listener<JSONObject> { response ->
                 Log.d(TAG, "/put request OK! Response: $response")
@@ -76,5 +76,4 @@ class JsonProductService : ProductServiceInterface {
         )
         BackendVolley.instance?.addToRequestQueue(jsonObjReq, TAG)
     }
-
 }

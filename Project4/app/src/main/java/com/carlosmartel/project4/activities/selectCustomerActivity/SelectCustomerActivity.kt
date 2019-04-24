@@ -36,7 +36,7 @@ class SelectCustomerActivity : AppCompatActivity() {
         }
         customerViewModel = ViewModelProviders.of(this).get(CustomerViewModel::class.java)
 
-        customerViewModel.getAllCustomers().observe(this, Observer {
+        customerViewModel.getAllCustomersJSON().observe(this, Observer {
             if (it != null) {
                 if (it.isEmpty()) {
                     openDialog()
