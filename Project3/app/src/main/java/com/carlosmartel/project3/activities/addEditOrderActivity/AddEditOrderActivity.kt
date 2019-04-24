@@ -38,6 +38,7 @@ class AddEditOrderActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
     private var currentCustomer: Customer? = null
     private var currentProduct: Product? = null
     private var currentOrder: Order? = null
+    private var prevOrder: Order? = null
 
     private var quantity: Int = 0
     private var price: Float = 0F
@@ -78,7 +79,6 @@ class AddEditOrderActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
                     setPriceWithQuantity()
                 }
             }
-
         })
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -87,6 +87,8 @@ class AddEditOrderActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
             currentProduct = intent.getParcelableExtra(CustomData.EXTRA_PRODUCT)
             currentCustomer = intent.getParcelableExtra(CustomData.EXTRA_CUSTOMER)
             currentOrder = intent.getParcelableExtra(CustomData.EXTRA_ORDER)
+
+            prevOrder = currentOrder
 
             title = currentOrder?.code
             datePickerText.text = DateFormat.getDateInstance(DateFormat.MEDIUM).format(currentOrder?.date)
@@ -175,6 +177,8 @@ class AddEditOrderActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
         data.putExtra(CustomData.EXTRA_ORDER_DATE, date)
         data.putExtra(CustomData.EXTRA_ORDER_CODE, code)
 
+        data.putExtra(CustomData.EXTRA_ORDER, prevOrder)
+
         if (currentOrder != null)
             data.putExtra(CustomData.EXTRA_ORDER_ID, currentOrder?.orderID)
         setResult(Activity.RESULT_OK, data)
@@ -221,6 +225,7 @@ class AddEditOrderActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
             putParcelable(CustomData.EXTRA_PRODUCT, currentProduct)
             putParcelable(CustomData.EXTRA_CUSTOMER, currentCustomer)
             putParcelable(CustomData.EXTRA_ORDER, currentOrder)
+            putParcelable(CustomData.EXTRA_ORDER_PREV, prevOrder)
         }
         super.onSaveInstanceState(outState)
     }
@@ -230,16 +235,18 @@ class AddEditOrderActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
             currentProduct = savedInstanceState.getParcelable(CustomData.EXTRA_PRODUCT)
             currentCustomer = savedInstanceState.getParcelable(CustomData.EXTRA_CUSTOMER)
             currentOrder = savedInstanceState.getParcelable(CustomData.EXTRA_ORDER)
-
+            prevOrder = savedInstanceState.getParcelable(CustomData.EXTRA_ORDER_PREV)
             title = currentOrder?.code
-            datePickerText.text = DateFormat.getDateInstance(DateFormat.MEDIUM).format(currentOrder?.date)
-            date = currentOrder?.date!!
+            if (currentOrder != null) {
+                datePickerText.text = DateFormat.getDateInstance(DateFormat.MEDIUM).format(currentOrder?.date)
+                date = currentOrder?.date!!
+                quantity = currentOrder?.quantity!!.toInt()
+                productQuantityText.text = currentOrder?.quantity.toString()
+                setPriceWithQuantity()
+            }
             orderCodeText.text = currentOrder?.code
             productNameText.text = currentProduct?.p_name
             customerNameText.text = currentCustomer?.c_name
-            productQuantityText.text = currentOrder?.quantity.toString()
-            quantity = currentOrder?.quantity!!.toInt()
-            setPriceWithQuantity()
         }
         super.onRestoreInstanceState(savedInstanceState)
     }

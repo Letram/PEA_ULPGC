@@ -313,7 +313,14 @@ class MainActivity :
 
                 val updateOrder = Order(orderID = oid, uid = uid, productID = pid, date = date, code = code, quantity = qty.toShort())
 
+                val undoOrder: Order = data.getParcelableExtra(CustomData.EXTRA_ORDER)
+
                 ViewModelProviders.of(this).get(OrderViewModel::class.java).update(updateOrder)
+                Snackbar.make(viewPager, R.string.product_updated, Snackbar.LENGTH_SHORT)
+                    .setAction(R.string.snack_undo) {
+                        ViewModelProviders.of(this).get(OrderViewModel::class.java).update(undoOrder)
+                    }
+                    .show()
                 Toast.makeText(this, R.string.order_updated, Toast.LENGTH_SHORT).show()
             }
         } else if (requestCode == CustomData.EDIT_CUSTOMER_REQ && resultCode == CustomData.DEL_CUSTOMER_REQ) {
@@ -328,6 +335,6 @@ class MainActivity :
 
             Toast.makeText(this, R.string.order_deleted, Toast.LENGTH_SHORT).show()
 
-        } else Toast.makeText(this, "fml", Toast.LENGTH_SHORT).show()
+        }
     }
 }
