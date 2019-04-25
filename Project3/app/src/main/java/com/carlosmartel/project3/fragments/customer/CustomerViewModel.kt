@@ -16,7 +16,9 @@ class CustomerViewModel constructor(application: Application) : AndroidViewModel
         allCustomers = customerRepository.getAllCustomers()
         allCustomersWithOrders = customerRepository.getAllCustomersWithOrders()
     }
-
+    companion object{
+        var lastCustomerID: Long? = null
+    }
     fun insert(customer: Customer) {
         customerRepository.insert(customer)
     }

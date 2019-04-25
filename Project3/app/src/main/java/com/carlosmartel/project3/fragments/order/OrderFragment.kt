@@ -53,42 +53,6 @@ class OrderFragment : Fragment() {
             }
         })
 
-        /*
-        //In order to delete a customer we just have to swipe left or right
-        ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
-            0,
-            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
-        ) {
-            override fun onMove(
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder,
-                target: RecyclerView.ViewHolder
-            ): Boolean {
-                return false
-            }
-
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val undoOrder = recyclerAdapter.getOrderAt(viewHolder.adapterPosition)
-                orderViewModel.delete(recyclerAdapter.getOrderAt(viewHolder.adapterPosition))
-                Snackbar.make(view!!, R.string.customer_deleted, Snackbar.LENGTH_SHORT)
-                    .setAction(R.string.snack_undo) {
-                        orderViewModel.insert(undoOrder)
-                    }
-                    .show()
-            }
-        }).attachToRecyclerView(recyclerView)
-
-
-        recyclerAdapter.setOnItemClickListener(object : OrderListAdapter.OnItemClickListener {
-            override fun onItemClick(order: Order) {
-                listener?.updateOrder(order)
-            }
-
-            override fun onItemLongClick(order: Order) {
-                listener?.deleteOrder(order)
-            }
-        })
-        */
         //In order to delete a customer we just have to swipe left or right
         ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
             0,
@@ -138,6 +102,7 @@ class OrderFragment : Fragment() {
         super.onDetach()
         listener = null
     }
+
     interface OnFragmentInteractionListener {
         fun updateOrder(order: Order)
         fun deleteOrder(order: Order)

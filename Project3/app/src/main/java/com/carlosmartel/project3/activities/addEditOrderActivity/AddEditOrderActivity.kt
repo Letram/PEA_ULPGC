@@ -127,6 +127,12 @@ class AddEditOrderActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
         }
     }
 
+    override fun onSupportNavigateUp(): Boolean {
+        setResult(CustomData.BACK_PRESSED)
+        finish()
+        return true
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 

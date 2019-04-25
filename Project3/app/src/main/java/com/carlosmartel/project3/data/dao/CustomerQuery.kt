@@ -19,7 +19,7 @@ interface CustomerQuery{
     fun insertAll(vararg customers: Customer)
 
     @Insert
-    fun insert(customer: Customer)
+    fun insert(customer: Customer): Long
 
     @Delete
     fun deleteCustomer(customer: Customer)

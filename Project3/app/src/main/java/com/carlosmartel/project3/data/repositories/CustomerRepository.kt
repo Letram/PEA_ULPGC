@@ -6,6 +6,7 @@ import android.os.AsyncTask
 import com.carlosmartel.project3.data.dao.CustomerQuery
 import com.carlosmartel.project3.data.database.DatabaseManager
 import com.carlosmartel.project3.data.entities.Customer
+import com.carlosmartel.project3.fragments.customer.CustomerViewModel
 
 class CustomerRepository (application: Application){
     private val customerQuery: CustomerQuery = DatabaseManager.getInstance(application)!!.customerQuery()
@@ -18,7 +19,8 @@ class CustomerRepository (application: Application){
 
     class InsertCustomerAsync(private val customerQuery: CustomerQuery): AsyncTask<Customer, Void, Void>() {
         override fun doInBackground(vararg params: Customer?): Void? {
-            customerQuery.insert(params[0]!!)
+            val userID = customerQuery.insert(params[0]!!)
+            CustomerViewModel.lastCustomerID = userID
             return null
         }
     }

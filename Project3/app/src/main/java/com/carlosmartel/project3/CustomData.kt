@@ -32,5 +32,6 @@ class CustomData {
         const val ADD_ORDER_REQ: Int = 9
         const val EDIT_ORDER_REQ: Int = 10
         const val DEL_ORDER_REQ: Int = 11
+        const val BACK_PRESSED: Int = 99
     }
 }

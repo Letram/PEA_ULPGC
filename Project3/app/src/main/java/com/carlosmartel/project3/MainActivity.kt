@@ -197,16 +197,6 @@ class MainActivity :
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        return when (item.itemId) {
-            R.id.action_settings -> true
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
-
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         // Handle navigation view item clicks here.
         when (item.itemId) {
@@ -235,7 +225,14 @@ class MainActivity :
                 val address: String = data.getStringExtra(CustomData.EXTRA_ADDRESS)
                 val newCustomer = Customer(address = address, c_name = name)
                 ViewModelProviders.of(this).get(CustomerViewModel::class.java).insert(newCustomer)
-                Toast.makeText(this, R.string.customer_saved_snack, Toast.LENGTH_SHORT).show()
+                /*
+                newCustomer.u_id = CustomerViewModel.lastCustomerID!!.toInt()
+                Snackbar.make(viewPager, R.string.customer_saved_snack, Snackbar.LENGTH_SHORT)
+                    .setAction(R.string.snack_undo) {
+                        ViewModelProviders.of(this).get(CustomerViewModel::class.java).delete(newCustomer)
+                    }
+                    .show()
+                    */
             }
 
         } else if (requestCode == CustomData.EDIT_CUSTOMER_REQ && resultCode == Activity.RESULT_OK) {
