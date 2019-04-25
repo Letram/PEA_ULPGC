@@ -4,6 +4,7 @@ import android.app.Activity
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.support.design.widget.NavigationView
 import android.support.design.widget.Snackbar
 import android.support.design.widget.TabLayout
@@ -192,17 +193,14 @@ class MainActivity :
         menuInflater.inflate(R.menu.main, menu)
         return true
     }
-
+/*
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        return when (item.itemId) {
-            R.id.action_settings -> true
-            else -> super.onOptionsItemSelected(item)
-        }
+        return super.onOptionsItemSelected(item)
     }
-
+*/
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         // Handle navigation view item clicks here.
         when (item.itemId) {
@@ -268,7 +266,6 @@ class MainActivity :
             val name = data.getStringExtra(CustomData.EXTRA_NAME)
             val description = data.getStringExtra(CustomData.EXTRA_DESCRIPTION)
             val price = data.getFloatExtra(CustomData.EXTRA_PRICE, -1F)
-            val undoProduct = data.getParcelableExtra<Product>(CustomData.EXTRA_PRODUCT)
             val productAux = Product(p_name = name, description = description, price = price)
             productAux.p_id = productID
             ViewModelProviders.of(this).get(ProductViewModel::class.java)
@@ -320,6 +317,21 @@ class MainActivity :
 
             Toast.makeText(this, R.string.order_deleted, Toast.LENGTH_SHORT).show()
 
-        } else Toast.makeText(this, "fml", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?, outPersistentState: PersistableBundle?) {
+        super.onSaveInstanceState(outState, outPersistentState)
+        println("HOLA")
+        outState?.run {
+            outState.putInt(CustomData.CURRENT_TAB, tabLayout.selectedTabPosition)
+        }
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+        savedInstanceState?.run {
+            tabLayout.getTabAt(savedInstanceState.getInt(CustomData.CURRENT_TAB, 0))?.select()
+        }
+        super.onRestoreInstanceState(savedInstanceState)
     }
 }

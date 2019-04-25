@@ -88,6 +88,12 @@ class AddEditProductActivity : AppCompatActivity() {
         }
     }
 
+    override fun onSupportNavigateUp(): Boolean {
+        setResult(CustomData.BACK_PRESSED)
+        finish()
+        return true
+    }
+
     private fun deleteProduct() {
         if (hasOrders(prevProduct))
             openDialog()

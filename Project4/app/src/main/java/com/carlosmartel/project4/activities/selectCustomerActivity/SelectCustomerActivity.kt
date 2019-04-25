@@ -11,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import com.carlosmartel.project4.CustomData
 import com.carlosmartel.project4.R
 import com.carlosmartel.project4.data.entities.Customer
@@ -22,7 +23,7 @@ class SelectCustomerActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var recyclerAdapter: SelectCustomerListAdapter
 
-    private lateinit var customerSelected: Customer
+    private var customerSelected: Customer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,7 +61,7 @@ class SelectCustomerActivity : AppCompatActivity() {
         title = resources.getString(R.string.select_customer)
         if (intent.hasExtra(CustomData.EXTRA_CUSTOMER)) {
             customerSelected = intent.getParcelableExtra(CustomData.EXTRA_CUSTOMER)
-            recyclerAdapter.setCustomerSelected(customerSelected)
+            recyclerAdapter.setCustomerSelected(customerSelected!!)
         }
     }
 
@@ -89,8 +90,12 @@ class SelectCustomerActivity : AppCompatActivity() {
     }
 
     private fun selectCustomer() {
+        if(customerSelected == null){
+            Toast.makeText(this, R.string.select_customer_pls, Toast.LENGTH_SHORT).show()
+            return
+        }
         val data = Intent()
-        data.putExtra(CustomData.EXTRA_CUSTOMER, customerSelected)
+        data.putExtra(CustomData.EXTRA_CUSTOMER, customerSelected!!)
         setResult(Activity.RESULT_OK, data)
         finish()
     }

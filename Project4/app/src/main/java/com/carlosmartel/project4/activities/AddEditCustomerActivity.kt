@@ -85,6 +85,13 @@ class AddEditCustomerActivity : AppCompatActivity() {
         }
     }
 
+
+    override fun onSupportNavigateUp(): Boolean {
+        setResult(CustomData.BACK_PRESSED)
+        finish()
+        return true
+    }
+
     private fun deleteCustomer() {
         if (hasOrders(prevCustomer))
             openDialog()

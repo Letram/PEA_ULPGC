@@ -11,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import com.carlosmartel.project4.CustomData
 import com.carlosmartel.project4.R
 import com.carlosmartel.project4.data.entities.Product
@@ -21,7 +22,7 @@ class SelectProductActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var recyclerAdapter: SelectProductListAdapter
 
-    private lateinit var productSelected: Product
+    private var productSelected: Product? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +38,7 @@ class SelectProductActivity : AppCompatActivity() {
 
         if (intent.hasExtra(CustomData.EXTRA_PRODUCT)) {
             productSelected = intent.getParcelableExtra(CustomData.EXTRA_PRODUCT)
-            recyclerAdapter.setProductSelected(productSelected)
+            recyclerAdapter.setProductSelected(productSelected!!)
         }
 
         productViewModel.getAllProductsJSON().observe(this, Observer {
@@ -62,7 +63,7 @@ class SelectProductActivity : AppCompatActivity() {
         title = resources.getString(R.string.select_product)
         if (intent.hasExtra(CustomData.EXTRA_PRODUCT)) {
             productSelected = intent.getParcelableExtra(CustomData.EXTRA_PRODUCT)
-            recyclerAdapter.setProductSelected(productSelected)
+            recyclerAdapter.setProductSelected(productSelected!!)
         }
     }
 
@@ -92,8 +93,12 @@ class SelectProductActivity : AppCompatActivity() {
     }
 
     private fun selectProduct() {
+        if(productSelected == null){
+            Toast.makeText(this, R.string.select_product_pls, Toast.LENGTH_SHORT).show()
+            return
+        }
         val data = Intent()
-        data.putExtra(CustomData.EXTRA_PRODUCT, productSelected)
+        data.putExtra(CustomData.EXTRA_PRODUCT, productSelected!!)
         setResult(Activity.RESULT_OK, data)
         finish()
     }

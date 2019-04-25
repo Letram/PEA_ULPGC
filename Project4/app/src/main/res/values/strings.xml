@@ -67,4 +67,6 @@
     <string name="another_name">There is a product with that name already.</string>
     <string name="another_name_customer">This customer name already exists</string>
     <string name="another_name_order">There is a order with that code already.</string>
+    <string name="select_customer_pls">Please select a customer first</string>
+    <string name="select_product_pls">Please select a product first</string>
 </resources>

@@ -18,6 +18,9 @@ class CustomData {
         const val EXTRA_ORDER_DATE: String  = "EXTRA_ORDER_DATE"
         const val EXTRA_ORDER_CODE: String = "EXTRA_ORDER_CODE"
         const val EXTRA_ORDER_ID: String = "EXTRA_ORDER_ID"
+        const val EXTRA_ORDER_PREV: String = "EXTRA_ORDER_PREV"
+
+        const val CURRENT_TAB: String = "CURRENT_TAB"
 
         //requests
         const val ADD_CUSTOMER_REQ: Int = 1
@@ -31,5 +34,7 @@ class CustomData {
         const val ADD_ORDER_REQ: Int = 9
         const val EDIT_ORDER_REQ: Int = 10
         const val DEL_ORDER_REQ: Int = 11
+
+        const val BACK_PRESSED: Int = 99
     }
 }
