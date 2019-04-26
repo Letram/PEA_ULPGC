@@ -71,7 +71,9 @@ class OrderFragment : Fragment() {
                 orderViewModel.delete(recyclerAdapter.getInflatedOrderAt(viewHolder.adapterPosition).order!!)
                 Snackbar.make(view!!, R.string.order_deleted, Snackbar.LENGTH_SHORT)
                     .setAction(R.string.snack_undo) {
-                        orderViewModel.insert(undoOrder)
+                        orderViewModel.insert(undoOrder) { insertedId: Int ->
+
+                        }
                     }
                     .show()
             }

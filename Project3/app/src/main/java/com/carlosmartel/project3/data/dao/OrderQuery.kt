@@ -17,7 +17,7 @@ interface OrderQuery{
     fun insertAll(vararg orders: Order)
 
     @Insert
-    fun insert(order: Order)
+    fun insert(order: Order): Long
 
     @Delete
     fun deleteOrder(order: Order)

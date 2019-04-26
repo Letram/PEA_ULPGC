@@ -16,8 +16,10 @@ class OrderViewModel (application: Application) : AndroidViewModel(application){
         allInflatedOrder = orderRepository.getAllInflatedOrders()
     }
 
-    fun insert(order: Order) {
-        orderRepository.insert(order)
+    fun insert(order: Order, completion: (Int) -> Unit) {
+        orderRepository.insert(order){ insertedId: Int ->
+            completion(insertedId)
+        }
     }
 
     fun update(order: Order) {

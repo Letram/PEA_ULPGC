@@ -19,7 +19,7 @@ interface ProductQuery{
     fun insertAll(vararg products: Product)
 
     @Insert
-    fun insert(product: Product)
+    fun insert(product: Product): Long
 
     @Delete
     fun deleteProduct(product: Product)

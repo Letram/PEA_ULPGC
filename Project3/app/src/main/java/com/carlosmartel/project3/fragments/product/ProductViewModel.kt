@@ -17,8 +17,10 @@ class ProductViewModel constructor(application: Application) : AndroidViewModel(
         allProductsWithOrders = productRepository.getAlProductsWithOrders()
     }
 
-    fun insert(product: Product) {
-        productRepository.insert(product)
+    fun insert(product: Product, completion: (Int) -> Unit) {
+        productRepository.insert(product) { insertedId ->
+            completion(insertedId)
+        }
     }
 
     fun update(product: Product) {

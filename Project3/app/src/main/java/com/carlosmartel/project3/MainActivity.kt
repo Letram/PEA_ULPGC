@@ -72,7 +72,7 @@ class MainActivity :
             ViewModelProviders.of(this).get(OrderViewModel::class.java).delete(order)
             Snackbar.make(viewPager, R.string.order_deleted, Snackbar.LENGTH_SHORT)
                 .setAction(R.string.snack_undo) {
-                    ViewModelProviders.of(this).get(OrderViewModel::class.java).insert(undoOrder)
+                    ViewModelProviders.of(this).get(OrderViewModel::class.java).insert(undoOrder) {}
                 }
                 .show()
         }
@@ -102,9 +102,9 @@ class MainActivity :
         dialog.setMessage(R.string.dialog_product_confirmation)
         dialog.setPositiveButton(R.string.dialog_delete) { _, _ ->
             ViewModelProviders.of(this).get(ProductViewModel::class.java).delete(product)
-            Snackbar.make(viewPager, R.string.customer_deleted, Snackbar.LENGTH_SHORT)
+            Snackbar.make(viewPager, R.string.product_deleted, Snackbar.LENGTH_SHORT)
                 .setAction(R.string.snack_undo) {
-                    ViewModelProviders.of(this).get(ProductViewModel::class.java).insert(undoProduct)
+                    ViewModelProviders.of(this).get(ProductViewModel::class.java).insert(undoProduct) {}
                 }
                 .show()
         }
@@ -121,7 +121,7 @@ class MainActivity :
             ViewModelProviders.of(this).get(CustomerViewModel::class.java).delete(customer)
             Snackbar.make(viewPager, R.string.customer_deleted, Snackbar.LENGTH_SHORT)
                 .setAction(R.string.snack_undo) {
-                    ViewModelProviders.of(this).get(CustomerViewModel::class.java).insert(undoCustomer)
+                    ViewModelProviders.of(this).get(CustomerViewModel::class.java).insert(undoCustomer) {}
                 }
                 .show()
         }
@@ -224,15 +224,14 @@ class MainActivity :
                 val name: String = data.getStringExtra(CustomData.EXTRA_NAME)
                 val address: String = data.getStringExtra(CustomData.EXTRA_ADDRESS)
                 val newCustomer = Customer(address = address, c_name = name)
-                ViewModelProviders.of(this).get(CustomerViewModel::class.java).insert(newCustomer)
-                /*
-                newCustomer.u_id = CustomerViewModel.lastCustomerID!!.toInt()
-                Snackbar.make(viewPager, R.string.customer_saved_snack, Snackbar.LENGTH_SHORT)
-                    .setAction(R.string.snack_undo) {
-                        ViewModelProviders.of(this).get(CustomerViewModel::class.java).delete(newCustomer)
-                    }
-                    .show()
-                    */
+                ViewModelProviders.of(this).get(CustomerViewModel::class.java).insert(newCustomer){ insertedId: Int ->
+                    newCustomer.u_id = insertedId
+                    Snackbar.make(viewPager, R.string.customer_saved_snack, Snackbar.LENGTH_SHORT)
+                        .setAction(R.string.snack_undo) {
+                            ViewModelProviders.of(this).get(CustomerViewModel::class.java).delete(newCustomer)
+                        }
+                        .show()
+                }
             }
 
         } else if (requestCode == CustomData.EDIT_CUSTOMER_REQ && resultCode == Activity.RESULT_OK) {
@@ -261,7 +260,15 @@ class MainActivity :
                 val description: String = data.getStringExtra(CustomData.EXTRA_DESCRIPTION)
                 val price: Float = data.getFloatExtra(CustomData.EXTRA_PRICE, 0F)
                 val newProduct = Product(description = description, p_name = name, price = price)
-                ViewModelProviders.of(this).get(ProductViewModel::class.java).insert(newProduct)
+                ViewModelProviders.of(this).get(ProductViewModel::class.java).insert(newProduct){ insertedId: Int ->
+                    newProduct.p_id = insertedId
+                    ViewModelProviders.of(this).get(ProductViewModel::class.java).update(newProduct)
+                    Snackbar.make(viewPager, R.string.product_saved_toast, Snackbar.LENGTH_SHORT)
+                        .setAction(R.string.snack_undo) {
+                            ViewModelProviders.of(this).get(ProductViewModel::class.java).delete(newProduct)
+                        }
+                        .show()
+                }
                 Toast.makeText(this, R.string.product_saved_toast, Toast.LENGTH_SHORT).show()
             }
 
@@ -295,8 +302,14 @@ class MainActivity :
 
                 val newOrder = Order(code = code, uid = uid, productID = pid, date = date, quantity = quantity.toShort())
 
-                ViewModelProviders.of(this).get(OrderViewModel::class.java).insert(newOrder)
-                Toast.makeText(this, R.string.order_created, Toast.LENGTH_SHORT).show()
+                ViewModelProviders.of(this).get(OrderViewModel::class.java).insert(newOrder){ insertedId: Int ->
+                    newOrder.orderID = insertedId
+                    Snackbar.make(viewPager, R.string.order_created, Snackbar.LENGTH_SHORT)
+                        .setAction(R.string.snack_undo) {
+                            ViewModelProviders.of(this).get(OrderViewModel::class.java).delete(newOrder)
+                        }
+                        .show()
+                }
 
             }
         } else if (requestCode == CustomData.EDIT_ORDER_REQ && resultCode == Activity.RESULT_OK){
@@ -313,12 +326,11 @@ class MainActivity :
                 val undoOrder: Order = data.getParcelableExtra(CustomData.EXTRA_ORDER)
 
                 ViewModelProviders.of(this).get(OrderViewModel::class.java).update(updateOrder)
-                Snackbar.make(viewPager, R.string.product_updated, Snackbar.LENGTH_SHORT)
+                Snackbar.make(viewPager, R.string.order_updated, Snackbar.LENGTH_SHORT)
                     .setAction(R.string.snack_undo) {
                         ViewModelProviders.of(this).get(OrderViewModel::class.java).update(undoOrder)
                     }
                     .show()
-                Toast.makeText(this, R.string.order_updated, Toast.LENGTH_SHORT).show()
             }
         } else if (requestCode == CustomData.EDIT_CUSTOMER_REQ && resultCode == CustomData.DEL_CUSTOMER_REQ) {
 

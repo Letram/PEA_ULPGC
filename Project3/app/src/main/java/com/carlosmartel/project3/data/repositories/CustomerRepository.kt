@@ -6,22 +6,28 @@ import android.os.AsyncTask
 import com.carlosmartel.project3.data.dao.CustomerQuery
 import com.carlosmartel.project3.data.database.DatabaseManager
 import com.carlosmartel.project3.data.entities.Customer
-import com.carlosmartel.project3.fragments.customer.CustomerViewModel
 
 class CustomerRepository (application: Application){
     private val customerQuery: CustomerQuery = DatabaseManager.getInstance(application)!!.customerQuery()
     private var allCustomers: LiveData<List<Customer>> = customerQuery.getAllCustomers()
     private var allCustomersWithOrders: LiveData<List<Int>> = customerQuery.getAllCustomersWithOrders()
 
-    fun insert(customer: Customer){
-        InsertCustomerAsync(customerQuery).execute(customer)
+    fun insert(customer: Customer, completion: (Int) -> Unit){
+        InsertCustomerAsync(customerQuery, completion).execute(customer)
     }
 
-    class InsertCustomerAsync(private val customerQuery: CustomerQuery): AsyncTask<Customer, Void, Void>() {
+    class InsertCustomerAsync(
+        private val customerQuery: CustomerQuery,
+        val completion: (Int) -> Unit
+    ): AsyncTask<Customer, Void, Void>() {
+        private var insertedId: Int? = null
         override fun doInBackground(vararg params: Customer?): Void? {
-            val userID = customerQuery.insert(params[0]!!)
-            CustomerViewModel.lastCustomerID = userID
+            insertedId = customerQuery.insert(params[0]!!).toInt()
             return null
+        }
+
+        override fun onPostExecute(result: Void?) {
+            insertedId?.let { completion(it) }
         }
     }
 

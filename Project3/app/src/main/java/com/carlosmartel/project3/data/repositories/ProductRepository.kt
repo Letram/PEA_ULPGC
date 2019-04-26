@@ -12,14 +12,22 @@ class ProductRepository (application: Application){
     private var allProducts: LiveData<List<Product>> = productQuery.getAllProducts()
     private var allProductsWithOrders: LiveData<List<Int>> = productQuery.getAllProductsWithOrders()
 
-    fun insert(product: Product){
-        InsertProductAsync(productQuery).execute(product)
+    fun insert(product: Product, completion: (insertedId: Int) -> Unit){
+        InsertProductAsync(productQuery, completion).execute(product)
     }
 
-    class InsertProductAsync(private val productQuery: ProductQuery): AsyncTask<Product, Void, Void>() {
+    class InsertProductAsync(
+        private val productQuery: ProductQuery,
+        val completion: (insertedId: Int) -> Unit
+    ): AsyncTask<Product, Void, Void>() {
+        private var insertedID: Int? = null
         override fun doInBackground(vararg params: Product?): Void? {
-            productQuery.insert(params[0]!!)
+            insertedID = productQuery.insert(params[0]!!).toInt()
             return null
+        }
+
+        override fun onPostExecute(result: Void?) {
+            insertedID?.let { completion(it) }
         }
     }
 

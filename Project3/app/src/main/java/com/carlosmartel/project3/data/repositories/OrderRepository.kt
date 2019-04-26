@@ -13,14 +13,22 @@ class OrderRepository (application: Application){
     private var allOrders: LiveData<List<Order>> = orderQuery.getAllOrders()
     private var allInflatedOrders: LiveData<List<InflatedOrder>> = orderQuery.getAllInflatedOrders()
 
-    fun insert(order: Order){
-        InsertOrderAsync(orderQuery).execute(order)
+    fun insert(order: Order, completion: (Int) -> Unit){
+        InsertOrderAsync(orderQuery, completion).execute(order)
     }
 
-    class InsertOrderAsync(private val orderQuery: OrderQuery): AsyncTask<Order, Void, Void>() {
+    class InsertOrderAsync(
+        private val orderQuery: OrderQuery,
+        val completion: (Int) -> Unit
+    ): AsyncTask<Order, Void, Void>() {
+        private var insertedId: Int? = null
         override fun doInBackground(vararg params: Order?): Void? {
-            orderQuery.insert(params[0]!!)
+            insertedId = orderQuery.insert(params[0]!!).toInt()
             return null
+        }
+
+        override fun onPostExecute(result: Void?) {
+            insertedId?.let { completion(it) }
         }
     }
 
