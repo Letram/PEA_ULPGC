@@ -140,7 +140,11 @@ class AddEditProductActivity : AppCompatActivity() {
             putParcelable(CustomData.EXTRA_PRODUCT, prevProduct)
             putString(CustomData.EXTRA_NAME, productName.text.toString())
             putString(CustomData.EXTRA_DESCRIPTION, productDescription.text.toString())
-            putFloat(CustomData.EXTRA_PRICE, productPrice.text.toString().toFloat())
+            try {
+                putFloat(CustomData.EXTRA_PRICE, productPrice.text.toString().toFloat())
+            }catch (e: NumberFormatException){
+                putFloat(CustomData.EXTRA_PRICE, 0F)
+            }
         }
         super.onSaveInstanceState(outState)
     }

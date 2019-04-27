@@ -9,7 +9,7 @@ interface ProductQuery{
     @Query("SELECT * FROM Product WHERE p_id = :productID")
     fun getProduct(productID: Int): Product
 
-    @Query("SELECT * FROM Product")
+    @Query("SELECT * FROM Product ORDER BY p_name")
     fun getAllProducts(): LiveData<List<Product>>
 
     @Query("SELECT DISTINCT p_id FROM Product, `Order` WHERE Product.p_id = `Order`.productID")

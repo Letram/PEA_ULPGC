@@ -26,7 +26,7 @@ class CustomerFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val v = inflater.inflate(com.carlosmartel.project3.R.layout.fragment_customer, container, false)
+        val v = inflater.inflate(R.layout.fragment_customer, container, false)
 
         recyclerView = v.findViewById(R.id.recycler_view)
         recyclerAdapter = CustomerListAdapter()
@@ -109,7 +109,7 @@ class CustomerFragment : Fragment() {
         if (context is OnFragmentInteractionListener) {
             listener = context
         } else {
-            throw RuntimeException(context.toString() + " must implement OnCustomerFragmentInteractionListener")
+            throw RuntimeException("$context must implement OnCustomerFragmentInteractionListener")
         }
     }
 

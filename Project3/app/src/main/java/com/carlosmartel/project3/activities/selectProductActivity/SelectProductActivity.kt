@@ -94,7 +94,7 @@ class SelectProductActivity : AppCompatActivity() {
 
     private fun selectProduct() {
         if(productSelected == null){
-            Toast.makeText(this, R.string.select_customer_pls, Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.select_product_pls, Toast.LENGTH_SHORT).show()
             return
         }
         val data = Intent()

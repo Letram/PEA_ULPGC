@@ -59,10 +59,11 @@
     <string name="nav_header_title">Android Studio</string>
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Proyecto 3</string>
-    <string name="action_settings">Ajustes</string>
     <string name="OK">OK</string>
     <string name="dialog_select_info">No hay datos de este objecto en el sistema. Por favor, vuelva más tarde cuando se
         hayan añadido
     </string>
     <string name="save_order_toast">Por favor, rellene todos los campos para continuar</string>
+    <string name="select_customer_pls">Seleccione un cliente para poder continuar</string>
+    <string name="select_product_pls">Seleccione un producto para poder continuar</string>
 </resources>

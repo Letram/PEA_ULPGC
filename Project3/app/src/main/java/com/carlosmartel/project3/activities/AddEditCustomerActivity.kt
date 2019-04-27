@@ -138,7 +138,7 @@ class AddEditCustomerActivity : AppCompatActivity() {
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
         if (savedInstanceState != null) {
-            prevCustomer = savedInstanceState.getParcelable(CustomData.EXTRA_CUSTOMER)!!
+            prevCustomer = savedInstanceState.getParcelable(CustomData.EXTRA_CUSTOMER)
             customerNameEdit.setText(savedInstanceState.getString(CustomData.EXTRA_NAME))
             customerAddressEdit.setText(savedInstanceState.getString(CustomData.EXTRA_ADDRESS))
         }

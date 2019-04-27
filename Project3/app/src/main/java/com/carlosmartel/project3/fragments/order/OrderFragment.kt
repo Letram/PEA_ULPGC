@@ -4,11 +4,9 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -53,31 +51,6 @@ class OrderFragment : Fragment() {
             }
         })
 
-        //In order to delete a customer we just have to swipe left or right
-        ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
-            0,
-            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
-        ) {
-            override fun onMove(
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder,
-                target: RecyclerView.ViewHolder
-            ): Boolean {
-                return false
-            }
-
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val undoOrder = recyclerAdapter.getInflatedOrderAt(viewHolder.adapterPosition).order!!
-                orderViewModel.delete(recyclerAdapter.getInflatedOrderAt(viewHolder.adapterPosition).order!!)
-                Snackbar.make(view!!, R.string.order_deleted, Snackbar.LENGTH_SHORT)
-                    .setAction(R.string.snack_undo) {
-                        orderViewModel.insert(undoOrder) { insertedId: Int ->
-
-                        }
-                    }
-                    .show()
-            }
-        }).attachToRecyclerView(recyclerView)
         recyclerAdapter.setOnInflatedItemClickListener(object: OrderListAdapter.OnInflatedItemClickListener{
             override fun onItemClick(inflatedOrder: InflatedOrder) {
                 listener?.updateInflatedOrder(inflatedOrder)
@@ -96,7 +69,7 @@ class OrderFragment : Fragment() {
         if (context is OnFragmentInteractionListener) {
             listener = context
         } else {
-            throw RuntimeException(context.toString() + " must implement OnOrderFragmentInteractionListener")
+            throw RuntimeException("$context must implement OnOrderFragmentInteractionListener")
         }
     }
 

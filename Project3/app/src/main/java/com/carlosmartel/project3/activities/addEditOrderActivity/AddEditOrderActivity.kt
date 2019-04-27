@@ -242,7 +242,7 @@ class AddEditOrderActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
             currentCustomer = savedInstanceState.getParcelable(CustomData.EXTRA_CUSTOMER)
             currentOrder = savedInstanceState.getParcelable(CustomData.EXTRA_ORDER)
             prevOrder = savedInstanceState.getParcelable(CustomData.EXTRA_ORDER_PREV)
-            title = currentOrder?.code
+            title = if (currentOrder != null) currentOrder?.code else "Add order"
             if (currentOrder != null) {
                 datePickerText.text = DateFormat.getDateInstance(DateFormat.MEDIUM).format(currentOrder?.date)
                 date = currentOrder?.date!!

@@ -9,7 +9,7 @@ interface CustomerQuery{
     @Query("SELECT * FROM Customer WHERE u_id = :uid")
     fun getCustomer(uid: Int): Customer
 
-    @Query("SELECT * FROM Customer")
+    @Query("SELECT * FROM Customer ORDER BY c_name")
     fun getAllCustomers(): LiveData<List<Customer>>
 
     @Query("SELECT DISTINCT Customer.u_id FROM Customer, `Order` WHERE Customer.u_id = `Order`.uid")
