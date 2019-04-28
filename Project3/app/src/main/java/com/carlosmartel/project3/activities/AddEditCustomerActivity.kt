@@ -78,6 +78,9 @@ class AddEditCustomerActivity : AppCompatActivity() {
         return true
     }
 
+    /**
+     * Deletes a customer from the db if it has no orders related to it. If not a dialog is shown.
+     */
     private fun deleteCustomer() {
         if (customersWithOrders.contains(intent.getIntExtra(CustomData.EXTRA_ID, -1)))
             openDialog()
@@ -96,6 +99,9 @@ class AddEditCustomerActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Opens a dialog that informs the user that the customer has some orders related to it at the time of deleting.
+     */
     private fun openDialog() {
         val dialog = AlertDialog.Builder(this)
         dialog.setTitle(R.string.dialog_customer_title)
@@ -105,6 +111,9 @@ class AddEditCustomerActivity : AppCompatActivity() {
         dialog.show()
     }
 
+    /**
+     * Finish the activity and passes all the data needed to the parent activity to save the customer into the db
+     */
     private fun saveCustomer() {
         val name: String = customerNameEdit.text.toString()
         val address: String = customerAddressEdit.text.toString()

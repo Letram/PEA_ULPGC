@@ -7,6 +7,15 @@ import com.carlosmartel.project3.data.dao.ProductQuery
 import com.carlosmartel.project3.data.database.DatabaseManager
 import com.carlosmartel.project3.data.entities.Product
 
+/**
+ * This class is used as an interface between the app and the db. It is in charge of making all the operations needed
+ *
+ * @property productQuery is the collection of actions that are currently supported by the db
+ * @property allProducts are the products in the db
+ * @property allProductsWithOrders are the products that have any order in the db
+ *
+ */
+
 class ProductRepository (application: Application){
     private val productQuery: ProductQuery = DatabaseManager.getInstance(application)!!.productQuery()
     private var allProducts: LiveData<List<Product>> = productQuery.getAllProducts()

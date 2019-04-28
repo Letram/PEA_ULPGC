@@ -8,19 +8,27 @@ import com.carlosmartel.project3.data.database.DatabaseManager
 import com.carlosmartel.project3.data.entities.Order
 import com.carlosmartel.project3.data.pojo.InflatedOrder
 
-class OrderRepository (application: Application){
+/**
+ * This class is used as an interface between the app and the db. It is in charge of making all the operations needed
+ *
+ * @property orderQuery is the collection of actions that are currently supported by the db
+ * @property allOrders are the orders in the db
+ * @property allInflatedOrders are all the orders in the db plus all of its inflated data such as the customer data and product info
+ *
+ */
+class OrderRepository(application: Application) {
     private val orderQuery: OrderQuery = DatabaseManager.getInstance(application)!!.orderQuery()
     private var allOrders: LiveData<List<Order>> = orderQuery.getAllOrders()
     private var allInflatedOrders: LiveData<List<InflatedOrder>> = orderQuery.getAllInflatedOrders()
 
-    fun insert(order: Order, completion: (Int) -> Unit){
+    fun insert(order: Order, completion: (Int) -> Unit) {
         InsertOrderAsync(orderQuery, completion).execute(order)
     }
 
     class InsertOrderAsync(
         private val orderQuery: OrderQuery,
         val completion: (Int) -> Unit
-    ): AsyncTask<Order, Void, Void>() {
+    ) : AsyncTask<Order, Void, Void>() {
         private var insertedId: Int? = null
         override fun doInBackground(vararg params: Order?): Void? {
             insertedId = orderQuery.insert(params[0]!!).toInt()
@@ -32,33 +40,33 @@ class OrderRepository (application: Application){
         }
     }
 
-    fun update(order: Order){
+    fun update(order: Order) {
         UpdateOrderAsync(orderQuery).execute(order)
     }
 
-    class UpdateOrderAsync(private val orderQuery: OrderQuery): AsyncTask<Order, Void, Void>() {
+    class UpdateOrderAsync(private val orderQuery: OrderQuery) : AsyncTask<Order, Void, Void>() {
         override fun doInBackground(vararg params: Order?): Void? {
             orderQuery.updateOrder(params[0]!!)
             return null
         }
     }
 
-    fun delete(order: Order){
+    fun delete(order: Order) {
         DeleteOrderAsync(orderQuery).execute(order)
     }
 
-    class DeleteOrderAsync(private val orderQuery: OrderQuery): AsyncTask<Order, Void, Void>() {
+    class DeleteOrderAsync(private val orderQuery: OrderQuery) : AsyncTask<Order, Void, Void>() {
         override fun doInBackground(vararg params: Order?): Void? {
             orderQuery.deleteOrder(params[0]!!)
             return null
         }
     }
 
-    fun deleteAll(){
+    fun deleteAll() {
         DeleteAllOrdersAsync(orderQuery).execute()
     }
 
-    class DeleteAllOrdersAsync(private val orderQuery: OrderQuery): AsyncTask<Void, Void, Void>() {
+    class DeleteAllOrdersAsync(private val orderQuery: OrderQuery) : AsyncTask<Void, Void, Void>() {
         override fun doInBackground(vararg params: Void?): Void? {
             orderQuery.deleteAllOrders()
             return null
@@ -70,7 +78,7 @@ class OrderRepository (application: Application){
         return allOrders
     }
 
-    fun getAllInflatedOrders(): LiveData<List<InflatedOrder>>{
+    fun getAllInflatedOrders(): LiveData<List<InflatedOrder>> {
         return allInflatedOrders
     }
 }

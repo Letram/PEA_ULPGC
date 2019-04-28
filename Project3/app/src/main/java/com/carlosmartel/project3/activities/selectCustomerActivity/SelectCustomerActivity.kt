@@ -15,6 +15,8 @@ import android.widget.Toast
 import com.carlosmartel.project3.CustomData
 import com.carlosmartel.project3.R
 import com.carlosmartel.project3.data.entities.Customer
+import com.carlosmartel.project3.data.entities.Order
+import com.carlosmartel.project3.data.entities.Product
 import com.carlosmartel.project3.fragments.customer.CustomerViewModel
 
 class SelectCustomerActivity : AppCompatActivity() {
@@ -24,6 +26,9 @@ class SelectCustomerActivity : AppCompatActivity() {
     private lateinit var recyclerAdapter: SelectCustomerListAdapter
 
     private var customerSelected: Customer? = null
+    private var order: Order?= null
+    private var orderProduct: Product?= null
+    private var prevOrder: Order?= null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,6 +68,9 @@ class SelectCustomerActivity : AppCompatActivity() {
             customerSelected = intent.getParcelableExtra(CustomData.EXTRA_CUSTOMER)
             recyclerAdapter.setCustomerSelected(customerSelected!!)
         }
+        order = intent.getParcelableExtra(CustomData.EXTRA_ORDER)
+        prevOrder = intent.getParcelableExtra(CustomData.EXTRA_ORDER_PREV)
+        orderProduct = intent.getParcelableExtra(CustomData.EXTRA_PRODUCT)
     }
 
     private fun openDialog(){
@@ -89,6 +97,21 @@ class SelectCustomerActivity : AppCompatActivity() {
         }
     }
 
+    override fun onSupportNavigateUp(): Boolean {
+        val data = Intent()
+        if(customerSelected != null)
+            data.putExtra(CustomData.EXTRA_CUSTOMER, customerSelected!!)
+        data.putExtra(CustomData.EXTRA_PRODUCT, orderProduct)
+        data.putExtra(CustomData.EXTRA_ORDER, order)
+        data.putExtra(CustomData.EXTRA_ORDER_PREV, prevOrder)
+        setResult(CustomData.BACK_PRESSED, data)
+        finish()
+        return true
+    }
+
+    /**
+     * Finishes the activity and passes the information to the parent to add the customer into the order.
+     */
     private fun selectCustomer() {
         if(customerSelected == null){
             Toast.makeText(this, R.string.select_customer_pls, Toast.LENGTH_SHORT).show()
@@ -96,7 +119,33 @@ class SelectCustomerActivity : AppCompatActivity() {
         }
         val data = Intent()
         data.putExtra(CustomData.EXTRA_CUSTOMER, customerSelected!!)
+        data.putExtra(CustomData.EXTRA_PRODUCT, orderProduct)
+        data.putExtra(CustomData.EXTRA_ORDER, order)
+        data.putExtra(CustomData.EXTRA_ORDER_PREV, prevOrder)
         setResult(Activity.RESULT_OK, data)
         finish()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        outState?.run {
+            putParcelable(CustomData.EXTRA_CUSTOMER, customerSelected)
+            putParcelable(CustomData.EXTRA_PRODUCT, orderProduct)
+            putParcelable(CustomData.EXTRA_ORDER, order)
+            putParcelable(CustomData.EXTRA_ORDER_PREV, prevOrder)
+        }
+        super.onSaveInstanceState(outState)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+        savedInstanceState?.run {
+            customerSelected = savedInstanceState.getParcelable(CustomData.EXTRA_CUSTOMER)
+            if(customerSelected != null){
+                recyclerAdapter.setCustomerSelected(customerSelected!!)
+            }
+            orderProduct = savedInstanceState.getParcelable(CustomData.EXTRA_PRODUCT)
+            order = savedInstanceState.getParcelable(CustomData.EXTRA_ORDER)
+            prevOrder = savedInstanceState.getParcelable(CustomData.EXTRA_ORDER_PREV)
+        }
+        super.onRestoreInstanceState(savedInstanceState)
     }
 }

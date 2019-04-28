@@ -44,6 +44,14 @@ class AddEditOrderActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
     private var price: Float = 0F
     private var date: Date = Date()
 
+    /**
+     * Sets a date into our order.
+     *
+     * @param view datepicker where the date was picked from
+     * @param year chosen year
+     * @param month chosen month
+     * @param dayOfMonth chosen day of month
+     */
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
         val c = Calendar.getInstance()
         c.set(Calendar.YEAR, year)
@@ -140,16 +148,92 @@ class AddEditOrderActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
             if (data != null) {
                 currentCustomer = data.getParcelableExtra(CustomData.EXTRA_CUSTOMER)
                 customerNameText.text = currentCustomer?.c_name
+
+                currentProduct = data.getParcelableExtra(CustomData.EXTRA_PRODUCT)
+                if (currentProduct != null)
+                    productNameText.text = currentProduct?.p_name
+
+                currentOrder = data.getParcelableExtra(CustomData.EXTRA_ORDER)
+                prevOrder = data.getParcelableExtra(CustomData.EXTRA_ORDER_PREV)
+                title = if (currentOrder != null) currentOrder?.code else "Add order"
+                if (currentOrder != null) {
+                    orderCodeText.text = currentOrder?.code
+                    datePickerText.text = DateFormat.getDateInstance(DateFormat.MEDIUM).format(currentOrder?.date)
+                    date = currentOrder?.date!!
+                    quantity = currentOrder?.quantity!!.toInt()
+                    productQuantityText.text = currentOrder?.quantity.toString()
+                    setPriceWithQuantity()
+                }
             }
         } else if (requestCode == CustomData.SELECT_PRODUCT_REQ && resultCode == Activity.RESULT_OK) {
             if (data != null) {
                 currentProduct = data.getParcelableExtra(CustomData.EXTRA_PRODUCT)
                 productNameText.text = currentProduct?.p_name
-                setPriceWithQuantity()
+
+                currentCustomer = data.getParcelableExtra(CustomData.EXTRA_CUSTOMER)
+                if (currentCustomer != null)
+                    customerNameText.text = currentCustomer?.c_name
+
+                currentOrder = data.getParcelableExtra(CustomData.EXTRA_ORDER)
+                prevOrder = data.getParcelableExtra(CustomData.EXTRA_ORDER_PREV)
+                title = if (currentOrder != null) currentOrder?.code else "Add order"
+                if (currentOrder != null) {
+                    orderCodeText.text = currentOrder?.code
+                    datePickerText.text = DateFormat.getDateInstance(DateFormat.MEDIUM).format(currentOrder?.date)
+                    date = currentOrder?.date!!
+                    quantity = currentOrder?.quantity!!.toInt()
+                    productQuantityText.text = currentOrder?.quantity.toString()
+                    setPriceWithQuantity()
+                }
+            }
+        } else if (resultCode == CustomData.BACK_PRESSED) {
+            if (requestCode == CustomData.SELECT_CUSTOMER_REQ) {
+                if (data != null) {
+                    if (data.hasExtra(CustomData.EXTRA_CUSTOMER)) {
+                        currentCustomer = data.getParcelableExtra(CustomData.EXTRA_CUSTOMER)
+                        customerNameText.text = currentCustomer?.c_name
+                    }
+                    currentProduct = data.getParcelableExtra(CustomData.EXTRA_PRODUCT)
+                    currentOrder = data.getParcelableExtra(CustomData.EXTRA_ORDER)
+                    prevOrder = data.getParcelableExtra(CustomData.EXTRA_ORDER_PREV)
+                    title = if (currentOrder != null) currentOrder?.code else "Add order"
+                    if (currentOrder != null) {
+                        datePickerText.text = DateFormat.getDateInstance(DateFormat.MEDIUM).format(currentOrder?.date)
+                        date = currentOrder?.date!!
+                        quantity = currentOrder?.quantity!!.toInt()
+                        productQuantityText.text = currentOrder?.quantity.toString()
+                        setPriceWithQuantity()
+                    }
+                    orderCodeText.text = currentOrder?.code
+                    productNameText.text = currentProduct?.p_name
+                }
+            } else if (requestCode == CustomData.SELECT_PRODUCT_REQ) {
+                if (data != null) {
+                    if (data.hasExtra(CustomData.EXTRA_PRODUCT)) {
+                        currentProduct = data.getParcelableExtra(CustomData.EXTRA_PRODUCT)
+                        productNameText.text = currentProduct?.p_name
+                    }
+                    currentCustomer = data.getParcelableExtra(CustomData.EXTRA_CUSTOMER)
+                    currentOrder = data.getParcelableExtra(CustomData.EXTRA_ORDER)
+                    prevOrder = data.getParcelableExtra(CustomData.EXTRA_ORDER_PREV)
+                    title = if (currentOrder != null) currentOrder?.code else "Add order"
+                    if (currentOrder != null) {
+                        datePickerText.text = DateFormat.getDateInstance(DateFormat.MEDIUM).format(currentOrder?.date)
+                        date = currentOrder?.date!!
+                        quantity = currentOrder?.quantity!!.toInt()
+                        productQuantityText.text = currentOrder?.quantity.toString()
+                        setPriceWithQuantity()
+                    }
+                    orderCodeText.text = currentOrder?.code
+                    customerNameText.text = currentCustomer?.c_name
+                }
             }
         }
     }
 
+    /**
+     * Opens a dialog that deletes an order from the db if "DELETE" is pressed. No undo action will be provided
+     */
     private fun deleteOrder() {
         val deleteOrder = currentOrder
 
@@ -165,6 +249,9 @@ class AddEditOrderActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
         dialog.show()
     }
 
+    /**
+     * Returns to the main activity with all the data needed in order to save an order to the db
+     */
     private fun saveOrder() {
         if (!valid()) {
             Toast.makeText(this, R.string.save_order_toast, Toast.LENGTH_SHORT).show()
@@ -191,6 +278,9 @@ class AddEditOrderActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
         finish()
     }
 
+    /**
+     * Checks if an order is valid to be saved into the db.
+     */
     private fun valid(): Boolean {
         if (orderCodeText.text.isNullOrBlank() ||
             currentCustomer == null ||
@@ -214,15 +304,23 @@ class AddEditOrderActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
 
     fun openCustomerSelector(view: View) {
         val intent = Intent(this, SelectCustomerActivity::class.java)
-        if (currentCustomer != null)
-            intent.putExtra(CustomData.EXTRA_CUSTOMER, currentCustomer!!)
+        if (currentCustomer != null) {
+            intent.putExtra(CustomData.EXTRA_CUSTOMER, currentCustomer)
+        }
+        intent.putExtra(CustomData.EXTRA_PRODUCT, currentProduct)
+        intent.putExtra(CustomData.EXTRA_ORDER, currentOrder)
+        intent.putExtra(CustomData.EXTRA_ORDER_PREV, prevOrder)
         startActivityForResult(intent, CustomData.SELECT_CUSTOMER_REQ)
     }
 
     fun openProductSelector(view: View) {
         val intent = Intent(this, SelectProductActivity::class.java)
-        if (currentProduct != null)
-            intent.putExtra(CustomData.EXTRA_PRODUCT, currentProduct!!)
+        if (currentProduct != null) {
+            intent.putExtra(CustomData.EXTRA_PRODUCT, currentProduct)
+        }
+        intent.putExtra(CustomData.EXTRA_CUSTOMER, currentCustomer)
+        intent.putExtra(CustomData.EXTRA_ORDER, currentOrder)
+        intent.putExtra(CustomData.EXTRA_ORDER_PREV, prevOrder)
         startActivityForResult(intent, CustomData.SELECT_PRODUCT_REQ)
     }
 

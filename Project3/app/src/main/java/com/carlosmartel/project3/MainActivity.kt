@@ -44,6 +44,12 @@ class MainActivity :
     private lateinit var mAdapter: MyFragmentPagerAdapter
     private lateinit var tabLayout: TabLayout
 
+
+    /**
+     * Opens an activity to update an existing order.
+     *
+     * @param inflatedOrder order to be updated.
+     */
     override fun updateInflatedOrder(inflatedOrder: InflatedOrder) {
         val intent = Intent(this, AddEditOrderActivity::class.java)
         intent.putExtra(CustomData.EXTRA_PRODUCT, inflatedOrder.product!!)
@@ -52,10 +58,18 @@ class MainActivity :
         startActivityForResult(intent, CustomData.EDIT_ORDER_REQ)
     }
 
+    /**
+     * Not used
+     */
     override fun updateOrder(order: Order) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
+    /**
+     * Deletes an order from the db if the positive button of a dialog is pressed. An undo action is provided.
+     *
+     * @param order product to be deleted.
+     */
     override fun deleteOrder(order: Order) {
         val undoOrder = Order(
             productID = order.productID,
@@ -80,6 +94,11 @@ class MainActivity :
         dialog.show()
     }
 
+    /**
+     * Opens an activity to update an existing product.
+     *
+     * @param product order to be updated.
+     */
     override fun updateProduct(product: Product) {
         val intent = Intent(this@MainActivity, AddEditProductActivity::class.java)
         intent.putExtra(CustomData.EXTRA_NAME, product.p_name)
@@ -90,6 +109,11 @@ class MainActivity :
         startActivityForResult(intent, CustomData.EDIT_PRODUCT_REQ)
     }
 
+    /**
+     * Deletes a product from the db if the positive button of a dialog is pressed. An undo action is provided.
+     *
+     * @param product product to be deleted.
+     */
     override fun deleteProduct(product: Product) {
         val undoProduct = Product(
             p_id = product.p_id,
@@ -112,6 +136,11 @@ class MainActivity :
         dialog.show()
     }
 
+    /**
+     * Deletes a customer from the db if the positive button of a dialog is pressed. An undo action is provided.
+     *
+     * @param customer customer to be deleted.
+     */
     override fun deleteCustomer(customer: Customer) {
         val undoCustomer = Customer(customer.u_id, customer.address, customer.c_name)
         val dialog = AlertDialog.Builder(this@MainActivity)
@@ -129,6 +158,11 @@ class MainActivity :
         dialog.show()
     }
 
+    /**
+     * Opens an activity to update an existing customer.
+     *
+     * @param customer customer to be updated.
+     */
     override fun updateCustomer(customer: Customer) {
         val intent = Intent(this@MainActivity, AddEditCustomerActivity::class.java)
         intent.putExtra(CustomData.EXTRA_NAME, customer.c_name)

@@ -28,6 +28,6 @@ interface OrderQuery{
     @Update
     fun updateOrder(order: Order)
 
-    @Query("SELECT * FROM `Order`, Customer, Product WHERE Customer.u_id = `Order`.uid AND Product.p_id =  `Order`.productID ORDER BY u_id, p_id, code")
+    @Query("SELECT * FROM `Order`, Customer, Product WHERE Customer.u_id = `Order`.uid AND Product.p_id =  `Order`.productID ORDER BY Customer.c_name, Product.p_name, code")
     fun getAllInflatedOrders(): LiveData<List<InflatedOrder>>
 }
