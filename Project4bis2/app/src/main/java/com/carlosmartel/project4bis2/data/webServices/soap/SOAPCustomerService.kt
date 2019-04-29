@@ -1,7 +1,7 @@
-package com.carlosmartel.project4.data.webServices.soap
+package com.carlosmartel.project4bis2.data.webServices.soap
 
 import android.os.AsyncTask
-import com.carlosmartel.project4.data.webServices.WebData
+import com.carlosmartel.project4bis2.data.webServices.WebData
 import org.ksoap2.SoapEnvelope
 import org.ksoap2.serialization.SoapObject
 import java.lang.Exception

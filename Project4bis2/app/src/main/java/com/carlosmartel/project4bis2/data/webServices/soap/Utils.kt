@@ -1,4 +1,4 @@
-package com.carlosmartel.project4.data.webServices.soap
+package com.carlosmartel.project4bis2.data.webServices.soap
 
 import org.ksoap2.transport.HttpTransportSE
 import org.ksoap2.SoapEnvelope

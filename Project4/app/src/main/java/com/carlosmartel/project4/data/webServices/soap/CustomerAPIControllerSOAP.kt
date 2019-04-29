@@ -2,7 +2,7 @@ package com.carlosmartel.project4.data.webServices.soap
 
 import org.ksoap2.serialization.SoapObject
 
-class CustomerAPIController constructor(customerServiceInjecttion: CustomerServiceInterface): CustomerServiceInterface{
+class CustomerAPIControllerSOAP constructor(customerServiceInjecttion: CustomerServiceInterfaceSOAP): CustomerServiceInterfaceSOAP{
 
     private val customerService = customerServiceInjecttion
 
