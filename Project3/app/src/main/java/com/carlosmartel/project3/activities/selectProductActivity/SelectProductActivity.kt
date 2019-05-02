@@ -95,6 +95,17 @@ class SelectProductActivity : AppCompatActivity() {
         }
     }
 
+    override fun onSupportNavigateUp(): Boolean {
+        val data = Intent()
+        if(productSelected != null)
+            data.putExtra(CustomData.EXTRA_PRODUCT, productSelected!!)
+        data.putExtra(CustomData.EXTRA_CUSTOMER, orderCustomer)
+        data.putExtra(CustomData.EXTRA_ORDER, order)
+        data.putExtra(CustomData.EXTRA_ORDER_PREV, prevOrder)
+        setResult(CustomData.BACK_PRESSED, data)
+        finish()
+        return true
+    }
     /**
      * Finishes the activity and passes the information to the parent so it can add the product to the order.
      */
