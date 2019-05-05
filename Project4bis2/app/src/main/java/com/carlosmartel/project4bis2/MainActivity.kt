@@ -23,6 +23,7 @@ import com.carlosmartel.project4bis2.data.entities.Customer
 import com.carlosmartel.project4bis2.data.entities.Order
 import com.carlosmartel.project4bis2.data.entities.Product
 import com.carlosmartel.project4bis2.data.pojo.InflatedOrderJson
+import com.carlosmartel.project4bis2.data.webServices.WebData
 import com.carlosmartel.project4bis2.fragments.MyFragmentPagerAdapter
 import com.carlosmartel.project4bis2.fragments.customer.CustomerFragment
 import com.carlosmartel.project4bis2.fragments.customer.CustomerViewModel
@@ -111,7 +112,7 @@ class MainActivity :
         dialog.setMessage(R.string.dialog_product_confirmation)
         dialog.setPositiveButton(R.string.dialog_delete) { _, _ ->
             ViewModelProviders.of(this).get(ProductViewModel::class.java).deleteJSON(product.p_id) {
-                Snackbar.make(viewPager, R.string.product_saved_toast, Snackbar.LENGTH_SHORT)
+                Snackbar.make(viewPager, R.string.product_deleted, Snackbar.LENGTH_SHORT)
                     .setAction(R.string.snack_undo) {
                         ViewModelProviders.of(this).get(ProductViewModel::class.java)
                             .insertJSON(product.p_name, product.description, product.price) {}
@@ -128,11 +129,11 @@ class MainActivity :
         dialog.setTitle(R.string.dialog_customer_title)
         dialog.setMessage(R.string.dialog_customer_confirmation)
         dialog.setPositiveButton(R.string.dialog_delete) { _, _ ->
-            ViewModelProviders.of(this).get(CustomerViewModel::class.java).deleteJSON(customer.u_id) {
-                Snackbar.make(viewPager, R.string.customer_saved_snack, Snackbar.LENGTH_SHORT)
+            ViewModelProviders.of(this).get(CustomerViewModel::class.java).deleteSOAP(customer.u_id) {
+                Snackbar.make(viewPager, R.string.customer_deleted, Snackbar.LENGTH_SHORT)
                     .setAction(R.string.snack_undo) {
                         ViewModelProviders.of(this).get(CustomerViewModel::class.java)
-                            .insertJSON(customer.c_name, customer.address) {}
+                            .insertSOAP(customer.c_name, customer.address) {}
                     }
                     .show()
             }
@@ -236,17 +237,10 @@ class MainActivity :
                 val name: String = data.getStringExtra(CustomData.EXTRA_NAME)
                 val address: String = data.getStringExtra(CustomData.EXTRA_ADDRESS)
 
-                ViewModelProviders.of(this).get(CustomerViewModel::class.java).insertJSON(name, address) { insertedID ->
+                ViewModelProviders.of(this).get(CustomerViewModel::class.java).insertSOAP(name, address) { insertedID ->
                     Snackbar.make(viewPager, R.string.customer_saved_snack, Snackbar.LENGTH_SHORT)
                         .setAction(R.string.snack_undo) {
-                            ViewModelProviders.of(this).get(CustomerViewModel::class.java).deleteJSON(insertedID) {
-                                Snackbar.make(viewPager, R.string.customer_saved_snack, Snackbar.LENGTH_SHORT)
-                                    .setAction(R.string.snack_undo) {
-                                        ViewModelProviders.of(this).get(CustomerViewModel::class.java)
-                                            .deleteJSON(insertedID) {}
-                                    }
-                                    .show()
-                            }
+                            ViewModelProviders.of(this).get(CustomerViewModel::class.java).deleteJSON(insertedID) {}
                         }
                         .show()
                 }
@@ -263,16 +257,14 @@ class MainActivity :
             val address = data.getStringExtra(CustomData.EXTRA_ADDRESS)
 
             val undoCustomer = data.getParcelableExtra<Customer>(CustomData.EXTRA_CUSTOMER)
-
-            ViewModelProviders.of(this).get(CustomerViewModel::class.java).updateJSON(uid, name, address) {
+            ViewModelProviders.of(this).get(CustomerViewModel::class.java).updateSOAP(uid, name, address) {
                 Snackbar.make(viewPager, R.string.customer_saved_snack, Snackbar.LENGTH_SHORT)
                     .setAction(R.string.snack_undo) {
                         ViewModelProviders.of(this).get(CustomerViewModel::class.java)
-                            .updateJSON(undoCustomer.u_id, undoCustomer.c_name, undoCustomer.address) {}
+                            .updateSOAP(undoCustomer.u_id, undoCustomer.c_name, undoCustomer.address) {}
                     }
                     .show()
             }
-
         } else if (requestCode == CustomData.ADD_PRODUCT_REQ && resultCode == Activity.RESULT_OK) {
 
             if (data != null) {
@@ -285,9 +277,7 @@ class MainActivity :
                         Snackbar.make(viewPager, R.string.product_saved_toast, Snackbar.LENGTH_SHORT)
                             .setAction(R.string.snack_undo) {
                                 ViewModelProviders.of(this).get(ProductViewModel::class.java)
-                                    .deleteJSON(insertedID) {
-
-                                    }
+                                    .deleteJSON(insertedID) {}
                             }
                             .show()
                     }
@@ -376,15 +366,27 @@ class MainActivity :
             }
         } else if (requestCode == CustomData.EDIT_CUSTOMER_REQ && resultCode == CustomData.DEL_CUSTOMER_REQ) {
 
-            Toast.makeText(this, R.string.customer_deleted, Toast.LENGTH_SHORT).show()
+            val uid = data!!.getIntExtra(WebData.CUSTOMER_ID, -1)
+            if (uid != -1)
+                ViewModelProviders.of(this).get(CustomerViewModel::class.java).deleteJSON(uid) {
+                    Toast.makeText(this, R.string.customer_deleted, Toast.LENGTH_SHORT).show()
+                }
 
         } else if (requestCode == CustomData.EDIT_PRODUCT_REQ && resultCode == CustomData.DEL_PRODUCT_REQ) {
 
-            Toast.makeText(this, R.string.product_deleted, Toast.LENGTH_SHORT).show()
+            val pid = data!!.getIntExtra(WebData.PRODUCT_ID, -1)
+            if (pid != -1)
+                ViewModelProviders.of(this).get(ProductViewModel::class.java).deleteJSON(pid) {
+                    Toast.makeText(this, R.string.product_deleted, Toast.LENGTH_SHORT).show()
+                }
 
         } else if (requestCode == CustomData.EDIT_ORDER_REQ && resultCode == CustomData.DEL_ORDER_REQ) {
 
-            Toast.makeText(this, R.string.order_deleted, Toast.LENGTH_SHORT).show()
+            val oid = data!!.getIntExtra(WebData.ORDER_ID, -1)
+            if (oid != -1)
+                ViewModelProviders.of(this).get(OrderViewModel::class.java).deleteJSON(oid) {
+                    Toast.makeText(this, R.string.order_deleted, Toast.LENGTH_SHORT).show()
+                }
 
         }
     }

@@ -23,6 +23,7 @@ import com.carlosmartel.project4bis2.data.entities.Customer
 import com.carlosmartel.project4bis2.data.entities.Order
 import com.carlosmartel.project4bis2.data.entities.Product
 import com.carlosmartel.project4bis2.data.pojo.InflatedOrderJson
+import com.carlosmartel.project4bis2.data.webServices.WebData
 import com.carlosmartel.project4bis2.fragments.order.OrderViewModel
 import java.text.DateFormat
 import java.util.*
@@ -153,20 +154,7 @@ class AddEditOrderActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-/*
-        if (requestCode == CustomData.SELECT_CUSTOMER_REQ && resultCode == Activity.RESULT_OK) {
-            if (data != null) {
-                currentCustomer = data.getParcelableExtra(CustomData.EXTRA_CUSTOMER)
-                customerNameText.text = currentCustomer?.c_name
-            }
-        } else if (requestCode == CustomData.SELECT_PRODUCT_REQ && resultCode == Activity.RESULT_OK) {
-            if (data != null) {
-                currentProduct = data.getParcelableExtra(CustomData.EXTRA_PRODUCT)
-                productNameText.text = currentProduct?.p_name
-                setPriceWithQuantity()
-            }
-        }
-*/
+
         if (requestCode == CustomData.SELECT_CUSTOMER_REQ && resultCode == Activity.RESULT_OK) {
             if (data != null) {
                 currentCustomer = data.getParcelableExtra(CustomData.EXTRA_CUSTOMER)
@@ -261,8 +249,9 @@ class AddEditOrderActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
         dialog.setTitle(R.string.dialog_order_title)
         dialog.setMessage(R.string.dialog_order_confirmation)
         dialog.setPositiveButton(R.string.dialog_delete) { _, _ ->
-            ViewModelProviders.of(this).get(OrderViewModel::class.java).delete(deleteOrder!!)
-            setResult(CustomData.DEL_ORDER_REQ)
+            val intent = Intent()
+            intent.putExtra(WebData.ORDER_ID, deleteOrder!!.orderID)
+            setResult(CustomData.DEL_ORDER_REQ, intent)
             finish()
         }
         dialog.setNegativeButton(R.string.dialog_cancel) { _, _ -> }
@@ -298,7 +287,7 @@ class AddEditOrderActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
     }
 
     private fun isRepeated(code: String): Boolean {
-        if(prevOrder != null) return false
+        if (prevOrder != null) return false
         for (order in orders) {
             if (order.order.code == code) {
                 return true

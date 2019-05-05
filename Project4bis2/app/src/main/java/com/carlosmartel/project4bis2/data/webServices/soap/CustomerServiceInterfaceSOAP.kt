@@ -1,10 +1,10 @@
 package com.carlosmartel.project4bis2.data.webServices.soap
 
-import org.ksoap2.serialization.SoapObject
+import com.carlosmartel.project4bis2.data.entities.Customer
 
 interface CustomerServiceInterfaceSOAP {
-    fun getCustomers(path: String, completionHandler: (response: SoapObject?) -> Unit)
-    fun insertCustomer(path: String, params: SoapObject, completionHandler: (response: SoapObject?) -> Unit)
-    fun deleteCustomer(path: String, params: SoapObject, completionHandler: (response: SoapObject?) -> Unit)
-    fun updateCustomer(path: String, params: SoapObject, completionHandler: (response: SoapObject?) -> Unit)
+    fun getCustomers(completionHandler: (response: List<Customer>?) -> Unit)
+    fun insertCustomer(params: Customer, completionHandler: (response: Int?) -> Unit)
+    fun updateCustomer(params: Customer, completionHandler: (response: Boolean?) -> Unit)
+    fun deleteCustomer(params: Int, completionHandler: (response: Boolean?) -> Unit)
 }

@@ -15,6 +15,7 @@ import com.carlosmartel.project4bis2.CustomData
 import com.carlosmartel.project4bis2.R
 import com.carlosmartel.project4bis2.data.entities.Customer
 import com.carlosmartel.project4bis2.data.pojo.InflatedOrderJson
+import com.carlosmartel.project4bis2.data.webServices.WebData
 import com.carlosmartel.project4bis2.fragments.customer.CustomerViewModel
 import com.carlosmartel.project4bis2.fragments.order.OrderViewModel
 
@@ -101,8 +102,9 @@ class AddEditCustomerActivity : AppCompatActivity() {
             dialog.setTitle(R.string.dialog_customer_title)
             dialog.setMessage(R.string.dialog_customer_confirmation)
             dialog.setPositiveButton(R.string.dialog_delete) { _, _ ->
-                ViewModelProviders.of(this).get(CustomerViewModel::class.java).delete(deleteCustomer)
-                setResult(CustomData.DEL_CUSTOMER_REQ)
+                val intent = Intent()
+                intent.putExtra(WebData.CUSTOMER_ID, deleteCustomer.u_id)
+                setResult(CustomData.DEL_CUSTOMER_REQ, intent)
                 finish()
             }
             dialog.setNegativeButton(R.string.dialog_cancel) { _, _ -> }
@@ -156,6 +158,7 @@ class AddEditCustomerActivity : AppCompatActivity() {
     }
 
     private fun isRepeated(name: String): Boolean {
+        if (prevCustomer != null) return false
         for (customer in customers) {
             if (customer.c_name == name) {
                 return true

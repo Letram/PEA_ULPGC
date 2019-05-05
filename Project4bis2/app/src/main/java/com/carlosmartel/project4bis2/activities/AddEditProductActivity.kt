@@ -15,6 +15,7 @@ import com.carlosmartel.project4bis2.CustomData
 import com.carlosmartel.project4bis2.R
 import com.carlosmartel.project4bis2.data.entities.Product
 import com.carlosmartel.project4bis2.data.pojo.InflatedOrderJson
+import com.carlosmartel.project4bis2.data.webServices.WebData
 import com.carlosmartel.project4bis2.fragments.order.OrderViewModel
 import com.carlosmartel.project4bis2.fragments.product.ProductViewModel
 
@@ -103,8 +104,9 @@ class AddEditProductActivity : AppCompatActivity() {
             dialog.setTitle(R.string.dialog_product_title)
             dialog.setMessage(R.string.dialog_product_confirmation)
             dialog.setPositiveButton(R.string.dialog_delete) { _, _ ->
-                ViewModelProviders.of(this).get(ProductViewModel::class.java).delete(deleteProduct)
-                setResult(CustomData.DEL_PRODUCT_REQ)
+                val intent = Intent()
+                intent.putExtra(WebData.PRODUCT_ID, deleteProduct.p_id)
+                setResult(CustomData.DEL_PRODUCT_REQ, intent)
                 finish()
             }
             dialog.setNegativeButton(R.string.dialog_cancel) { _, _ -> }

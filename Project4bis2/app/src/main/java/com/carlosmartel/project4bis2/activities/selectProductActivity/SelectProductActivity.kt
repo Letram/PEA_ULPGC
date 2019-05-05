@@ -25,9 +25,9 @@ class SelectProductActivity : AppCompatActivity() {
     private lateinit var recyclerAdapter: SelectProductListAdapter
 
     private var productSelected: Product? = null
-    private var order: Order?= null
-    private var orderCustomer: Customer?= null
-    private var prevOrder: Order?= null
+    private var order: Order? = null
+    private var orderCustomer: Customer? = null
+    private var prevOrder: Order? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -102,7 +102,7 @@ class SelectProductActivity : AppCompatActivity() {
 
     override fun onSupportNavigateUp(): Boolean {
         val data = Intent()
-        if(productSelected != null)
+        if (productSelected != null)
             data.putExtra(CustomData.EXTRA_PRODUCT, productSelected!!)
         data.putExtra(CustomData.EXTRA_CUSTOMER, orderCustomer)
         data.putExtra(CustomData.EXTRA_ORDER, order)
@@ -111,11 +111,12 @@ class SelectProductActivity : AppCompatActivity() {
         finish()
         return true
     }
+
     /**
      * Finishes the activity and passes the information to the parent so it can add the product to the order.
      */
     private fun selectProduct() {
-        if(productSelected == null){
+        if (productSelected == null) {
             Toast.makeText(this, R.string.select_product_pls, Toast.LENGTH_SHORT).show()
             return
         }
@@ -141,7 +142,7 @@ class SelectProductActivity : AppCompatActivity() {
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
         savedInstanceState?.run {
             productSelected = savedInstanceState.getParcelable(CustomData.EXTRA_PRODUCT)
-            if(productSelected != null){
+            if (productSelected != null) {
                 recyclerAdapter.setProductSelected(productSelected!!)
             }
             orderCustomer = savedInstanceState.getParcelable(CustomData.EXTRA_CUSTOMER)

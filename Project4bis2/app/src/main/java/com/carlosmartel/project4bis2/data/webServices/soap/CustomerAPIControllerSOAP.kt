@@ -1,25 +1,25 @@
 package com.carlosmartel.project4bis2.data.webServices.soap
 
-import org.ksoap2.serialization.SoapObject
+import com.carlosmartel.project4bis2.data.entities.Customer
 
 class CustomerAPIControllerSOAP constructor(customerServiceInjecttion: CustomerServiceInterfaceSOAP): CustomerServiceInterfaceSOAP{
 
     private val customerService = customerServiceInjecttion
 
-    override fun getCustomers(path: String, completionHandler: (response: SoapObject?) -> Unit) {
-        customerService.getCustomers(path, completionHandler)
+    override fun getCustomers(completionHandler: (response: List<Customer>?) -> Unit) {
+        customerService.getCustomers(completionHandler)
     }
 
-    override fun insertCustomer(path: String, params: SoapObject, completionHandler: (response: SoapObject?) -> Unit) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun insertCustomer(params: Customer, completionHandler: (response: Int?) -> Unit) {
+        customerService.insertCustomer(params, completionHandler)
     }
 
-    override fun deleteCustomer(path: String, params: SoapObject, completionHandler: (response: SoapObject?) -> Unit) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun updateCustomer(params: Customer, completionHandler: (response: Boolean?) -> Unit) {
+        customerService.updateCustomer(params, completionHandler)
     }
 
-    override fun updateCustomer(path: String, params: SoapObject, completionHandler: (response: SoapObject?) -> Unit) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun deleteCustomer(params: Int, completionHandler: (response: Boolean?) -> Unit) {
+        customerService.deleteCustomer(params, completionHandler)
     }
 
 }
