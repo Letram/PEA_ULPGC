@@ -57,7 +57,7 @@ class OrderViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     //JSON
-    private fun refresh() {
+    fun refresh() {
         refreshOrders()
     }
 

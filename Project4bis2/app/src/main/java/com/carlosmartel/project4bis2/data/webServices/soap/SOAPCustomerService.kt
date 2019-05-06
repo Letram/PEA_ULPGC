@@ -92,7 +92,6 @@ class SOAPCustomerService : CustomerServiceInterfaceSOAP {
             req!!.addProperty(WebData.CUSTOMER_NAME, params[0]!!.c_name)
             req!!.addProperty(WebData.CUSTOMER_ADDRESS, params[0]!!.address)
 
-            println(req.toString())
             envelope = soapUtils.getSoapSerializationEnvelope(req!!)
             httpTransport = soapUtils.getHttpTransportSE(WebData.URL_SOAP)
 

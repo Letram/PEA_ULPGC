@@ -35,7 +35,7 @@ class CustomerViewModel constructor(application: Application) : AndroidViewModel
         refreshSOAP()
     }
 
-    private fun refreshAll() {
+    fun refreshAll() {
         refreshJSON()
         refreshSOAP()
     }

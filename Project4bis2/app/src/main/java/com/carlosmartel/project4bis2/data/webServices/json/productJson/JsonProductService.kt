@@ -20,7 +20,8 @@ class JsonProductService : ProductServiceInterface {
             Response.Listener<JSONObject> { response ->
                 completionHandler(response)
             },
-            Response.ErrorListener {
+            Response.ErrorListener {error ->
+                VolleyLog.e(TAG, "/get request fail! Error: ${error.message}")
                 completionHandler(null)
             })
         BackendVolley.instance?.addToRequestQueue(jsonObjReq, TAG)

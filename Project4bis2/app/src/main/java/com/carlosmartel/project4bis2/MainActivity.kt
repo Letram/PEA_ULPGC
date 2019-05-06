@@ -210,6 +210,24 @@ class MainActivity :
         return true
     }
 
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        return when (item?.itemId) {
+            R.id.reload -> {
+                reload()
+                true
+            }
+            else -> {
+                super.onOptionsItemSelected(item)
+            }
+        }
+    }
+
+    private fun reload() {
+        ViewModelProviders.of(this).get(CustomerViewModel::class.java).refreshAll()
+        ViewModelProviders.of(this).get(ProductViewModel::class.java).refresh()
+        ViewModelProviders.of(this).get(OrderViewModel::class.java).refresh()
+    }
+
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         // Handle navigation view item clicks here.
         when (item.itemId) {
