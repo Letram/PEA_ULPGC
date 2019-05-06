@@ -13,7 +13,7 @@ class BackendVolley : Application() {
     }
 
     private var _requestQueue: RequestQueue? = null
-    val requestQueue: RequestQueue?
+    private val requestQueue: RequestQueue?
         get() {
             if (_requestQueue == null) {
                 _requestQueue = Volley.newRequestQueue(applicationContext)

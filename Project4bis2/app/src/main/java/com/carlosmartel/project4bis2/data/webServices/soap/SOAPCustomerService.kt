@@ -1,6 +1,5 @@
 package com.carlosmartel.project4bis2.data.webServices.soap
 
-import android.arch.persistence.room.Delete
 import android.os.AsyncTask
 import com.carlosmartel.project4bis2.data.entities.Customer
 import com.carlosmartel.project4bis2.data.webServices.WebData
@@ -8,10 +7,8 @@ import org.ksoap2.SoapEnvelope
 import org.ksoap2.SoapFault
 import org.ksoap2.serialization.SoapObject
 import org.ksoap2.serialization.SoapSerializationEnvelope
-import java.lang.Exception
 import org.ksoap2.transport.HttpTransportSE
 import java.util.*
-import com.carlosmartel.project4bis2.data.entities.Product
 
 
 class SOAPCustomerService : CustomerServiceInterfaceSOAP {

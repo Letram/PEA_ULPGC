@@ -11,7 +11,7 @@ import org.json.JSONObject
 
 class JsonCustomerService : CustomerServiceInterface {
 
-    val TAG = JsonCustomerService::class.java.simpleName
+    private val TAG = JsonCustomerService::class.java.simpleName
 
     override fun insertCustomer(path: String, params: JSONObject, completionHandler: (response: JSONObject?) -> Unit) {
         val jsonObjReq = JsonObjectRequest(

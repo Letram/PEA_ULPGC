@@ -68,7 +68,7 @@ class OrderFragment : Fragment() {
         if (context is OnFragmentInteractionListener) {
             listener = context
         } else {
-            throw RuntimeException(context.toString() + " must implement OnOrderFragmentInteractionListener")
+            throw RuntimeException("$context must implement OnOrderFragmentInteractionListener")
         }
     }
 

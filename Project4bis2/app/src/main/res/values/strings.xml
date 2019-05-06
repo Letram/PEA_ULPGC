@@ -5,7 +5,6 @@
     <string name="nav_header_title">Android Studio</string>
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Project 4</string>
-    <string name="action_settings">Settings</string>
     <string name="customer_tab">Customers</string>
     <string name="order_tab">Orders</string>
     <string name="product_tab">Products</string>
@@ -58,7 +57,6 @@
     <string name="dialog_cant_delete_product">This product has some orders related to it. Delete those before you delete
         this.
     </string>
-    <string name="customer_updated">Customer updated!</string>
     <string name="product_updated">Product updated!</string>
     <string name="save_order_toast">Please fill all fields to complete your request</string>
     <string name="dialog_select_info">There is no data in the database for the related object. Please come again once

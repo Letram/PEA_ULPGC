@@ -7,5 +7,4 @@ class InflatedOrderJson(
     var order: Order,
     internal var customerName: String,
     internal var productPrice: Float
-) {
-}
+)

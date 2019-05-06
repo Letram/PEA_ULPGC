@@ -12,7 +12,7 @@ import org.json.JSONObject
 
 class JsonProductService : ProductServiceInterface {
 
-    val TAG = JsonCustomerService::class.java.simpleName
+    private val TAG = JsonCustomerService::class.java.simpleName
 
     override fun getProducts(path: String, params: JSONObject?, completionHandler: (response: JSONObject?) -> Unit) {
         val jsonObjReq = JsonObjectRequest(

@@ -100,7 +100,7 @@ class CustomerFragment : Fragment() {
         if (context is OnFragmentInteractionListener) {
             listener = context
         } else {
-            throw RuntimeException(context.toString() + " must implement OnCustomerFragmentInteractionListener")
+            throw RuntimeException("$context must implement OnCustomerFragmentInteractionListener")
         }
     }
 

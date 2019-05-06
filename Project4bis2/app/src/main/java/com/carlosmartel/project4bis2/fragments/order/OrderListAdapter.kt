@@ -51,7 +51,7 @@ class OrderListAdapter : RecyclerView.Adapter<OrderListAdapter.OrderViewHolder>(
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OrderListAdapter.OrderViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OrderViewHolder {
         val orderView = LayoutInflater.from(parent.context).inflate(R.layout.order_list_item, parent, false)
         return OrderViewHolder(orderView)
     }
@@ -64,7 +64,7 @@ class OrderListAdapter : RecyclerView.Adapter<OrderListAdapter.OrderViewHolder>(
         orderViewHolder.bind(orders[position], listener)
     }
 */
-    override fun onBindViewHolder(orderViewHolder: OrderListAdapter.OrderViewHolder, position: Int) {
+    override fun onBindViewHolder(orderViewHolder: OrderViewHolder, position: Int) {
         orderViewHolder.bindInflated(inflatedOrders[position], inflatedListener)
     }
     

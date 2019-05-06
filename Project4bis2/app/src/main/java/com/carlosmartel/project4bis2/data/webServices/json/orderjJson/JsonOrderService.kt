@@ -10,7 +10,7 @@ import com.carlosmartel.project4bis2.data.webServices.WebData
 import org.json.JSONObject
 
 class JsonOrderService : OrderServiceInterface {
-    val TAG = JsonOrderService::class.java.simpleName
+    private val TAG = JsonOrderService::class.java.simpleName
 
     override fun insertOrder(path: String, params: JSONObject, completionHandler: (response: JSONObject?) -> Unit) {
         val jsonObjReq = JsonObjectRequest(
