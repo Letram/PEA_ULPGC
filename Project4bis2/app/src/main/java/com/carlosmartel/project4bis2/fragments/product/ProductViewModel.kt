@@ -5,10 +5,10 @@ import android.arch.lifecycle.AndroidViewModel
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import com.carlosmartel.project4bis2.data.entities.Product
+import com.carlosmartel.project4bis2.data.room.repositories.ProductRepository
+import com.carlosmartel.project4bis2.data.webServices.WebData
 import com.carlosmartel.project4bis2.data.webServices.json.productJson.JsonProductService
 import com.carlosmartel.project4bis2.data.webServices.json.productJson.ProductAPIController
-import com.carlosmartel.project4bis2.data.webServices.WebData
-import com.carlosmartel.project4bis2.data.room.repositories.ProductRepository
 import org.json.JSONObject
 
 class ProductViewModel constructor(application: Application) : AndroidViewModel(application) {
@@ -25,7 +25,8 @@ class ProductViewModel constructor(application: Application) : AndroidViewModel(
         allProducts = productRepository.getAllProducts()
         allProductsWithOrders = productRepository.getAlProductsWithOrders()
         allProductsJson = MutableLiveData()
-        refresh()
+        if (WebData.connected)
+            refresh()
     }
 
     fun insert(product: Product) {
@@ -109,7 +110,7 @@ class ProductViewModel constructor(application: Application) : AndroidViewModel(
         jsonObject.put(WebData.PRODUCT_ID, productID)
         productAPI.deleteProduct(WebData.DELETE_PRODUCT, jsonObject) { response ->
             if (response != null) {
-                if (response.getInt("fault") == 0 && response.getBoolean("data")){
+                if (response.getInt("fault") == 0 && response.getBoolean("data")) {
                     completion()
                     refresh()
                 }

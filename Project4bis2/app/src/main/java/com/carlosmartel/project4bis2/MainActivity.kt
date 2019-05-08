@@ -3,6 +3,7 @@ package com.carlosmartel.project4bis2
 import android.app.Activity
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.support.design.widget.NavigationView
@@ -31,6 +32,7 @@ import com.carlosmartel.project4bis2.fragments.order.OrderFragment
 import com.carlosmartel.project4bis2.fragments.order.OrderViewModel
 import com.carlosmartel.project4bis2.fragments.product.ProductFragment
 import com.carlosmartel.project4bis2.fragments.product.ProductViewModel
+import com.carlosmartel.project4bis2.receivers.MyNetworkReceiver
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import java.text.SimpleDateFormat
@@ -46,6 +48,7 @@ class MainActivity :
     private lateinit var viewPager: ViewPager
     private lateinit var mAdapter: MyFragmentPagerAdapter
     private lateinit var tabLayout: TabLayout
+    private var receiver: MyNetworkReceiver? = null
 
     override fun updateInflatedOrder(inflatedOrder: InflatedOrderJson) {
         val intent = Intent(this, AddEditOrderActivity::class.java)
@@ -156,6 +159,8 @@ class MainActivity :
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
+        registerConnectionReceiver()
+
         fab.setOnClickListener {
             when (viewPager.currentItem) {
                 0 -> {
@@ -171,6 +176,8 @@ class MainActivity :
                     startActivityForResult(intent, CustomData.ADD_PRODUCT_REQ)
                 }
             }
+
+
         }
 
         val toggle = ActionBarDrawerToggle(
@@ -194,6 +201,30 @@ class MainActivity :
 
         tabLayout = this.findViewById(R.id.tabLayout)
         tabLayout.setupWithViewPager(viewPager)
+    }
+
+    private fun registerConnectionReceiver() {
+        receiver = MyNetworkReceiver()
+        receiver!!.setNetworkCallbackListener(object : MyNetworkReceiver.NetworkCallback {
+            override fun onConnectionGained() {
+                Toast.makeText(this@MainActivity, "Tengo conn", Toast.LENGTH_SHORT).show()
+                reload()
+            }
+
+            override fun onConnectionLost() {
+                Toast.makeText(this@MainActivity, "PUES YA NO TENGO CONEXION EQUISDE", Toast.LENGTH_SHORT).show()
+            }
+
+        })
+        val intentFilter = IntentFilter()
+        intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE")
+        registerReceiver(receiver, intentFilter)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (receiver != null)
+            unregisterReceiver(receiver)
     }
 
     override fun onBackPressed() {
@@ -411,7 +442,6 @@ class MainActivity :
 
     override fun onSaveInstanceState(outState: Bundle?, outPersistentState: PersistableBundle?) {
         super.onSaveInstanceState(outState, outPersistentState)
-        println("HOLA")
         outState?.run {
             outState.putInt(CustomData.CURRENT_TAB, tabLayout.selectedTabPosition)
         }

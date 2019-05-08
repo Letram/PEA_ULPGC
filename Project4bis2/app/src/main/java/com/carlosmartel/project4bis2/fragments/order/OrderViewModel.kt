@@ -5,15 +5,14 @@ import android.arch.lifecycle.AndroidViewModel
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import com.carlosmartel.project4bis2.data.entities.Order
-import com.carlosmartel.project4bis2.data.webServices.WebData
-import com.carlosmartel.project4bis2.data.webServices.json.orderjJson.JsonOrderService
-import com.carlosmartel.project4bis2.data.webServices.json.orderjJson.OrderAPIController
 import com.carlosmartel.project4bis2.data.pojo.InflatedOrder
 import com.carlosmartel.project4bis2.data.pojo.InflatedOrderJson
 import com.carlosmartel.project4bis2.data.room.repositories.OrderRepository
+import com.carlosmartel.project4bis2.data.webServices.WebData
+import com.carlosmartel.project4bis2.data.webServices.json.orderjJson.JsonOrderService
+import com.carlosmartel.project4bis2.data.webServices.json.orderjJson.OrderAPIController
 import org.json.JSONObject
 import java.text.SimpleDateFormat
-import kotlin.collections.ArrayList
 
 class OrderViewModel(application: Application) : AndroidViewModel(application) {
     private var orderRepository: OrderRepository = OrderRepository(application)
@@ -29,7 +28,8 @@ class OrderViewModel(application: Application) : AndroidViewModel(application) {
         allOrders = orderRepository.getAllOrders()
         allInflatedOrder = orderRepository.getAllInflatedOrders()
         allInflatedOrdersJson = MutableLiveData()
-        refresh()
+        if (WebData.connected)
+            refresh()
     }
 
     fun insert(order: Order) {

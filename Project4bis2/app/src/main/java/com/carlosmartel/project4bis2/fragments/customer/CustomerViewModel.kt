@@ -5,10 +5,10 @@ import android.arch.lifecycle.AndroidViewModel
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import com.carlosmartel.project4bis2.data.entities.Customer
+import com.carlosmartel.project4bis2.data.room.repositories.CustomerRepository
+import com.carlosmartel.project4bis2.data.webServices.WebData
 import com.carlosmartel.project4bis2.data.webServices.json.customerJson.CustomerAPIController
 import com.carlosmartel.project4bis2.data.webServices.json.customerJson.JsonCustomerService
-import com.carlosmartel.project4bis2.data.webServices.WebData
-import com.carlosmartel.project4bis2.data.room.repositories.CustomerRepository
 import com.carlosmartel.project4bis2.data.webServices.soap.CustomerAPIControllerSOAP
 import com.carlosmartel.project4bis2.data.webServices.soap.SOAPCustomerService
 import org.json.JSONObject
@@ -30,9 +30,11 @@ class CustomerViewModel constructor(application: Application) : AndroidViewModel
         allCustomersWithOrders = customerRepository.getAllCustomersWithOrders()
         allCustomersJson = MutableLiveData()
         allCustomersSOAP = MutableLiveData()
-        refreshAll()
-        refreshJSON()
-        refreshSOAP()
+        if(WebData.connected){
+            refreshAll()
+            refreshJSON()
+            refreshSOAP()
+        }
     }
 
     fun refreshAll() {

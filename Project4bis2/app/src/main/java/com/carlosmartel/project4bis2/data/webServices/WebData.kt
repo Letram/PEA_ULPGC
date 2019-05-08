@@ -1,8 +1,5 @@
 package com.carlosmartel.project4bis2.data.webServices
 
-import android.content.Context
-import android.net.ConnectivityManager
-
 class WebData {
     companion object {
         const val URL: String = "http://appstip.iatext.ulpgc.es/ventas/server.php?"
@@ -45,12 +42,8 @@ class WebData {
         const val ORDER_ID = "IDOrder"
         const val ORDER_CUSTOMER_NAME = "customerName"
         const val ORDER_PRODUCT_NAME = "productName"
-    }
 
-    fun isConnected(context: Context): Boolean {
-        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val activeNetwork = cm.activeNetworkInfo
-        return activeNetwork != null && activeNetwork.isConnectedOrConnecting
+        var connected = false
     }
 }
 
