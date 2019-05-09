@@ -4,6 +4,7 @@ import android.app.Application
 import android.arch.lifecycle.AndroidViewModel
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
+import com.carlosmartel.project4bis2.SelectorData
 import com.carlosmartel.project4bis2.data.entities.Customer
 import com.carlosmartel.project4bis2.data.room.repositories.CustomerRepository
 import com.carlosmartel.project4bis2.data.webServices.WebData
@@ -30,7 +31,7 @@ class CustomerViewModel constructor(application: Application) : AndroidViewModel
         allCustomersWithOrders = customerRepository.getAllCustomersWithOrders()
         allCustomersJson = MutableLiveData()
         allCustomersSOAP = MutableLiveData()
-        if(WebData.connected){
+        if (WebData.connected) {
             refreshAll()
             refreshJSON()
             refreshSOAP()
@@ -147,6 +148,8 @@ class CustomerViewModel constructor(application: Application) : AndroidViewModel
     private fun refreshCustomersSOAP() {
         customerApiSOAP.getCustomers {
             allCustomersSOAP.value = it
+            if (it != null)
+                SelectorData.customers = it
         }
     }
 
@@ -155,6 +158,10 @@ class CustomerViewModel constructor(application: Application) : AndroidViewModel
     }
 
     fun insertSOAP(name: String, address: String, completion: (Int) -> Unit) {
+        if (!WebData.connected) {
+            completion(-1)
+            return
+        }
         val customerToInsert = Customer(c_name = name, address = address)
         customerApiSOAP.insertCustomer(customerToInsert) { response ->
             response?.let {
@@ -165,6 +172,10 @@ class CustomerViewModel constructor(application: Application) : AndroidViewModel
     }
 
     fun updateSOAP(uid: Int, name: String?, address: String?, completion: (Boolean) -> Unit) {
+        if (!WebData.connected) {
+            completion(false)
+            return
+        }
         val customerToUpdate = Customer(c_name = name!!, address = address!!)
         customerToUpdate.u_id = uid
         customerApiSOAP.updateCustomer(customerToUpdate) { response ->
@@ -175,10 +186,14 @@ class CustomerViewModel constructor(application: Application) : AndroidViewModel
         }
     }
 
-    fun deleteSOAP(uid: Int, completion: () -> Unit) {
+    fun deleteSOAP(uid: Int, completion: (Boolean) -> Unit) {
+        if (!WebData.connected) {
+            completion(false)
+            return
+        }
         customerApiSOAP.deleteCustomer(uid) { response ->
             if (response!!) {
-                completion()
+                completion(response)
                 refreshAll()
             }
         }

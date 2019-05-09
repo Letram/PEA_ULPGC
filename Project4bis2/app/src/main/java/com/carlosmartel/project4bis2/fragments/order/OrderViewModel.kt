@@ -90,7 +90,6 @@ class OrderViewModel(application: Application) : AndroidViewModel(application) {
                             order = orderAux
                         )
                         orders.add(infOrder)
-                        println("SOMETHING WAS ADDED TO ORDER LIST")
                     }
                     allInflatedOrdersJson.value = orders
                 }

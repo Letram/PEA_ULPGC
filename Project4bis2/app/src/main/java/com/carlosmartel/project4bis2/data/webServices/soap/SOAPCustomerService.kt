@@ -107,6 +107,7 @@ class SOAPCustomerService : CustomerServiceInterfaceSOAP {
             try {
                 result = (envelope as SoapSerializationEnvelope).response as Int
             } catch (soapFault: SoapFault) {
+                //Esto se dispara cuando la operación no ha podido ser realizada por parte del servidor
                 soapFault.printStackTrace()
             }
             if (result != null) {

@@ -45,7 +45,7 @@ class SelectProductActivity : AppCompatActivity() {
             productSelected = intent.getParcelableExtra(CustomData.EXTRA_PRODUCT)
             recyclerAdapter.setProductSelected(productSelected!!)
         }
-
+        //todo viewmodel or selectorData? Still have to display at least a list with the products...
         productViewModel.getAllProductsJSON().observe(this, Observer {
             if (it != null) {
                 if (it.isEmpty()) openDialog()

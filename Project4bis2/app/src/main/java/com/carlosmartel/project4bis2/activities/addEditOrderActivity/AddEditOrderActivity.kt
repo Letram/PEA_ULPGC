@@ -27,6 +27,7 @@ import com.carlosmartel.project4bis2.data.webServices.WebData
 import com.carlosmartel.project4bis2.fragments.order.OrderViewModel
 import java.text.DateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class AddEditOrderActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
@@ -38,7 +39,7 @@ class AddEditOrderActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
     private lateinit var orderCodeText: TextView
 
     private lateinit var orderViewModel: OrderViewModel
-    private lateinit var orders: List<InflatedOrderJson>
+    private var orders: List<InflatedOrderJson> = ArrayList()
 
     private var currentCustomer: Customer? = null
     private var currentProduct: Product? = null
@@ -94,6 +95,7 @@ class AddEditOrderActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
             }
         })
 
+        //todo viewmodel or selectorData? check customer selector or addedit customer
         orderViewModel = ViewModelProviders.of(this).get(OrderViewModel(application)::class.java)
         orderViewModel.getAllInflatedOrdersJSON().observe(this, android.arch.lifecycle.Observer {
             if (it != null)

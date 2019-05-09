@@ -1,7 +1,6 @@
 package com.carlosmartel.project4bis2.activities.selectCustomerActivity
 
 import android.app.Activity
-import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
@@ -14,6 +13,7 @@ import android.view.MenuItem
 import android.widget.Toast
 import com.carlosmartel.project4bis2.CustomData
 import com.carlosmartel.project4bis2.R
+import com.carlosmartel.project4bis2.SelectorData
 import com.carlosmartel.project4bis2.data.entities.Customer
 import com.carlosmartel.project4bis2.data.entities.Order
 import com.carlosmartel.project4bis2.data.entities.Product
@@ -26,9 +26,9 @@ class SelectCustomerActivity : AppCompatActivity() {
     private lateinit var recyclerAdapter: SelectCustomerListAdapter
 
     private var customerSelected: Customer? = null
-    private var order: Order?= null
-    private var orderProduct: Product?= null
-    private var prevOrder: Order?= null
+    private var order: Order? = null
+    private var orderProduct: Product? = null
+    private var prevOrder: Order? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_select_customer)
@@ -41,7 +41,11 @@ class SelectCustomerActivity : AppCompatActivity() {
         }
         customerViewModel = ViewModelProviders.of(this).get(CustomerViewModel::class.java)
 
-        customerViewModel.getAllCustomersJSON().observe(this, Observer {
+        //todo  redo this. Use of viewmodel or not?
+        recyclerAdapter.setCustomers(SelectorData.customers)
+        if (SelectorData.customers.isEmpty()) openDialog()
+        /*
+        customerViewModel.getAllCustomersSOAP().observe(this, Observer {
             if (it != null) {
                 if (it.isEmpty()) {
                     openDialog()
@@ -51,7 +55,7 @@ class SelectCustomerActivity : AppCompatActivity() {
                 }
             }
         })
-
+*/
         recyclerAdapter.setOnCustomerClickListener(object :
             SelectCustomerListAdapter.OnCustomerClickListener {
             override fun onCustomerClick(customer: Customer) {
@@ -72,11 +76,11 @@ class SelectCustomerActivity : AppCompatActivity() {
         orderProduct = intent.getParcelableExtra(CustomData.EXTRA_PRODUCT)
     }
 
-    private fun openDialog(){
+    private fun openDialog() {
         val dialog = AlertDialog.Builder(this)
         dialog.setTitle(R.string.select_customer)
         dialog.setMessage(R.string.dialog_select_info)
-        dialog.setPositiveButton(R.string.OK){ _, _ -> finish()}
+        dialog.setPositiveButton(R.string.OK) { _, _ -> finish() }
         dialog.setCancelable(false)
         dialog.show()
     }
@@ -98,7 +102,7 @@ class SelectCustomerActivity : AppCompatActivity() {
 
     override fun onSupportNavigateUp(): Boolean {
         val data = Intent()
-        if(customerSelected != null)
+        if (customerSelected != null)
             data.putExtra(CustomData.EXTRA_CUSTOMER, customerSelected!!)
         data.putExtra(CustomData.EXTRA_PRODUCT, orderProduct)
         data.putExtra(CustomData.EXTRA_ORDER, order)
@@ -112,7 +116,7 @@ class SelectCustomerActivity : AppCompatActivity() {
      * Finishes the activity and passes the information to the parent to add the customer into the order.
      */
     private fun selectCustomer() {
-        if(customerSelected == null){
+        if (customerSelected == null) {
             Toast.makeText(this, R.string.select_customer_pls, Toast.LENGTH_SHORT).show()
             return
         }
@@ -138,7 +142,7 @@ class SelectCustomerActivity : AppCompatActivity() {
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
         savedInstanceState?.run {
             customerSelected = savedInstanceState.getParcelable(CustomData.EXTRA_CUSTOMER)
-            if(customerSelected != null){
+            if (customerSelected != null) {
                 recyclerAdapter.setCustomerSelected(customerSelected!!)
             }
             orderProduct = savedInstanceState.getParcelable(CustomData.EXTRA_PRODUCT)

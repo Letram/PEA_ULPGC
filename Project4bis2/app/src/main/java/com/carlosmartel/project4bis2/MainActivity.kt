@@ -132,13 +132,18 @@ class MainActivity :
         dialog.setTitle(R.string.dialog_customer_title)
         dialog.setMessage(R.string.dialog_customer_confirmation)
         dialog.setPositiveButton(R.string.dialog_delete) { _, _ ->
-            ViewModelProviders.of(this).get(CustomerViewModel::class.java).deleteSOAP(customer.u_id) {
-                Snackbar.make(viewPager, R.string.customer_deleted, Snackbar.LENGTH_SHORT)
-                    .setAction(R.string.snack_undo) {
-                        ViewModelProviders.of(this).get(CustomerViewModel::class.java)
-                            .insertSOAP(customer.c_name, customer.address) {}
-                    }
-                    .show()
+            ViewModelProviders.of(this).get(CustomerViewModel::class.java).deleteSOAP(customer.u_id) { operationCompleted ->
+                if(!operationCompleted){
+                    Toast.makeText(this, R.string.operation_not_completed, Toast.LENGTH_SHORT).show()
+                }
+                else{
+                    Snackbar.make(viewPager, R.string.customer_deleted, Snackbar.LENGTH_SHORT)
+                        .setAction(R.string.snack_undo) {
+                            ViewModelProviders.of(this).get(CustomerViewModel::class.java)
+                                .insertSOAP(customer.c_name, customer.address) {}
+                        }
+                        .show()
+                }
             }
         }
         dialog.setNegativeButton(R.string.dialog_cancel) { _, _ -> }
@@ -207,12 +212,12 @@ class MainActivity :
         receiver = MyNetworkReceiver()
         receiver!!.setNetworkCallbackListener(object : MyNetworkReceiver.NetworkCallback {
             override fun onConnectionGained() {
-                Toast.makeText(this@MainActivity, "Tengo conn", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@MainActivity, R.string.connected, Toast.LENGTH_SHORT).show()
                 reload()
             }
 
             override fun onConnectionLost() {
-                Toast.makeText(this@MainActivity, "PUES YA NO TENGO CONEXION EQUISDE", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@MainActivity, R.string.not_connected, Toast.LENGTH_SHORT).show()
             }
 
         })
@@ -287,11 +292,14 @@ class MainActivity :
                 val address: String = data.getStringExtra(CustomData.EXTRA_ADDRESS)
 
                 ViewModelProviders.of(this).get(CustomerViewModel::class.java).insertSOAP(name, address) { insertedID ->
-                    Snackbar.make(viewPager, R.string.customer_saved_snack, Snackbar.LENGTH_SHORT)
-                        .setAction(R.string.snack_undo) {
-                            ViewModelProviders.of(this).get(CustomerViewModel::class.java).deleteJSON(insertedID) {}
-                        }
-                        .show()
+                    if(insertedID == -1)Toast.makeText(this, R.string.operation_not_completed, Toast.LENGTH_SHORT).show()
+                    else{
+                        Snackbar.make(viewPager, R.string.customer_saved_snack, Snackbar.LENGTH_SHORT)
+                            .setAction(R.string.snack_undo) {
+                                ViewModelProviders.of(this).get(CustomerViewModel::class.java).deleteJSON(insertedID) {}
+                            }
+                            .show()
+                    }
                 }
             }
 
@@ -306,13 +314,18 @@ class MainActivity :
             val address = data.getStringExtra(CustomData.EXTRA_ADDRESS)
 
             val undoCustomer = data.getParcelableExtra<Customer>(CustomData.EXTRA_CUSTOMER)
-            ViewModelProviders.of(this).get(CustomerViewModel::class.java).updateSOAP(uid, name, address) {
-                Snackbar.make(viewPager, R.string.customer_saved_snack, Snackbar.LENGTH_SHORT)
-                    .setAction(R.string.snack_undo) {
-                        ViewModelProviders.of(this).get(CustomerViewModel::class.java)
-                            .updateSOAP(undoCustomer.u_id, undoCustomer.c_name, undoCustomer.address) {}
-                    }
-                    .show()
+            ViewModelProviders.of(this).get(CustomerViewModel::class.java).updateSOAP(uid, name, address) {operationCompleted ->
+                if(!operationCompleted){
+                    Toast.makeText(this, R.string.operation_not_completed, Toast.LENGTH_SHORT).show()
+                } else {
+                    //todo update orderviewmodel when a customer updates
+                    Snackbar.make(viewPager, R.string.customer_saved_snack, Snackbar.LENGTH_SHORT)
+                        .setAction(R.string.snack_undo) {
+                            ViewModelProviders.of(this).get(CustomerViewModel::class.java)
+                                .updateSOAP(undoCustomer.u_id, undoCustomer.c_name, undoCustomer.address) {}
+                        }
+                        .show()
+                }
             }
         } else if (requestCode == CustomData.ADD_PRODUCT_REQ && resultCode == Activity.RESULT_OK) {
 
@@ -323,6 +336,7 @@ class MainActivity :
                 val newProduct = Product(description = description, p_name = name, price = price)
                 ViewModelProviders.of(this).get(ProductViewModel::class.java)
                     .insertJSON(newProduct.p_name, newProduct.description, newProduct.price) { insertedID ->
+                        //todo check for connection
                         Snackbar.make(viewPager, R.string.product_saved_toast, Snackbar.LENGTH_SHORT)
                             .setAction(R.string.snack_undo) {
                                 ViewModelProviders.of(this).get(ProductViewModel::class.java)
@@ -347,6 +361,7 @@ class MainActivity :
             val undoProduct = data.getParcelableExtra<Product>(CustomData.EXTRA_PRODUCT)
             ViewModelProviders.of(this).get(ProductViewModel::class.java)
                 .updateJSON(productAux.p_id, productAux.p_name, productAux.description, productAux.price) {
+                    //todo update orderViewmodel when a product is updated and check for connection
                     Snackbar.make(viewPager, R.string.product_updated, Snackbar.LENGTH_SHORT)
                         .setAction(R.string.snack_undo) {
                             ViewModelProviders.of(this).get(ProductViewModel::class.java)
@@ -370,6 +385,7 @@ class MainActivity :
 
                 ViewModelProviders.of(this).get(OrderViewModel::class.java)
                     .insertJSON(code, SimpleDateFormat("yyyy-MM-dd").format(date), uid, pid, quantity) { insertedID ->
+                        //todo check for connection
                         Snackbar.make(viewPager, R.string.order_created, Snackbar.LENGTH_SHORT)
                             .setAction(R.string.snack_undo) {
                                 ViewModelProviders.of(this).get(OrderViewModel::class.java).deleteJSON(insertedID) {}
@@ -417,8 +433,9 @@ class MainActivity :
 
             val uid = data!!.getIntExtra(WebData.CUSTOMER_ID, -1)
             if (uid != -1)
-                ViewModelProviders.of(this).get(CustomerViewModel::class.java).deleteJSON(uid) {
-                    Toast.makeText(this, R.string.customer_deleted, Toast.LENGTH_SHORT).show()
+                ViewModelProviders.of(this).get(CustomerViewModel::class.java).deleteSOAP(uid) { operationCompleted ->
+                    if (!operationCompleted) Toast.makeText(this, R.string.operation_not_completed, Toast.LENGTH_SHORT).show()
+                    else Toast.makeText(this, R.string.customer_deleted, Toast.LENGTH_SHORT).show()
                 }
 
         } else if (requestCode == CustomData.EDIT_PRODUCT_REQ && resultCode == CustomData.DEL_PRODUCT_REQ) {

@@ -13,6 +13,7 @@ import android.widget.EditText
 import android.widget.Toast
 import com.carlosmartel.project4bis2.CustomData
 import com.carlosmartel.project4bis2.R
+import com.carlosmartel.project4bis2.SelectorData
 import com.carlosmartel.project4bis2.data.entities.Customer
 import com.carlosmartel.project4bis2.data.pojo.InflatedOrderJson
 import com.carlosmartel.project4bis2.data.webServices.WebData
@@ -28,17 +29,22 @@ class AddEditCustomerActivity : AppCompatActivity() {
 
     private lateinit var orderViewModel: OrderViewModel
     private lateinit var orders: List<InflatedOrderJson>
-    private lateinit var customers: List<Customer>
+    private var customers: List<Customer> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_customer)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        //todo redo this. Use of viewmodel or not?
+        customers = SelectorData.customers
+/*
         customerViewModel = ViewModelProviders.of(this).get(CustomerViewModel::class.java)
-        customerViewModel.getAllCustomersJSON().observe(this, Observer {
+        customerViewModel.getAllCustomersSOAP().observe(this, Observer {
             if (it != null)
                 customers = it
         })
+*/
 
         orderViewModel = ViewModelProviders.of(this).get(OrderViewModel(application)::class.java)
         orderViewModel.getAllInflatedOrdersJSON().observe(this, Observer {

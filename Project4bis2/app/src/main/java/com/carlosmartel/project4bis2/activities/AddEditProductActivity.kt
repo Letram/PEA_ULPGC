@@ -28,7 +28,7 @@ class AddEditProductActivity : AppCompatActivity() {
 
     private lateinit var orderViewModel: OrderViewModel
     private lateinit var orders: List<InflatedOrderJson>
-    private lateinit var products: List<Product>
+    private var products: List<Product> = ArrayList()
 
 
     private var prevProduct: Product? = null
@@ -40,8 +40,9 @@ class AddEditProductActivity : AppCompatActivity() {
         productName = findViewById(R.id.product_name)
         productDescription = findViewById(R.id.product_description)
         productPrice = findViewById(R.id.product_price)
-        productViewModel = ViewModelProviders.of(this).get(ProductViewModel(application)::class.java)
 
+        //todo use viewmodel or selectorData? check customerselector and addedit customer
+        productViewModel = ViewModelProviders.of(this).get(ProductViewModel(application)::class.java)
         productViewModel.getAllProductsJSON().observe(this, Observer {
             if (it != null)
                 products = it

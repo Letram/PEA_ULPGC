@@ -18,7 +18,6 @@ class MyNetworkReceiver: BroadcastReceiver(){
         isConnected = activeNetwork?.isConnected == true
         WebData.connected = isConnected
         sendMessage()
-        //Toast.makeText(context, if(isConnected) "CONNECTION PRESENT" else "NO INTERNET CONNECTION", Toast.LENGTH_SHORT).show()
     }
 
     private fun sendMessage() {
