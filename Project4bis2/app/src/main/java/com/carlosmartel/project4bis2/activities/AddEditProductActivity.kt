@@ -13,6 +13,7 @@ import android.widget.EditText
 import android.widget.Toast
 import com.carlosmartel.project4bis2.CustomData
 import com.carlosmartel.project4bis2.R
+import com.carlosmartel.project4bis2.SelectorData
 import com.carlosmartel.project4bis2.data.entities.Product
 import com.carlosmartel.project4bis2.data.pojo.InflatedOrderJson
 import com.carlosmartel.project4bis2.data.webServices.WebData
@@ -42,6 +43,9 @@ class AddEditProductActivity : AppCompatActivity() {
         productPrice = findViewById(R.id.product_price)
 
         //todo use viewmodel or selectorData? check customerselector and addedit customer
+        products = SelectorData.products
+        orders = SelectorData.inflatedOrders
+        /*
         productViewModel = ViewModelProviders.of(this).get(ProductViewModel(application)::class.java)
         productViewModel.getAllProductsJSON().observe(this, Observer {
             if (it != null)
@@ -53,7 +57,7 @@ class AddEditProductActivity : AppCompatActivity() {
                 orders = it
             }
         })
-
+*/
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         if (intent.hasExtra(CustomData.EXTRA_NAME)) {
@@ -178,6 +182,8 @@ class AddEditProductActivity : AppCompatActivity() {
             putParcelable(CustomData.EXTRA_PRODUCT, prevProduct)
             putString(CustomData.EXTRA_NAME, productName.text.toString())
             putString(CustomData.EXTRA_DESCRIPTION, productDescription.text.toString())
+            if (productPrice.text.isEmpty())
+                productPrice.setText("0")
             putFloat(CustomData.EXTRA_PRICE, productPrice.text.toString().toFloat())
         }
         super.onSaveInstanceState(outState)

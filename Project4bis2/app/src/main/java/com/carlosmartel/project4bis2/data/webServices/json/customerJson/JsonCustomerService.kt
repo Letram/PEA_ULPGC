@@ -34,17 +34,17 @@ class JsonCustomerService : CustomerServiceInterface {
         val jsonObjReq = JsonObjectRequest(
             Request.Method.GET, WebData.URL + path, null,
             Response.Listener<JSONObject> { response ->
+                Log.d(TAG, "/get request OK! Response: $response")
                 completionHandler(response)
             },
-            Response.ErrorListener {
+            Response.ErrorListener {error ->
+                VolleyLog.e(TAG, "/get request fail! Error: ${error.message}")
                 completionHandler(null)
             })
         BackendVolley.instance?.addToRequestQueue(jsonObjReq, TAG)
     }
 
     override fun deleteCustomer(path: String, params: JSONObject, completionHandler: (response: JSONObject?) -> Unit) {
-        println(params)
-
         val jsonObjReq = JsonObjectRequest(
             Request.Method.POST,
             WebData.URL + path,

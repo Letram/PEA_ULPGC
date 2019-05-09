@@ -32,13 +32,17 @@ class CustomerViewModel constructor(application: Application) : AndroidViewModel
         allCustomersJson = MutableLiveData()
         allCustomersSOAP = MutableLiveData()
         if (WebData.connected) {
-            refreshAll()
+            refreshAll {}
             refreshJSON()
             refreshSOAP()
         }
     }
 
-    fun refreshAll() {
+    fun refreshAll(completion: () -> Unit) {
+        if(!WebData.connected){
+            completion()
+            return
+        }
         refreshJSON()
         refreshSOAP()
     }
@@ -106,7 +110,7 @@ class CustomerViewModel constructor(application: Application) : AndroidViewModel
             if (response != null) {
                 if (response.getInt("fault") == 0) {
                     completion(response.getInt("data"))
-                    refreshAll()
+                    refreshAll {}
                 }
             }
         }
@@ -119,7 +123,7 @@ class CustomerViewModel constructor(application: Application) : AndroidViewModel
             if (response != null) {
                 if (response.getInt("fault") == 0 && response.getBoolean("data")) {
                     completion()
-                    refreshAll()
+                    refreshAll {}
                 }
             }
         }
@@ -134,7 +138,7 @@ class CustomerViewModel constructor(application: Application) : AndroidViewModel
             if (response != null) {
                 if (response.getInt("fault") == 0 && response.getBoolean("data")) {
                     completion()
-                    refreshAll()
+                    refreshAll {}
                 }
             }
         }
@@ -166,7 +170,7 @@ class CustomerViewModel constructor(application: Application) : AndroidViewModel
         customerApiSOAP.insertCustomer(customerToInsert) { response ->
             response?.let {
                 completion(it)
-                refreshAll()
+                refreshAll {}
             }
         }
     }
@@ -181,7 +185,7 @@ class CustomerViewModel constructor(application: Application) : AndroidViewModel
         customerApiSOAP.updateCustomer(customerToUpdate) { response ->
             response?.let {
                 completion(it)
-                refreshAll()
+                refreshAll {}
             }
         }
     }
@@ -194,7 +198,7 @@ class CustomerViewModel constructor(application: Application) : AndroidViewModel
         customerApiSOAP.deleteCustomer(uid) { response ->
             if (response!!) {
                 completion(response)
-                refreshAll()
+                refreshAll {}
             }
         }
     }

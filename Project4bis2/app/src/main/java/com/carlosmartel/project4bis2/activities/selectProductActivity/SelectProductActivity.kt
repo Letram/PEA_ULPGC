@@ -14,6 +14,7 @@ import android.view.MenuItem
 import android.widget.Toast
 import com.carlosmartel.project4bis2.CustomData
 import com.carlosmartel.project4bis2.R
+import com.carlosmartel.project4bis2.SelectorData
 import com.carlosmartel.project4bis2.data.entities.Customer
 import com.carlosmartel.project4bis2.data.entities.Order
 import com.carlosmartel.project4bis2.data.entities.Product
@@ -46,6 +47,9 @@ class SelectProductActivity : AppCompatActivity() {
             recyclerAdapter.setProductSelected(productSelected!!)
         }
         //todo viewmodel or selectorData? Still have to display at least a list with the products...
+        recyclerAdapter.setProducts(SelectorData.products)
+        if (SelectorData.products.isEmpty()) openDialog()
+        /*
         productViewModel.getAllProductsJSON().observe(this, Observer {
             if (it != null) {
                 if (it.isEmpty()) openDialog()
@@ -55,7 +59,7 @@ class SelectProductActivity : AppCompatActivity() {
                 }
             }
         })
-
+*/
         recyclerAdapter.setOnProductClickListener(object :
             SelectProductListAdapter.OnProductClickListener {
             override fun onProductClick(product: Product) {

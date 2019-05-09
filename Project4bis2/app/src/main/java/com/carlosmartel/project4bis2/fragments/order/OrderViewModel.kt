@@ -4,6 +4,7 @@ import android.app.Application
 import android.arch.lifecycle.AndroidViewModel
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
+import com.carlosmartel.project4bis2.SelectorData
 import com.carlosmartel.project4bis2.data.entities.Order
 import com.carlosmartel.project4bis2.data.pojo.InflatedOrder
 import com.carlosmartel.project4bis2.data.pojo.InflatedOrderJson
@@ -29,7 +30,7 @@ class OrderViewModel(application: Application) : AndroidViewModel(application) {
         allInflatedOrder = orderRepository.getAllInflatedOrders()
         allInflatedOrdersJson = MutableLiveData()
         if (WebData.connected)
-            refresh()
+            refresh(){}
     }
 
     fun insert(order: Order) {
@@ -57,7 +58,11 @@ class OrderViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     //JSON
-    fun refresh() {
+    fun refresh(completion: () -> Unit) {
+        if (!WebData.connected){
+            completion()
+            return
+        }
         refreshOrders()
     }
 
@@ -92,6 +97,7 @@ class OrderViewModel(application: Application) : AndroidViewModel(application) {
                         orders.add(infOrder)
                     }
                     allInflatedOrdersJson.value = orders
+                    SelectorData.inflatedOrders = orders
                 }
             }
         }
@@ -109,6 +115,8 @@ class OrderViewModel(application: Application) : AndroidViewModel(application) {
         quantity: Int,
         completion: (Int) -> Unit
     ) {
+        if (!WebData.connected)
+            completion(-1)
         val jsonObject = JSONObject()
         jsonObject.put(WebData.ORDER_CODE, code)
         jsonObject.put(WebData.ORDER_QTY, quantity)
@@ -119,20 +127,23 @@ class OrderViewModel(application: Application) : AndroidViewModel(application) {
             if (response != null) {
                 if (response.getInt("fault") == 0) {
                     completion(response.getInt("data"))
-                    refresh()
+                    refresh(){}
                 }
             }
         }
     }
 
-    fun deleteJSON(orderID: Int, completion: () -> Unit) {
+    fun deleteJSON(orderID: Int, completion: (Boolean) -> Unit) {
+        if (!WebData.connected)
+            completion(false)
         val jsonObject = JSONObject()
         jsonObject.put(WebData.ORDER_ID, orderID)
         orderApi.deleteOrder(WebData.DELETE_ORDER, jsonObject) { response ->
             if (response != null) {
+                //todo maybe return not only when its true but false so we can display something?
                 if (response.getInt("fault") == 0 && response.getBoolean("data")) {
-                    completion()
-                    refresh()
+                    completion(response.getBoolean("data"))
+                    refresh(){}
                 }
             }
         }
@@ -145,8 +156,10 @@ class OrderViewModel(application: Application) : AndroidViewModel(application) {
         idCustomer: Int,
         idProduct: Int,
         date: String,
-        completion: () -> Unit
+        completion: (Boolean) -> Unit
     ) {
+        if (!WebData.connected)
+            completion(false)
         val jsonObject = JSONObject()
         jsonObject.put(WebData.ORDER_ID, orderID)
         jsonObject.put(WebData.ORDER_CODE, code)
@@ -157,8 +170,8 @@ class OrderViewModel(application: Application) : AndroidViewModel(application) {
         orderApi.updateOrder(WebData.UPDATE_ORDER, jsonObject) { response ->
             if (response != null) {
                 if (response.getInt("fault") == 0 && response.getBoolean("data")) {
-                    completion()
-                    refresh()
+                    completion(response.getBoolean("data"))
+                    refresh(){}
                 }
             }
         }

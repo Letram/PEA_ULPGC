@@ -17,6 +17,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.carlosmartel.project4bis2.CustomData
 import com.carlosmartel.project4bis2.R
+import com.carlosmartel.project4bis2.SelectorData
 import com.carlosmartel.project4bis2.activities.selectCustomerActivity.SelectCustomerActivity
 import com.carlosmartel.project4bis2.activities.selectProductActivity.SelectProductActivity
 import com.carlosmartel.project4bis2.data.entities.Customer
@@ -96,12 +97,14 @@ class AddEditOrderActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
         })
 
         //todo viewmodel or selectorData? check customer selector or addedit customer
+        orders = SelectorData.inflatedOrders
+        /*
         orderViewModel = ViewModelProviders.of(this).get(OrderViewModel(application)::class.java)
         orderViewModel.getAllInflatedOrdersJSON().observe(this, android.arch.lifecycle.Observer {
             if (it != null)
                 orders = it
         })
-
+*/
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         if (intent.hasExtra(CustomData.EXTRA_ORDER)) {

@@ -19,6 +19,7 @@ import com.carlosmartel.project4bis2.data.pojo.InflatedOrderJson
 import com.carlosmartel.project4bis2.data.webServices.WebData
 import com.carlosmartel.project4bis2.fragments.customer.CustomerViewModel
 import com.carlosmartel.project4bis2.fragments.order.OrderViewModel
+import java.nio.channels.Selector
 
 class AddEditCustomerActivity : AppCompatActivity() {
 
@@ -46,13 +47,15 @@ class AddEditCustomerActivity : AppCompatActivity() {
         })
 */
 
+        orders = SelectorData.inflatedOrders
+        /*
         orderViewModel = ViewModelProviders.of(this).get(OrderViewModel(application)::class.java)
         orderViewModel.getAllInflatedOrdersJSON().observe(this, Observer {
             if (it != null) {
                 orders = it
             }
         })
-
+*/
 
         customerNameEdit = this.findViewById(R.id.name_edit)
         customerAddressEdit = this.findViewById(R.id.address_edit)
