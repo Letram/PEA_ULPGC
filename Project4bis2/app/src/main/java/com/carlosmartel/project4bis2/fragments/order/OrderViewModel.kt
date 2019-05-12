@@ -140,8 +140,7 @@ class OrderViewModel(application: Application) : AndroidViewModel(application) {
         jsonObject.put(WebData.ORDER_ID, orderID)
         orderApi.deleteOrder(WebData.DELETE_ORDER, jsonObject) { response ->
             if (response != null) {
-                //todo maybe return not only when its true but false so we can display something?
-                if (response.getInt("fault") == 0 && response.getBoolean("data")) {
+                if (response.getInt("fault") == 0) {
                     completion(response.getBoolean("data"))
                     refresh(){}
                 }
@@ -169,7 +168,7 @@ class OrderViewModel(application: Application) : AndroidViewModel(application) {
         jsonObject.put(WebData.ORDER_QTY, quantity)
         orderApi.updateOrder(WebData.UPDATE_ORDER, jsonObject) { response ->
             if (response != null) {
-                if (response.getInt("fault") == 0 && response.getBoolean("data")) {
+                if (response.getInt("fault") == 0) {
                     completion(response.getBoolean("data"))
                     refresh(){}
                 }

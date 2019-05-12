@@ -56,11 +56,11 @@ class ProductViewModel constructor(application: Application) : AndroidViewModel(
 
     //JSON
     fun refresh(completion: () -> Unit) {
-        if (!WebData.connected){
+        if (!WebData.connected) {
             completion()
             return
         }
-            refreshProducts()
+        refreshProducts()
     }
 
     private fun refreshProducts() {
@@ -97,7 +97,7 @@ class ProductViewModel constructor(application: Application) : AndroidViewModel(
         price: Float,
         completion: (Int) -> Unit
     ) {
-        if(!WebData.connected)
+        if (!WebData.connected)
             completion(-1)
         val jsonObject = JSONObject()
         jsonObject.put(WebData.PRODUCT_NAME, name)
@@ -114,13 +114,13 @@ class ProductViewModel constructor(application: Application) : AndroidViewModel(
     }
 
     fun deleteJSON(productID: Int, completion: (Boolean) -> Unit) {
-        if(!WebData.connected)
+        if (!WebData.connected)
             completion(false)
         val jsonObject = JSONObject()
         jsonObject.put(WebData.PRODUCT_ID, productID)
         productAPI.deleteProduct(WebData.DELETE_PRODUCT, jsonObject) { response ->
             if (response != null) {
-                if (response.getInt("fault") == 0 && response.getBoolean("data")) {
+                if (response.getInt("fault") == 0) {
                     completion(response.getBoolean("data"))
                     refresh {}
                 }
@@ -135,7 +135,7 @@ class ProductViewModel constructor(application: Application) : AndroidViewModel(
         price: Float,
         completion: (Boolean) -> Unit
     ) {
-        if(!WebData.connected)
+        if (!WebData.connected)
             completion(false)
         val jsonObject = JSONObject()
         jsonObject.put(WebData.PRODUCT_ID, productID)
@@ -144,8 +144,7 @@ class ProductViewModel constructor(application: Application) : AndroidViewModel(
         jsonObject.put(WebData.PRODUCT_PRICE, price)
         productAPI.updateProduct(WebData.UPDATE_PRODUCT, jsonObject) { response ->
             if (response != null) {
-                //todo maybe send even if its false and show something to the user? see delete as well
-                if (response.getInt("fault") == 0 && response.getBoolean("data")) {
+                if (response.getInt("fault") == 0) {
                     completion(response.getBoolean("data"))
                     refresh {}
                 }

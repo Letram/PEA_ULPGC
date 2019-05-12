@@ -196,8 +196,8 @@ class CustomerViewModel constructor(application: Application) : AndroidViewModel
             return
         }
         customerApiSOAP.deleteCustomer(uid) { response ->
-            if (response!!) {
-                completion(response)
+            response?.let {
+                completion(it)
                 refreshAll {}
             }
         }
