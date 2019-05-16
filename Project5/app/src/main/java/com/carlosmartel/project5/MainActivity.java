@@ -7,6 +7,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.support.v4.math.MathUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Display;
@@ -14,11 +15,18 @@ import android.view.View;
 
 import com.imankur.analogclockview.AnalogClock;
 
+import java.text.DecimalFormat;
+
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
 
     private SensorManager sensorManager;
-    private AnalogClock clock;
+    private MyAnalogClock clock;
 
+    private float translationalViscosity = 0.25f;
+    private float rotationalViscosity = 0.5f;
+
+    private float[] translationClamp = {0, 0.75f};
+    private float[] rotationalClamp = {0, 0.5f};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         super.onResume();
         sensorManager.registerListener(this,
                 sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
-                SensorManager.SENSOR_DELAY_NORMAL); // Cada 0.2 segundos se obtendrán las coordenadas
+                SensorManager.SENSOR_DELAY_GAME); //para que se obtengan las coordenadas de manera exhaustiva
     }
 
     @Override
@@ -58,20 +66,33 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         float x = sensorEvent.values[0];
         float y = sensorEvent.values[1];
 
+        //ratio of movement (X,Y)
+
+        //ojo con la aceleración, tiene que ir a valores pequeños
+        translationalViscosity += 0.002;
+        rotationalViscosity += 0.1;
+
         if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-            updatePosition(x, y);
-            updateRotation(x, y);
+            updatePosition(x, y, translationalViscosity);
+            updateRotation(x, y, rotationalViscosity);
         }
     }
 
-    private void updatePosition(float x, float y) {
+    private void updatePosition(float x, float y, float viscosity) {
+        //get the display's size
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
+
+        //and bounds of the screen apart from (0,0), the other diagonal
         int widthScreen = size.x;
         int heightScreen = size.y;
+
         int rightBorder = widthScreen - clock.getWidth();
         int bottomBorder = heightScreen - clock.getHeight();
+
+        translationalViscosity = MathUtils.clamp(translationalViscosity, translationClamp[0], translationClamp[1]);
+        rotationalViscosity = MathUtils.clamp(rotationalViscosity, rotationalClamp[0], rotationalClamp[1]);
 
         // Left //
         if (clock.getX() <= 0) {
@@ -84,27 +105,43 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         // Top //
         if (clock.getY() <= 0) {
             clock.setY(0);
+            translationalViscosity = 0;
         }
         // Bottom //
         if (clock.getY() > bottomBorder) {
             clock.setY(bottomBorder);
+            translationalViscosity = 0;
         }
 
-        clock.setTranslationX(clock.getTranslationX() - x);
-        clock.setTranslationY(clock.getTranslationY() + y);
+        clock.setTranslationX(clock.getTranslationX() - x * viscosity);
+        clock.setTranslationY(clock.getTranslationY() + y * viscosity);
     }
 
-    private void updateRotation(float horizontalCoordinate, float verticalCoordinate) {
-        double angle = Math.atan2(horizontalCoordinate, verticalCoordinate) / (Math.PI / 180);
-        int rotation = (int) Math.round(angle);
-        System.out.println("Rotation: " + rotation);
-        float tol = 5;
-        if(Math.abs(clock.getRotation() - rotation) < tol)
+    private void updateRotation(float horizontalCoordinate, float verticalCoordinate, float viscosity) {
+
+        DecimalFormat dm = new DecimalFormat("#");
+        double deg = Math.toDegrees(Math.atan2(horizontalCoordinate, verticalCoordinate));
+        System.out.println("Rotation: " + dm.format(deg) + "; clock angle: " + clock.getRotation());
+
+        float formattedDeg = Float.parseFloat(dm.format(deg));
+        if (formattedDeg < clock.getRotation()) {
+            clock.setRotation(clock.getRotation() - viscosity);
+        } else if (formattedDeg > clock.getRotation()) {
+            clock.setRotation(clock.getRotation() + viscosity);
+        }
+        /*
+            double angle = Math.atan2(horizontalCoordinate, verticalCoordinate) / (Math.PI / 180);
+            int rotation = (int) Math.round(angle);
+            if(rotation != clock.getRotation())
+                clock.setRotation(clock.getRotation() + viscosity);
+            System.out.println("Rotation: " + rotation + "; angle: " + rotation + "; clock angle: " + clock.getRotation());
             clock.setRotation(rotation);
+        */
     }
 
     @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) { }
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+    }
 
 
 }

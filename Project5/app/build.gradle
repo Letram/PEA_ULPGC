@@ -19,8 +19,11 @@ android {
 }
 
 dependencies {
-    //analog-clock
+    //analog-clock by imankur
     implementation 'com.imankur.library:analogclockview:1.0.0'
+
+    //analog-clock by Turki
+    implementation 'turki.alkhateeb:vectoranalogclock:1.0.0'
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:28.0.0'
