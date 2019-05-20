@@ -7,26 +7,28 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Bundle;
 import android.support.v4.math.MathUtils;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.Display;
 import android.view.View;
 
-import com.imankur.analogclockview.AnalogClock;
-
 import java.text.DecimalFormat;
 
+//todo quitar los temblores
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
 
     private SensorManager sensorManager;
     private MyAnalogClock clock;
 
-    private float translationalViscosity = 0.25f;
-    private float rotationalViscosity = 0.5f;
+    private float firstTranslationalViscosity = 0.25f;
+    private float translationalViscosity = firstTranslationalViscosity;
+    private float firstRotationalViscosity = 0.5f;
+    private float rotationalViscosity = firstRotationalViscosity;
 
     private float[] translationClamp = {0, 0.75f};
     private float[] rotationalClamp = {0, 0.5f};
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,9 +36,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         setContentView(R.layout.activity_main);
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+
         clock = findViewById(R.id.analog_clock);
 
-        int flag = 0;
+        int flag;
 
         flag = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -50,9 +53,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     protected void onResume() {
         super.onResume();
-        sensorManager.registerListener(this,
-                sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
-                SensorManager.SENSOR_DELAY_GAME); //para que se obtengan las coordenadas de manera exhaustiva
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_GAME);
+        //sensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_GAME);
     }
 
     @Override
@@ -63,18 +65,23 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
-        float x = sensorEvent.values[0];
-        float y = sensorEvent.values[1];
 
-        //ratio of movement (X,Y)
-
-        //ojo con la aceleración, tiene que ir a valores pequeños
-        translationalViscosity += 0.002;
-        rotationalViscosity += 0.1;
 
         if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            float x = sensorEvent.values[0];
+            float y = sensorEvent.values[1];
+
+
             updatePosition(x, y, translationalViscosity);
             updateRotation(x, y, rotationalViscosity);
+
+            //ojo con la aceleración, tiene que ir a valores pequeños
+            translationalViscosity += 0.002;
+            rotationalViscosity += 0.8;
+
+            translationalViscosity = MathUtils.clamp(translationalViscosity, translationClamp[0], translationClamp[1]);
+            rotationalViscosity = MathUtils.clamp(rotationalViscosity, rotationalClamp[0], rotationalClamp[1]);
+
         }
     }
 
@@ -91,8 +98,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         int rightBorder = widthScreen - clock.getWidth();
         int bottomBorder = heightScreen - clock.getHeight();
 
-        translationalViscosity = MathUtils.clamp(translationalViscosity, translationClamp[0], translationClamp[1]);
-        rotationalViscosity = MathUtils.clamp(rotationalViscosity, rotationalClamp[0], rotationalClamp[1]);
 
         // Left //
         if (clock.getX() <= 0) {
@@ -105,12 +110,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         // Top //
         if (clock.getY() <= 0) {
             clock.setY(0);
-            translationalViscosity = 0;
+            translationalViscosity = firstTranslationalViscosity;
         }
         // Bottom //
         if (clock.getY() > bottomBorder) {
             clock.setY(bottomBorder);
-            translationalViscosity = 0;
+            translationalViscosity = firstTranslationalViscosity;
         }
 
         clock.setTranslationX(clock.getTranslationX() - x * viscosity);
@@ -120,28 +125,35 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private void updateRotation(float horizontalCoordinate, float verticalCoordinate, float viscosity) {
 
         DecimalFormat dm = new DecimalFormat("#");
+        float clockRotation = clock.getRotation();
         double deg = Math.toDegrees(Math.atan2(horizontalCoordinate, verticalCoordinate));
-        System.out.println("Rotation: " + dm.format(deg) + "; clock angle: " + clock.getRotation());
 
         float formattedDeg = Float.parseFloat(dm.format(deg));
-        if (formattedDeg < clock.getRotation()) {
-            clock.setRotation(clock.getRotation() - viscosity);
-        } else if (formattedDeg > clock.getRotation()) {
-            clock.setRotation(clock.getRotation() + viscosity);
+
+        System.out.println("Rotation: " + formattedDeg + "; clock angle: " + clockRotation);
+
+        while(clockRotation < 0 || formattedDeg < 0){
+            clockRotation += 360f;
+            formattedDeg += 360f;
         }
-        /*
-            double angle = Math.atan2(horizontalCoordinate, verticalCoordinate) / (Math.PI / 180);
-            int rotation = (int) Math.round(angle);
-            if(rotation != clock.getRotation())
-                clock.setRotation(clock.getRotation() + viscosity);
-            System.out.println("Rotation: " + rotation + "; angle: " + rotation + "; clock angle: " + clock.getRotation());
-            clock.setRotation(rotation);
-        */
+
+        clockRotation = clockRotation % 360f;
+        formattedDeg = formattedDeg % 360f;
+
+        float distance = (formattedDeg - clockRotation);
+
+        System.out.println("Rotation: " + formattedDeg + "; clock angle: " + clockRotation + "; distance: " + distance);
+
+        if (distance < 0) {
+            if (distance > -180) clock.setRotation(clock.getRotation() - viscosity);
+            else clock.setRotation(clock.getRotation() + viscosity);
+        } else {
+            if (distance > 180) clock.setRotation(clock.getRotation() - viscosity);
+            else clock.setRotation(clock.getRotation() + viscosity);
+        }
     }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
     }
-
-
 }
