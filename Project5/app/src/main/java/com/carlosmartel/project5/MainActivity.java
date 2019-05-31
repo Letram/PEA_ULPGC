@@ -16,7 +16,6 @@ import android.widget.TextView;
 
 import java.text.DecimalFormat;
 
-//todo quitar los temblores
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
 
     private SensorManager sensorManager;
@@ -101,6 +100,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             updateRotation(x, y, rotationalViscosity, false);
     }
 
+    /**
+     * Method in charge of moving the clock through the screen using the X and Y accelerometer values
+     *
+     * @param x horizontal movement of the clock as an increment.
+     * @param y vertical movement of the clock. Just the increase value.
+     * @param viscosity factor of sinkness of the clock while rotating. Works like a resistance.
+     */
     private void updatePosition(float x, float y, float viscosity) {
         //get the display's size
         Display display = getWindowManager().getDefaultDisplay();
@@ -139,6 +145,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
 
 
+    /**
+     * Method in charge of rotating the clock using its X and Y rotation values and inclination.
+     *
+     * @param horizontalCoordinate rotation of the X axis
+     * @param verticalCoordinate rotation of the Y axis
+     * @param viscosity factor of sinkness of the clock while rotating. Works like a resistance.
+     * @param isNotStanding if the phone is in horizontal position or vertical (standing) position
+     */
     private void updateRotation(float horizontalCoordinate, float verticalCoordinate, float viscosity, boolean isNotStanding) {
         DecimalFormat dm = new DecimalFormat("#");
         float clockRotation = clock.getRotation();
