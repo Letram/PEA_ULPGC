@@ -12,6 +12,7 @@ import android.support.v4.math.MathUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Display;
 import android.view.View;
+import android.widget.TextView;
 
 import java.text.DecimalFormat;
 
@@ -20,17 +21,17 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     private SensorManager sensorManager;
     private CustomAnalogClock clock;
+    private TextView rotationDisabledText;
 
-    private float firstTranslationalViscosity = 0.25f;
+    private final float firstTranslationalViscosity = 0.25f;
     private float translationalViscosity = firstTranslationalViscosity;
-    private float firstRotationalViscosity = 0.5f;
+    private final float firstRotationalViscosity = 0.5f;
     private float rotationalViscosity = firstRotationalViscosity;
 
-    private float[] translationClamp = {0, 0.75f};
-    private float[] rotationalClamp = {0, 1};
+    private final float[] translationClamp = {0, 0.75f};
+    private final float[] rotationalClamp = {0, 1};
 
-    private int degreeTolerance = 5;
-    private float[] inputTolerance = {-0.25f, 0.25f};
+    private final float[] inputTolerance = {-0.25f, 0.25f};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +41,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         clock = findViewById(R.id.analog_clock);
+        rotationDisabledText = findViewById(R.id.rotationDisabled);
+        rotationDisabledText.setVisibility(View.GONE);
 
         int flag;
 
@@ -48,9 +51,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 | View.SYSTEM_UI_FLAG_LOW_PROFILE
                 | View.SYSTEM_UI_FLAG_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_IMMERSIVE;
 
         getWindow().getDecorView().setSystemUiVisibility(flag);
+
     }
 
     @Override
@@ -134,15 +139,16 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
 
 
-    private void updateRotation(float horizontalCoordinate, float verticalCoordinate, float viscosity, boolean isStanding) {
+    private void updateRotation(float horizontalCoordinate, float verticalCoordinate, float viscosity, boolean isNotStanding) {
         DecimalFormat dm = new DecimalFormat("#");
         float clockRotation = clock.getRotation();
         double deg = Math.toDegrees(Math.atan2(horizontalCoordinate, verticalCoordinate));
         float formattedDeg = Float.parseFloat(dm.format(deg));
 
-        if (isStanding) {
+        if (isNotStanding) {
+            rotationDisabledText.setVisibility(View.VISIBLE);
             formattedDeg = 0;
-        }
+        }else rotationDisabledText.setVisibility(View.GONE);
 
         while (clockRotation < 0 || formattedDeg < 0) {
             clockRotation += 360f;
@@ -156,20 +162,21 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         //System.out.println("Rotation: " + formattedDeg + "; clock angle: " + clockRotation + "; distance: " + distance);
 
+        int degreeTolerance = 5;
         if (Math.abs(distance) > degreeTolerance) {
             if (distance < 0) {
                 if (distance > -180)
-                    clock.setRotation(clock.getRotation() * 0.9f + (clock.getRotation() - viscosity) * 0.1f);
+                    clock.setRotation(clock.getRotation() * 0.8f + (clock.getRotation() - viscosity) * 0.2f);
                     //clock.setRotation(clock.getRotation() - viscosity);
                     //else clock.setRotation(clock.getRotation() + viscosity);
                 else
-                    clock.setRotation(clock.getRotation() * 0.9f + (clock.getRotation() + viscosity) * 0.1f);
+                    clock.setRotation(clock.getRotation() * 0.8f + (clock.getRotation() + viscosity) * 0.2f);
             } else {
                 if (distance > 180)
-                    clock.setRotation(clock.getRotation() * 0.9f + (clock.getRotation() - viscosity) * 0.1f);
+                    clock.setRotation(clock.getRotation() * 0.8f + (clock.getRotation() - viscosity) * 0.2f);
                     //clock.setRotation(clock.getRotation() - viscosity);
                 else
-                    clock.setRotation(clock.getRotation() * 0.9f + (clock.getRotation() + viscosity) * 0.1f);
+                    clock.setRotation(clock.getRotation() * 0.8f + (clock.getRotation() + viscosity) * 0.2f);
                 //else clock.setRotation(clock.getRotation() + viscosity);
             }
         }

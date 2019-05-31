@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Project5</string>
+    <string name="rotation_disabled">Rotation is disabled. Inclination angle is not sufficient.</string>
 </resources>

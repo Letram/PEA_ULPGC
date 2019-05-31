@@ -21,7 +21,6 @@ public class CustomAnalogClock extends View {
 
     /** spacing and padding of the clock-hands around the clock round */
     private int mPadding = 0;
-    private int mNumeralSpacing = 0;
 
     /** truncation of the heights of the clock-hands,
      hour clock-hand will be smaller comparetively to others */
@@ -44,6 +43,7 @@ public class CustomAnalogClock extends View {
             mPaint = new Paint();
             mHeight = getHeight();
             mWidth = getWidth();
+            int mNumeralSpacing = 0;
             mPadding = mNumeralSpacing + 50;  // spacing from the circle border
             int minAttr = Math.min(mHeight, mWidth);
             mRadius = minAttr / 2 - mPadding;
@@ -63,11 +63,11 @@ public class CustomAnalogClock extends View {
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeWidth(4);
         mPaint.setAntiAlias(true);
-        canvas.drawCircle(mWidth / 2, mHeight / 2, mRadius + mPadding - 10, mPaint);
+        canvas.drawCircle((float) (mWidth / 2.0), (float) (mHeight / 2.0), mRadius + mPadding - 10, mPaint);
 
         /* clock-center */
         mPaint.setStyle(Paint.Style.FILL);
-        canvas.drawCircle(mWidth / 2, mHeight / 2, 12, mPaint);  // the 03 clock hands will be rotated from this center point.
+        canvas.drawCircle((float) (mWidth / 2.0), (float) (mHeight / 2.0), 12, mPaint);  // the 03 clock hands will be rotated from this center point.
 
         /* border of hours */
 
@@ -81,7 +81,7 @@ public class CustomAnalogClock extends View {
             // find the circle-wise (x, y) position as mathematical rule
             double angle = Math.PI / 6 * (hour - 3);
             int x = (int) (mWidth / 2 + Math.cos(angle) * mRadius - mRect.width() / 2);
-            int y = (int) (mHeight / 2 + Math.sin(angle) * mRadius + mRect.height() / 2);
+            int y = (int) (mHeight / 2.0 + Math.sin(angle) * mRadius + mRect.height() / 2.0);
 
             canvas.drawText(String.valueOf(hour), x, y, mPaint);  // you can draw dots to denote hours as alternative
         }
@@ -92,7 +92,7 @@ public class CustomAnalogClock extends View {
         float hour = calendar.get(Calendar.HOUR_OF_DAY);
         hour = hour > 12 ? hour - 12 : hour;
 
-        drawHandLine(canvas, (hour + calendar.get(Calendar.MINUTE) / 60) * 5f, true, false); // draw hours
+        drawHandLine(canvas, (hour + calendar.get(Calendar.MINUTE) / 60.0) * 5f, true, false); // draw hours
         drawHandLine(canvas, calendar.get(Calendar.MINUTE), false, false); // draw minutes
         drawHandLine(canvas, calendar.get(Calendar.SECOND), false, true); // draw seconds
 
@@ -105,6 +105,6 @@ public class CustomAnalogClock extends View {
         double angle = Math.PI * moment / 30 - Math.PI / 2;
         int handRadius = isHour ? mRadius - mHandTruncation - mHourHandTruncation : mRadius - mHandTruncation;
         if (isSecond) mPaint.setColor(Color.RED);
-        canvas.drawLine(mWidth / 2, mHeight / 2, (float) (mWidth / 2 + Math.cos(angle) * handRadius), (float) (mHeight / 2 + Math.sin(angle) * handRadius), mPaint);
+        canvas.drawLine((float) (mWidth / 2.0), (float) (mHeight / 2.0), (float) (mWidth / 2 + Math.cos(angle) * handRadius), (float) (mHeight / 2 + Math.sin(angle) * handRadius), mPaint);
     }
 }
